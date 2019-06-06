@@ -5,69 +5,76 @@ enum SmokingBehavior { never, previous, current }
 SmokingBehavior _smokingBehavior;
 
 Widget getRadioButtons(context) {
-  return (
-      Row(
+  return (Padding(
+      padding: EdgeInsets.only(bottom: 5.0),
+      child: Row(
         children: [
-          Text("Smoking Behavior"),
-          Row(
-            children: [
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      child: Radio(
-                        value: SmokingBehavior.never,
-                        groupValue: _smokingBehavior,
-                        onChanged: (SmokingBehavior newValue) {
-                          context.setState(() {
-                            _smokingBehavior = newValue;
-                          });
-                        },
+          Expanded(
+            flex: 1,
+            child: Text("Smoking Behavior"),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Radio(
+                          value: SmokingBehavior.never,
+                          groupValue: _smokingBehavior,
+                          onChanged: (SmokingBehavior newValue) {
+                            context.setState(() {
+                              _smokingBehavior = newValue;
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                    Text("never")
-                  ],
+                      Text("never")
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      child: Radio(
-                        value: SmokingBehavior.previous,
-                        groupValue: _smokingBehavior,
-                        onChanged: (SmokingBehavior newValue) {
-                          context.setState(() {
-                            _smokingBehavior = newValue;
-                          });
-                        },
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Radio(
+                          value: SmokingBehavior.previous,
+                          groupValue: _smokingBehavior,
+                          onChanged: (SmokingBehavior newValue) {
+                            context.setState(() {
+                              _smokingBehavior = newValue;
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                    Text("previously"),
-                  ],
+                      Text("previously"),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      child: Radio(
-                        value: SmokingBehavior.current,
-                        groupValue: _smokingBehavior,
-                        onChanged: (SmokingBehavior newValue) {
-                          context.setState(() {
-                            _smokingBehavior = newValue;
-                          });
-                        },
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Radio(
+                          value: SmokingBehavior.current,
+                          groupValue: _smokingBehavior,
+                          onChanged: (SmokingBehavior newValue) {
+                            context.setState(() {
+                              _smokingBehavior = newValue;
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                    Text("current")
-                  ],
+                      Text("current")
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
-      )
-  );
+      )));
 }

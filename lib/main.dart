@@ -30,6 +30,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _sliderValue = 0.0;
+  double _age = 18.0;
 
   final mockedData = [
     QuarterSales('Q1', 5000),
@@ -82,17 +83,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   getRadioButtons(this),
                   Row(
                     children: [
-                      Text("Smoking Behavior"),
-                      Slider(
-                        value: _sliderValue,
-                        onChanged: (double newValue) {
-                          setState(() {
-                            _sliderValue = newValue;
-                          });
-                        },
+                      Expanded(
+                        flex: 1,
+                        child: Text("Age"),
                       ),
-                    ],
-                  ),
+                      Expanded(
+                        flex: 2,
+                        child: Slider(
+                          value: _age,
+                          min: 18.0,
+                          max: 99.0,
+                          divisions: 81,
+                          label: '${_age.round()}',
+                          onChanged: (double value) {
+                            setState(() {
+                              _age = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ]
+                  )
                 ],
               ),
             ),
