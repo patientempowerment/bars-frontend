@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'charts/simple_bar_chart.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +31,26 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   double _sliderValue = 0.0;
 
+  final mockedData = [
+    QuarterSales('Q1', 5000),
+    QuarterSales('Q2', 25000),
+    QuarterSales('Q3', 100000),
+    QuarterSales('Q4', 75000),
+  ];
+
+  List<charts.Series<QuarterSales, String>> mapChartData(
+      List<QuarterSales> data) {
+    return [
+      charts.Series<QuarterSales, String>(
+        id: 'Sales',
+        colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+        domainFn: (QuarterSales sales, _) => sales.quarter,
+        measureFn: (QuarterSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -50,63 +72,53 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Container (
+        padding: EdgeInsets.all(40.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: <Widget> [
-                    Text("Blood Pressure"),
-                    Slider(
-                      value: _sliderValue,
-                      onChanged: (double newValue) {
-                        setState(() {
-                          _sliderValue = newValue;
-                        });
-                      }
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget> [
-                    Text("Smoking Behavior"),
-                    Slider(
+            Expanded(
+              flex: 1,
+              child:  Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Text("Smoking Behavior"),
+                      Slider(
+                          value: _sliderValue,
+                          onChanged: (double newValue) {
+                            setState(() {
+                              _sliderValue = newValue;
+                            });
+                          },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("Smoking Behavior"),
+                      Slider(
                         value: _sliderValue,
                         onChanged: (double newValue) {
                           setState(() {
                             _sliderValue = newValue;
                           });
-                        }
-                    ),
-                  ],
-                ),
-              ],
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'You have pushed the button this many times:',
-                ),
-                Text(
-                  '$_counter',
-                  style: Theme.of(context).textTheme.display1,
-                ),
-              ],
+            Expanded(
+                flex: 1,
+                child: Container(
+                  child:  SimpleBarChart(mapChartData(mockedData)),
+                )
             ),
-          ]
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
