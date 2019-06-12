@@ -3,37 +3,38 @@ import 'package:flutter/material.dart';
 double _age = 18.0;
 
 Widget getAgeSlider(context) {
-  return (Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text("Age"),
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(children: [
+      Expanded(
+        flex: 1,
+        child: Text("Age"),
+      ),
+      Expanded(
+        flex: 2,
+        child: Slider(
+          value: _age,
+          min: 18.0,
+          max: 99.0,
+          divisions: 81,
+          label: '${_age.round()}',
+          onChanged: (double value) {
+            context.setState(() {
+              _age = value;
+            });
+          },
         ),
-        Expanded(
-          flex: 2,
-          child: Slider(
-            value: _age,
-            min: 18.0,
-            max: 99.0,
-            divisions: 81,
-            label: '${_age.round()}',
-            onChanged: (double value) {
-              context.setState(() {
-                _age = value;
-              });
-            },
-          ),
-        ),
-      ]
-  )
-  );
+      ),
+    ]),
+  ));
 }
 
 double _dystolicBloodPressure = 80.0;
 
 Widget getDystolicBloodPressureSlider(context) {
-  return (Row(
-      children: [
+  return (Padding(
+      padding: EdgeInsets.only(bottom: 10.0),
+      child: Row(children: [
         Expanded(
           flex: 1,
           child: Text("Dystolic Blood Pressure"),
@@ -53,16 +54,15 @@ Widget getDystolicBloodPressureSlider(context) {
             },
           ),
         ),
-      ]
-  )
-  );
+      ])));
 }
 
-double _systolicBloodPressure = 80.0;
+double _systolicBloodPressure = 100.0;
 
 Widget getSystolicBloodPressureSlider(context) {
-  return (Row(
-      children: [
+  return (Padding(
+      padding: EdgeInsets.only(bottom: 5.0),
+      child: Row(children: [
         Expanded(
           flex: 1,
           child: Text("Systolic Blood Pressure"),
@@ -82,7 +82,5 @@ Widget getSystolicBloodPressureSlider(context) {
             },
           ),
         ),
-      ]
-  )
-  );
+      ])));
 }
