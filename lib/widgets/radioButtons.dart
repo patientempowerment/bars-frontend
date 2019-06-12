@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum SmokingBehavior { never, previous, current }
+
 SmokingBehavior _smokingBehavior;
 
 Widget getSmokingStatusRadioButtons(context) {
@@ -79,6 +80,7 @@ Widget getSmokingStatusRadioButtons(context) {
 }
 
 enum Sex { female, male }
+
 Sex _sex;
 
 Widget getSexRadioButtons(context) {
@@ -196,4 +198,310 @@ Widget getAlcoholFrequencyRadioButtons(context) {
           ),
         ],
       )));
+}
+
+
+enum COPD { yes, no }
+COPD _copd;
+
+Widget getCOPDRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("COPD"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: COPD.yes,
+                        groupValue: _copd,
+                        onChanged: (COPD newValue) {
+                          context.setState(() {
+                            _copd = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: COPD.no,
+                        groupValue: _copd,
+                        onChanged: (COPD newValue) {
+                          context.setState(() {
+                            _copd = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
+}
+
+enum Asthma { yes, no }
+Asthma _asthma;
+
+Widget getAsthmaRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("Asthma"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: Asthma.yes,
+                        groupValue: _asthma,
+                        onChanged: (Asthma newValue) {
+                          context.setState(() {
+                            _asthma = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: Asthma.no,
+                        groupValue: _asthma,
+                        onChanged: (Asthma newValue) {
+                          context.setState(() {
+                            _asthma = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
+}
+
+enum CoughOnMostDays { yes, no }
+CoughOnMostDays _coughOnMostDays;
+
+Widget getCoughOnMostDaysRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("Cough On Most Days"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: CoughOnMostDays.yes,
+                        groupValue: _coughOnMostDays,
+                        onChanged: (CoughOnMostDays newValue) {
+                          context.setState(() {
+                            _coughOnMostDays = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: CoughOnMostDays.no,
+                        groupValue: _coughOnMostDays,
+                        onChanged: (CoughOnMostDays newValue) {
+                          context.setState(() {
+                            _coughOnMostDays = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
+}
+
+enum CurrentlySmoking { yes, no }
+CurrentlySmoking _currentlySmoking;
+
+Widget getCurrentlySmokingRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("Currently Smoking"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: CurrentlySmoking.yes,
+                        groupValue: _currentlySmoking,
+                        onChanged: (CurrentlySmoking newValue) {
+                          context.setState(() {
+                            _currentlySmoking = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: CurrentlySmoking.no,
+                        groupValue: _currentlySmoking,
+                        onChanged: (CurrentlySmoking newValue) {
+                          context.setState(() {
+                            _currentlySmoking = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
+}
+
+enum Diabetes { yes, no }
+Diabetes _diabetes;
+
+Widget getDiabetesRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("Diabetes"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: Diabetes.yes,
+                        groupValue: _diabetes,
+                        onChanged: (Diabetes newValue) {
+                          context.setState(() {
+                            _diabetes = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: Diabetes.no,
+                        groupValue: _diabetes,
+                        onChanged: (Diabetes newValue) {
+                          context.setState(() {
+                            _diabetes = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
 }

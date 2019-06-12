@@ -76,17 +76,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Expanded(
-              flex: 1,
-              child: Column(
-                // Slider Part
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
                 children: [
+                  //        'height',
+                  //       'neverSmoked' y/n, 'noOfCigarettesPerDay' 0 - 30, 'noOfCigarettesPreviouslyPerDay' 0 -30,
+                  //       'previouslySmoked', 'sex', 'sputumOnMostDays', 'systolicBloodPressure',
+                  //       'tuberculosis', 'weight', 'wheezeInChestInLastYear']
                   getSexRadioButtons(this),
                   getAgeSlider(this),
                   getSmokingStatusRadioButtons(this),
                   getAlcoholFrequencyRadioButtons(this),
-                  getDystolicBloodPressureSlider(this),
+                  getDiastolicBloodPressureSlider(this),
                   getSystolicBloodPressureSlider(this),
+                  getCOPDRadioButtons(this),
+                  getAsthmaRadioButtons(this),
+                  getCoughOnMostDaysRadioButtons(this),
+                  getCurrentlySmokingRadioButtons(this),
+                  getDiabetesRadioButtons(this),
                 ],
               ),
             ),
