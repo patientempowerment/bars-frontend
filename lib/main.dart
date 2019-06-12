@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'charts/simple_bar_chart.dart';
 import 'widgets/radioButtons.dart';
+import 'widgets/sliders.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,7 +31,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _sliderValue = 0.0;
-  double _age = 18.0;
 
   final mockedData = [
     QuarterSales('Q1', 5000),
@@ -78,32 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               flex: 1,
               child: Column(
+                // Slider Part
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  getRadioButtons(this),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text("Age"),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Slider(
-                          value: _age,
-                          min: 18.0,
-                          max: 99.0,
-                          divisions: 81,
-                          label: '${_age.round()}',
-                          onChanged: (double value) {
-                            setState(() {
-                              _age = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ]
-                  )
+                  getSexRadioButtons(this),
+                  getAgeSlider(this),
+                  getSmokingStatusRadioButtons(this),
+                  getAlcoholFrequencyRadioButtons(this),
+                  getDystolicBloodPressureSlider(this),
+                  getSystolicBloodPressureSlider(this),
                 ],
               ),
             ),
