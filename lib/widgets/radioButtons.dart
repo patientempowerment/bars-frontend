@@ -505,3 +505,125 @@ Widget getDiabetesRadioButtons(context) {
     ),
   ));
 }
+
+enum NeverSmoked { yes, no }
+NeverSmoked _NeverSmoked;
+
+Widget getNeverSmokedRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("Never Smoked"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: NeverSmoked.yes,
+                        groupValue: _NeverSmoked,
+                        onChanged: (NeverSmoked newValue) {
+                          context.setState(() {
+                            _NeverSmoked = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: NeverSmoked.no,
+                        groupValue: _NeverSmoked,
+                        onChanged: (NeverSmoked newValue) {
+                          context.setState(() {
+                            _NeverSmoked = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
+}
+
+enum PreviouslySmoked { yes, no }
+PreviouslySmoked _PreviouslySmoked;
+
+Widget getPreviouslySmokedRadioButtons(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text("Previously Smoked"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: PreviouslySmoked.yes,
+                        groupValue: _PreviouslySmoked,
+                        onChanged: (PreviouslySmoked newValue) {
+                          context.setState(() {
+                            _PreviouslySmoked = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("yes")
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Container(
+                      child: Radio(
+                        value: PreviouslySmoked.no,
+                        groupValue: _PreviouslySmoked,
+                        onChanged: (PreviouslySmoked newValue) {
+                          context.setState(() {
+                            _PreviouslySmoked = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    Text("no"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ));
+}

@@ -84,3 +84,59 @@ Widget getSystolicBloodPressureSlider(context) {
         ),
       ])));
 }
+
+double _noOfCigarettesPerDay = 0.0;
+
+Widget getNoOfCigarettesPerDaySlider(context) {
+  return (Padding(
+      padding: EdgeInsets.only(bottom: 5.0),
+      child: Row(children: [
+        Expanded(
+          flex: 1,
+          child: Text("Number of cigarettes per day"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Slider(
+            value: _noOfCigarettesPerDay,
+            min: 0.0,
+            max: 70.0,
+            divisions: 70,
+            label: '${_noOfCigarettesPerDay.round()}',
+            onChanged: (double value) {
+              context.setState(() {
+                _noOfCigarettesPerDay = value;
+              });
+            },
+          ),
+        ),
+      ])));
+}
+
+double _noOfCigarettesPreviouslyPerDay = 0.0;
+
+Widget getNoOfCigarettesPreviouslyPerDaySlider(context) {
+  return (Padding(
+      padding: EdgeInsets.only(bottom: 5.0),
+      child: Row(children: [
+        Expanded(
+          flex: 1,
+          child: Text("Number of cigarettes previously per day"),
+        ),
+        Expanded(
+          flex: 2,
+          child: Slider(
+            value: _noOfCigarettesPreviouslyPerDay,
+            min: 0.0,
+            max: 140.0,
+            divisions: 140,
+            label: '${_noOfCigarettesPreviouslyPerDay.round()}',
+            onChanged: (double value) {
+              context.setState(() {
+                _noOfCigarettesPreviouslyPerDay = value;
+              });
+            },
+          ),
+        ),
+      ])));
+}

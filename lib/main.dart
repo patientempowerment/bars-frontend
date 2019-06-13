@@ -79,8 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView(
                 children: [
                   //        'height',
-                  //       'neverSmoked' y/n, 'noOfCigarettesPerDay' 0 - 30, 'noOfCigarettesPreviouslyPerDay' 0 -30,
-                  //       'previouslySmoked', 'sex', 'sputumOnMostDays', 'systolicBloodPressure',
+                  //        'sputumOnMostDays' 0/1,
                   //       'tuberculosis', 'weight', 'wheezeInChestInLastYear']
                   getSexRadioButtons(this),
                   getAgeSlider(this),
@@ -93,6 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   getCoughOnMostDaysRadioButtons(this),
                   getCurrentlySmokingRadioButtons(this),
                   getDiabetesRadioButtons(this),
+                  getNeverSmokedRadioButtons(this),
+                  getNoOfCigarettesPerDaySlider(this),
+                  getNoOfCigarettesPreviouslyPerDaySlider(this),
+                  getPreviouslySmokedRadioButtons(this),
                 ],
               ),
             ),
