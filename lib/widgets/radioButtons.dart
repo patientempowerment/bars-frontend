@@ -201,28 +201,35 @@ Widget getAlcoholFrequencyRadioButtons(context) {
       )));
 }
 
-
-
-Widget getDiabetesRadioButtons(context) {
+Widget getDiabetesRadioButtons() {
   return(new YesNoRadioButtons("Diabetes"));
 }
-Widget getCurrentlySmokingRadioButtons(context) {
+Widget getCurrentlySmokingRadioButtons() {
   return(new YesNoRadioButtons("CurrentlySmoking"));
 }
-Widget getNeverSmokedRadioButtons(context) {
+Widget getNeverSmokedRadioButtons() {
   return(new YesNoRadioButtons("Never Smoked"));
 }
-Widget getCoughOnMostDaysRadioButtons(context) {
+Widget getCoughOnMostDaysRadioButtons() {
   return(new YesNoRadioButtons("Cough on most days"));
 }
-Widget getAsthmaRadioButtons(context) {
+Widget getAsthmaRadioButtons() {
   return(new YesNoRadioButtons("Asthma"));
 }
-Widget getCOPDRadioButtons(context) {
+Widget getCOPDRadioButtons() {
   return(new YesNoRadioButtons("COPD"));
 }
-Widget getPreviouslySmokedRadioButtons(context) {
+Widget getPreviouslySmokedRadioButtons() {
   return (new YesNoRadioButtons("Previously Smoked"));
+}
+Widget getSputumOnMostDaysRadioButtons() {
+  return (new YesNoRadioButtons("Sputum on most days"));
+}
+Widget getTuberculosisRadioButtons() {
+  return (new YesNoRadioButtons("Tuberculosis"));
+}
+Widget getWheezeInChestInLastYearRadioButtons() {
+  return (new YesNoRadioButtons("Wheeze in chest in last year"));
 }
 
 enum YesNo { yes, no }
