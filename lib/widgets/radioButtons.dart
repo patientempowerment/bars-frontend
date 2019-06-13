@@ -141,6 +141,7 @@ Widget getSexRadioButtons(context) {
 }
 
 enum AlcoholFrequency { never, daily }
+
 AlcoholFrequency _alcoholFrequency;
 
 Widget getAlcoholFrequencyRadioButtons(context) {
@@ -200,8 +201,8 @@ Widget getAlcoholFrequencyRadioButtons(context) {
       )));
 }
 
-
 enum COPD { yes, no }
+
 COPD _copd;
 
 Widget getCOPDRadioButtons(context) {
@@ -263,6 +264,7 @@ Widget getCOPDRadioButtons(context) {
 }
 
 enum Asthma { yes, no }
+
 Asthma _asthma;
 
 Widget getAsthmaRadioButtons(context) {
@@ -324,6 +326,7 @@ Widget getAsthmaRadioButtons(context) {
 }
 
 enum CoughOnMostDays { yes, no }
+
 CoughOnMostDays _coughOnMostDays;
 
 Widget getCoughOnMostDaysRadioButtons(context) {
@@ -385,6 +388,7 @@ Widget getCoughOnMostDaysRadioButtons(context) {
 }
 
 enum CurrentlySmoking { yes, no }
+
 CurrentlySmoking _currentlySmoking;
 
 Widget getCurrentlySmokingRadioButtons(context) {
@@ -446,6 +450,7 @@ Widget getCurrentlySmokingRadioButtons(context) {
 }
 
 enum Diabetes { yes, no }
+
 Diabetes _diabetes;
 
 Widget getDiabetesRadioButtons(context) {
@@ -507,8 +512,10 @@ Widget getDiabetesRadioButtons(context) {
 }
 
 enum NeverSmoked { yes, no }
+
 NeverSmoked _NeverSmoked;
 
+/*
 Widget getNeverSmokedRadioButtons(context) {
   return (Padding(
     padding: EdgeInsets.only(bottom: 5.0),
@@ -566,64 +573,94 @@ Widget getNeverSmokedRadioButtons(context) {
     ),
   ));
 }
+*/
 
-enum PreviouslySmoked { yes, no }
-PreviouslySmoked _PreviouslySmoked;
-
+Widget getNeverSmokedRadioButtons(context) {
+  return(YesNoRadioButtons("Never Smoked"));
+}
 Widget getPreviouslySmokedRadioButtons(context) {
-  return (Padding(
-    padding: EdgeInsets.only(bottom: 5.0),
-    child: Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text("Previously Smoked"),
-        ),
-        Expanded(
-          flex: 2,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      child: Radio(
-                        value: PreviouslySmoked.yes,
-                        groupValue: _PreviouslySmoked,
-                        onChanged: (PreviouslySmoked newValue) {
-                          context.setState(() {
-                            _PreviouslySmoked = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                    Text("yes")
-                  ],
-                ),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      child: Radio(
-                        value: PreviouslySmoked.no,
-                        groupValue: _PreviouslySmoked,
-                        onChanged: (PreviouslySmoked newValue) {
-                          context.setState(() {
-                            _PreviouslySmoked = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                    Text("no"),
-                  ],
-                ),
-              ),
-            ],
+  return (YesNoRadioButtons("Previously Smoked"));
+}
+
+enum YesNo { yes, no }
+
+class YesNoRadioButtons extends StatefulWidget {
+  String title;
+
+  YesNoRadioButtons(String title) {
+    this.title = title;
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return YesNoState(this.title);
+  }
+}
+
+class YesNoState extends State<YesNoRadioButtons> {
+  YesNo variable;
+  String title;
+
+  YesNoState(String newTitle) {
+    this.title = newTitle;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (Padding(
+      padding: EdgeInsets.only(bottom: 5.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(title),
           ),
-        ),
-      ],
-    ),
-  ));
+          Expanded(
+            flex: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Radio(
+                          value: YesNo.yes,
+                          groupValue: this.variable,
+                          onChanged: (YesNo newValue) {
+                            setState(() {
+                              this.variable = newValue;
+                            });
+                          },
+                        ),
+                      ),
+                      Text("yes")
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Radio(
+                          value: YesNo.no,
+                          groupValue: this.variable,
+                          onChanged: (YesNo newValue) {
+                            setState(() {
+                              this.variable = newValue;
+                            });
+                          },
+                        ),
+                      ),
+                      Text("no"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
 }
