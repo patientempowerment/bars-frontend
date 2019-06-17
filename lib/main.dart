@@ -81,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   //        'height','weight'
                   getSexRadioButtons(this),
                   getAgeSlider(this),
+                  getHeightSlider(this),
+                  getWeightSlider(this),
                   getSmokingStatusRadioButtons(this),
                   getAlcoholFrequencyRadioButtons(this),
                   getDiastolicBloodPressureSlider(this),

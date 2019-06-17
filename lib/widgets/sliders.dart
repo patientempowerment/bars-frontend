@@ -29,6 +29,65 @@ Widget getAgeSlider(context) {
   ));
 }
 
+double _height = 120.0;
+
+Widget getHeightSlider(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(children: [
+      Expanded(
+        flex: 1,
+        child: Text("Height"),
+      ),
+      Expanded(
+        flex: 2,
+        child: Slider(
+          value: _height,
+          min: 120.0,
+          max: 220.0,
+          divisions: 100,
+          label: '${_height.round()}',
+          onChanged: (double value) {
+            context.setState(() {
+              _height = value;
+            });
+          },
+        ),
+      ),
+    ]),
+  ));
+}
+
+double _weight = 30;
+
+Widget getWeightSlider(context) {
+  return (Padding(
+    padding: EdgeInsets.only(bottom: 5.0),
+    child: Row(children: [
+      Expanded(
+        flex: 1,
+        child: Text("Weight"),
+      ),
+      Expanded(
+        flex: 2,
+        child: Slider(
+          value: _weight,
+          min: 30.0,
+          max: 200.0,
+          divisions: 170,
+          label: '${_weight.round()}',
+          onChanged: (double value) {
+            context.setState(() {
+              _weight = value;
+            });
+          },
+        ),
+      ),
+    ]),
+  ));
+}
+
+
 double _diastolicBloodPressure = 30.0;
 
 Widget getDiastolicBloodPressureSlider(context) {
