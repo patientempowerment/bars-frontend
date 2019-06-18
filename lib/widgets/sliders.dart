@@ -152,7 +152,7 @@ Widget getNoOfCigarettesPerDaySlider(context) {
       child: Row(children: [
         Expanded(
           flex: 1,
-          child: Text("Number of cigarettes per day"),
+          child: Text("Number of Cigarettes per Day"),
         ),
         Expanded(
           flex: 2,
@@ -180,7 +180,7 @@ Widget getNoOfCigarettesPreviouslyPerDaySlider(context) {
       child: Row(children: [
         Expanded(
           flex: 1,
-          child: Text("Number of cigarettes previously per day"),
+          child: Text("Number of Cigarettes Previously per Day"),
         ),
         Expanded(
           flex: 2,

@@ -125,13 +125,13 @@ Widget getDiabetesRadioButtons() {
   return(new YesNoRadioButtons("Diabetes"));
 }
 Widget getCurrentlySmokingRadioButtons() {
-  return(new YesNoRadioButtons("CurrentlySmoking"));
+  return(new YesNoRadioButtons("Currently Smoking"));
 }
 Widget getNeverSmokedRadioButtons() {
   return(new YesNoRadioButtons("Never Smoked"));
 }
 Widget getCoughOnMostDaysRadioButtons() {
-  return(new YesNoRadioButtons("Cough on most days"));
+  return(new YesNoRadioButtons("Cough on Most Days"));
 }
 Widget getAsthmaRadioButtons() {
   return(new YesNoRadioButtons("Asthma"));
@@ -143,13 +143,13 @@ Widget getPreviouslySmokedRadioButtons() {
   return (new YesNoRadioButtons("Previously Smoked"));
 }
 Widget getSputumOnMostDaysRadioButtons() {
-  return (new YesNoRadioButtons("Sputum on most days"));
+  return (new YesNoRadioButtons("Sputum on Most Days"));
 }
 Widget getTuberculosisRadioButtons() {
   return (new YesNoRadioButtons("Tuberculosis"));
 }
 Widget getWheezeInChestInLastYearRadioButtons() {
-  return (new YesNoRadioButtons("Wheeze in chest in last year"));
+  return (new YesNoRadioButtons("Wheeze in Chest in Last Zear"));
 }
 
 enum YesNo { yes, no }
