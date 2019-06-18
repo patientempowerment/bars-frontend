@@ -27,6 +27,7 @@ Widget getSexRadioButtons(context) {
                           onChanged: (Sex newValue) {
                             context.setState(() {
                               _sex = newValue;
+                              context.input.sex = newValue;
                             });
                           },
                         ),
@@ -45,6 +46,7 @@ Widget getSexRadioButtons(context) {
                           onChanged: (Sex newValue) {
                             context.setState(() {
                               _sex = newValue;
+                              context.input.sex = newValue;
                             });
                           },
                         ),
@@ -61,7 +63,6 @@ Widget getSexRadioButtons(context) {
 }
 
 enum AlcoholFrequency { never, daily }
-
 AlcoholFrequency _alcoholFrequency;
 
 Widget getAlcoholFrequencyRadioButtons(context) {
@@ -88,6 +89,7 @@ Widget getAlcoholFrequencyRadioButtons(context) {
                           onChanged: (AlcoholFrequency newValue) {
                             context.setState(() {
                               _alcoholFrequency = newValue;
+                              context.input.alcoholFrequency = newValue;
                             });
                           },
                         ),
@@ -106,6 +108,7 @@ Widget getAlcoholFrequencyRadioButtons(context) {
                           onChanged: (AlcoholFrequency newValue) {
                             context.setState(() {
                               _alcoholFrequency = newValue;
+                              context.input.alcoholFrequency = newValue;
                             });
                           },
                         ),
@@ -155,11 +158,9 @@ Widget getWheezeInChestInLastYearRadioButtons() {
 enum YesNo { yes, no }
 
 class YesNoRadioButtons extends StatefulWidget {
-  String title;
+  final String title;
 
-  YesNoRadioButtons(String title) {
-    this.title = title;
-  }
+  YesNoRadioButtons(this.title);
 
   @override
   State<StatefulWidget> createState() {

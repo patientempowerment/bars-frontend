@@ -23,3 +23,10 @@ class QuarterSales {
 
   QuarterSales(this.quarter, this.sales);
 }
+
+class IllnessProb {
+  final String illness;
+  final double probability;
+
+  IllnessProb(this.illness, this.probability);
+}

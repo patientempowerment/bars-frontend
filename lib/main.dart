@@ -7,7 +7,6 @@ import 'widgets/sliders.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,44 +28,54 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  double _sliderValue = 0.0;
+class Inputs {
+  double age = 18.0;
+  double height = 120.0;
+  double weight = 30;
+  double diastolicBloodPressure = 30.0;
+  double systolicBloodPressure = 70.0;
+  double noOfCigarettesPerDay = 0.0;
+  double noOfCigarettesPreviouslyPerDay = 0.0;
+  Sex sex;
+  AlcoholFrequency alcoholFrequency;
+}
 
-  final mockedData = [
-    QuarterSales('Q1', 5000),
-    QuarterSales('Q2', 25000),
-    QuarterSales('Q3', 100000),
-    QuarterSales('Q4', 75000),
+getIllnessProbs(Inputs inputs) {
+  if(inputs.sex == Sex.female) {
+    return
+      [
+        IllnessProb('Q1', 0),
+        IllnessProb('Q2', 25000),
+        IllnessProb('Q3', 100000),
+        IllnessProb('Q4', 75000),
+      ];
+  }
+  return [
+    IllnessProb('Q1', 5000),
+    IllnessProb('Q2', 25000),
+    IllnessProb('Q3', 100000),
+    IllnessProb('Q4', 75000),
   ];
+}
 
-  List<charts.Series<QuarterSales, String>> mapChartData(
-      List<QuarterSales> data) {
+class _MyHomePageState extends State<MyHomePage> {
+  Inputs input = new Inputs();
+
+  List<charts.Series<IllnessProb, String>> mapChartData(
+      List<IllnessProb> data) {
     return [
-      charts.Series<QuarterSales, String>(
+      charts.Series<IllnessProb, String>(
         id: 'Sales',
         colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
-        domainFn: (QuarterSales sales, _) => sales.quarter,
-        measureFn: (QuarterSales sales, _) => sales.sales,
+        domainFn: (IllnessProb sales, _) => sales.illness,
+        measureFn: (IllnessProb sales, _) => sales.probability,
         data: data,
       )
     ];
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      //_counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -90,19 +99,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   getPreviouslySmokedRadioButtons(),
                   getNoOfCigarettesPerDaySlider(this),
                   getNoOfCigarettesPreviouslyPerDaySlider(this),
+                  getWheezeInChestInLastYearRadioButtons(),
+                  getCoughOnMostDaysRadioButtons(),
+                  getSputumOnMostDaysRadioButtons(),
                   getCOPDRadioButtons(),
                   getAsthmaRadioButtons(),
-                  getCoughOnMostDaysRadioButtons(),
                   getDiabetesRadioButtons(),
-                  getSputumOnMostDaysRadioButtons(),
                   getTuberculosisRadioButtons(),
-                  getWheezeInChestInLastYearRadioButtons(),
                 ],
               ),
             ),
             Expanded(
               flex: 1,
-              child: SimpleBarChart(mapChartData(mockedData)),
+              child: SimpleBarChart(mapChartData(getIllnessProbs(input))),
             ),
           ],
         ),

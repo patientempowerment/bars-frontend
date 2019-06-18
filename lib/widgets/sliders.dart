@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-double _age = 18.0;
-
 Widget getAgeSlider(context) {
   return (Padding(
     padding: EdgeInsets.only(bottom: 5.0),
@@ -13,14 +11,14 @@ Widget getAgeSlider(context) {
       Expanded(
         flex: 2,
         child: Slider(
-          value: _age,
+          value: context.input.age,
           min: 18.0,
           max: 99.0,
           divisions: 81,
-          label: '${_age.round()}',
+          label: '${context.input.age.round()}',
           onChanged: (double value) {
             context.setState(() {
-              _age = value;
+              context.input.age = value;
             });
           },
         ),
@@ -28,8 +26,6 @@ Widget getAgeSlider(context) {
     ]),
   ));
 }
-
-double _height = 120.0;
 
 Widget getHeightSlider(context) {
   return (Padding(
@@ -42,14 +38,14 @@ Widget getHeightSlider(context) {
       Expanded(
         flex: 2,
         child: Slider(
-          value: _height,
+          value: context.input.height,
           min: 120.0,
           max: 220.0,
           divisions: 100,
-          label: '${_height.round()}',
+          label: '${context.input.height.round()}',
           onChanged: (double value) {
             context.setState(() {
-              _height = value;
+              context.input.height = value;
             });
           },
         ),
@@ -57,8 +53,6 @@ Widget getHeightSlider(context) {
     ]),
   ));
 }
-
-double _weight = 30;
 
 Widget getWeightSlider(context) {
   return (Padding(
@@ -71,14 +65,14 @@ Widget getWeightSlider(context) {
       Expanded(
         flex: 2,
         child: Slider(
-          value: _weight,
+          value: context.input.weight,
           min: 30.0,
           max: 200.0,
           divisions: 170,
-          label: '${_weight.round()}',
+          label: '${context.input.weight.round()}',
           onChanged: (double value) {
             context.setState(() {
-              _weight = value;
+              context.input.weight = value;
             });
           },
         ),
@@ -86,9 +80,6 @@ Widget getWeightSlider(context) {
     ]),
   ));
 }
-
-
-double _diastolicBloodPressure = 30.0;
 
 Widget getDiastolicBloodPressureSlider(context) {
   return (Padding(
@@ -101,22 +92,20 @@ Widget getDiastolicBloodPressureSlider(context) {
         Expanded(
           flex: 2,
           child: Slider(
-            value: _diastolicBloodPressure,
+            value: context.input.diastolicBloodPressure,
             min: 30.0,
             max: 150.0,
             divisions: 120,
-            label: '${_diastolicBloodPressure.round()}',
+            label: '${context.input.diastolicBloodPressure.round()}',
             onChanged: (double value) {
               context.setState(() {
-                _diastolicBloodPressure = value;
+                context.input.diastolicBloodPressure = value;
               });
             },
           ),
         ),
       ])));
 }
-
-double _systolicBloodPressure = 70.0;
 
 Widget getSystolicBloodPressureSlider(context) {
   return (Padding(
@@ -129,22 +118,20 @@ Widget getSystolicBloodPressureSlider(context) {
         Expanded(
           flex: 2,
           child: Slider(
-            value: _systolicBloodPressure,
+            value: context.input.systolicBloodPressure,
             min: 70.0,
             max: 250.0,
             divisions: 180,
-            label: '${_systolicBloodPressure.round()}',
+            label: '${context.input.systolicBloodPressure.round()}',
             onChanged: (double value) {
               context.setState(() {
-                _systolicBloodPressure = value;
+                context.input.systolicBloodPressure = value;
               });
             },
           ),
         ),
       ])));
 }
-
-double _noOfCigarettesPerDay = 0.0;
 
 Widget getNoOfCigarettesPerDaySlider(context) {
   return (Padding(
@@ -157,22 +144,20 @@ Widget getNoOfCigarettesPerDaySlider(context) {
         Expanded(
           flex: 2,
           child: Slider(
-            value: _noOfCigarettesPerDay,
+            value: context.input.noOfCigarettesPerDay,
             min: 0.0,
             max: 70.0,
             divisions: 70,
-            label: '${_noOfCigarettesPerDay.round()}',
+            label: '${context.input.noOfCigarettesPerDay.round()}',
             onChanged: (double value) {
               context.setState(() {
-                _noOfCigarettesPerDay = value;
+                context.input.noOfCigarettesPerDay = value;
               });
             },
           ),
         ),
       ])));
 }
-
-double _noOfCigarettesPreviouslyPerDay = 0.0;
 
 Widget getNoOfCigarettesPreviouslyPerDaySlider(context) {
   return (Padding(
@@ -185,14 +170,14 @@ Widget getNoOfCigarettesPreviouslyPerDaySlider(context) {
         Expanded(
           flex: 2,
           child: Slider(
-            value: _noOfCigarettesPreviouslyPerDay,
+            value: context.input.noOfCigarettesPreviouslyPerDay,
             min: 0.0,
             max: 140.0,
             divisions: 140,
-            label: '${_noOfCigarettesPreviouslyPerDay.round()}',
+            label: '${context.input.noOfCigarettesPreviouslyPerDay.round()}',
             onChanged: (double value) {
               context.setState(() {
-                _noOfCigarettesPreviouslyPerDay = value;
+                context.input.noOfCigarettesPreviouslyPerDay = value;
               });
             },
           ),
