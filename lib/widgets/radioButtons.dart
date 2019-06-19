@@ -120,34 +120,34 @@ Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
 }
 
 Widget getDiabetesRadioButtons(MyHomePageState context) {
-  return(new YesNoRadioButtons("Diabetes", context.input.diabetes));
+  return(new YesNoRadioButtons("Diabetes", context.input.diabetes, context));
 }
 Widget getCurrentlySmokingRadioButtons(MyHomePageState context) {
-  return(new YesNoRadioButtons("Currently Smoking", context.input.currentlySmoking));
+  return(new YesNoRadioButtons("Currently Smoking", context.input.currentlySmoking, context));
 }
 Widget getNeverSmokedRadioButtons(MyHomePageState context) {
-  return(new YesNoRadioButtons("Never Smoked", context.input.neverSmoked));
+  return(new YesNoRadioButtons("Never Smoked", context.input.neverSmoked, context));
 }
 Widget getCoughOnMostDaysRadioButtons(MyHomePageState context) {
-  return(new YesNoRadioButtons("Cough on Most Days", context.input.coughOnMostDays));
+  return(new YesNoRadioButtons("Cough on Most Days", context.input.coughOnMostDays, context));
 }
 Widget getAsthmaRadioButtons(MyHomePageState context) {
-  return(new YesNoRadioButtons("Asthma", context.input.asthma));
+  return(new YesNoRadioButtons("Asthma", context.input.asthma, context));
 }
 Widget getCOPDRadioButtons(MyHomePageState context) {
-  return(new YesNoRadioButtons("COPD", context.input.copd));
+  return(new YesNoRadioButtons("COPD", context.input.copd, context));
 }
 Widget getPreviouslySmokedRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("Previously Smoked", context.input.previouslySmoked));
+  return (new YesNoRadioButtons("Previously Smoked", context.input.previouslySmoked, context));
 }
 Widget getSputumOnMostDaysRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("Sputum on Most Days", context.input.sputumOnMostDays));
+  return (new YesNoRadioButtons("Sputum on Most Days", context.input.sputumOnMostDays, context));
 }
 Widget getTuberculosisRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("Tuberculosis", context.input.tuberculosis));
+  return (new YesNoRadioButtons("Tuberculosis", context.input.tuberculosis, context));
 }
 Widget getWheezeInChestInLastYearRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("Wheeze in Chest in Last Year", context.input.wheezeInChestInLastYear));
+  return (new YesNoRadioButtons("Wheeze in Chest in Last Year", context.input.wheezeInChestInLastYear, context));
 }
 
 enum YesNo { yes, no }
@@ -161,12 +161,13 @@ class YesNoWrapper {
 class YesNoRadioButtons extends StatefulWidget {
   final String title;
   final YesNoWrapper variableWrapper;
+  final MyHomePageState homePageState;
 
-  YesNoRadioButtons(this.title, this.variableWrapper);
+  YesNoRadioButtons(this.title, this.variableWrapper, this.homePageState);
 
   @override
   State<StatefulWidget> createState() {
-    return YesNoState(this.title, this.variableWrapper);
+    return YesNoState(this.title, this.variableWrapper, this.homePageState);
   }
 }
 
@@ -174,10 +175,12 @@ class YesNoState extends State<YesNoRadioButtons> {
   YesNo variable;
   String title;
   YesNoWrapper variableWrapper;
+  MyHomePageState homePageState;
 
-  YesNoState(String newTitle, YesNoWrapper variableWrapper) {
+  YesNoState(String newTitle, YesNoWrapper variableWrapper, MyHomePageState homePageState) {
     this.title = newTitle;
     this.variableWrapper = variableWrapper;
+    this.homePageState = homePageState;
   }
 
   @override
@@ -203,7 +206,7 @@ class YesNoState extends State<YesNoRadioButtons> {
                           value: YesNo.yes,
                           groupValue: this.variableWrapper.yesNo,
                           onChanged: (YesNo newValue) {
-                            setState(() {
+                            homePageState.setState(() {
                               this.variableWrapper.yesNo = newValue;
                             });
                           },
@@ -221,7 +224,7 @@ class YesNoState extends State<YesNoRadioButtons> {
                           value: YesNo.no,
                           groupValue: this.variableWrapper.yesNo,
                           onChanged: (YesNo newValue) {
-                            setState(() {
+                            homePageState.setState(() {
                               this.variableWrapper.yesNo = newValue;
                             });
                           },

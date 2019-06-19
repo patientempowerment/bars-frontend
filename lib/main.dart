@@ -51,7 +51,7 @@ class Inputs {
 }
 
 getIllnessProbs(Inputs inputs) {
-  if(inputs.sex == Sex.female) {
+  if(inputs.diabetes.yesNo == YesNo.no) {
     return
       [
         IllnessProb('Q1', 0),
