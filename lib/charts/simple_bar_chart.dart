@@ -16,14 +16,6 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-/// Quarter Sales data type.
-class QuarterSales {
-  final String quarter;
-  final double sales;
-
-  QuarterSales(this.quarter, this.sales);
-}
-
 class IllnessProb {
   final String illness;
   final double probability;
