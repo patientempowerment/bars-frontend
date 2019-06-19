@@ -25,7 +25,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
 class Inputs {
@@ -38,6 +38,16 @@ class Inputs {
   double noOfCigarettesPreviouslyPerDay = 0.0;
   Sex sex;
   AlcoholFrequency alcoholFrequency;
+  YesNoWrapper currentlySmoking = new YesNoWrapper(null);
+  YesNoWrapper neverSmoked = new YesNoWrapper(null);
+  YesNoWrapper coughOnMostDays = new YesNoWrapper(null);
+  YesNoWrapper asthma = new YesNoWrapper(null);
+  YesNoWrapper copd = new YesNoWrapper(null);
+  YesNoWrapper diabetes = new YesNoWrapper(null);
+  YesNoWrapper previouslySmoked = new YesNoWrapper(null);
+  YesNoWrapper sputumOnMostDays = new YesNoWrapper(null);
+  YesNoWrapper wheezeInChestInLastYear = new YesNoWrapper(null);
+  YesNoWrapper tuberculosis = new YesNoWrapper(null);
 }
 
 getIllnessProbs(Inputs inputs) {
@@ -58,7 +68,7 @@ getIllnessProbs(Inputs inputs) {
   ];
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   Inputs input = new Inputs();
 
   List<charts.Series<IllnessProb, String>> mapChartData(
@@ -94,18 +104,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   getDiastolicBloodPressureSlider(this),
                   getSystolicBloodPressureSlider(this),
                   getAlcoholFrequencyRadioButtons(this),
-                  getCurrentlySmokingRadioButtons(),
-                  getNeverSmokedRadioButtons(),
-                  getPreviouslySmokedRadioButtons(),
+                  getCurrentlySmokingRadioButtons(this),
+                  getNeverSmokedRadioButtons(this),
+                  getPreviouslySmokedRadioButtons(this),
                   getNoOfCigarettesPerDaySlider(this),
                   getNoOfCigarettesPreviouslyPerDaySlider(this),
-                  getWheezeInChestInLastYearRadioButtons(),
-                  getCoughOnMostDaysRadioButtons(),
-                  getSputumOnMostDaysRadioButtons(),
-                  getCOPDRadioButtons(),
-                  getAsthmaRadioButtons(),
-                  getDiabetesRadioButtons(),
-                  getTuberculosisRadioButtons(),
+                  getWheezeInChestInLastYearRadioButtons(this),
+                  getCoughOnMostDaysRadioButtons(this),
+                  getSputumOnMostDaysRadioButtons(this),
+                  getCOPDRadioButtons(this),
+                  getAsthmaRadioButtons(this),
+                  getDiabetesRadioButtons(this),
+                  getTuberculosisRadioButtons(this),
                 ],
               ),
             ),

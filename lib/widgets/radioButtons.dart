@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:bars_frontend/main.dart';
 
 enum Sex { female, male }
-Sex _sex;
 
-Widget getSexRadioButtons(context) {
+Widget getSexRadioButtons(MyHomePageState context) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(
@@ -23,10 +23,9 @@ Widget getSexRadioButtons(context) {
                       Container(
                         child: Radio(
                           value: Sex.female,
-                          groupValue: _sex,
+                          groupValue: context.input.sex,
                           onChanged: (Sex newValue) {
                             context.setState(() {
-                              _sex = newValue;
                               context.input.sex = newValue;
                             });
                           },
@@ -42,10 +41,9 @@ Widget getSexRadioButtons(context) {
                       Container(
                         child: Radio(
                           value: Sex.male,
-                          groupValue: _sex,
+                          groupValue: context.input.sex,
                           onChanged: (Sex newValue) {
                             context.setState(() {
-                              _sex = newValue;
                               context.input.sex = newValue;
                             });
                           },
@@ -63,9 +61,8 @@ Widget getSexRadioButtons(context) {
 }
 
 enum AlcoholFrequency { never, daily }
-AlcoholFrequency _alcoholFrequency;
 
-Widget getAlcoholFrequencyRadioButtons(context) {
+Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(
@@ -85,10 +82,9 @@ Widget getAlcoholFrequencyRadioButtons(context) {
                       Container(
                         child: Radio(
                           value: AlcoholFrequency.never,
-                          groupValue: _alcoholFrequency,
+                          groupValue: context.input.alcoholFrequency,
                           onChanged: (AlcoholFrequency newValue) {
                             context.setState(() {
-                              _alcoholFrequency = newValue;
                               context.input.alcoholFrequency = newValue;
                             });
                           },
@@ -104,10 +100,9 @@ Widget getAlcoholFrequencyRadioButtons(context) {
                       Container(
                         child: Radio(
                           value: AlcoholFrequency.daily,
-                          groupValue: _alcoholFrequency,
+                          groupValue: context.input.alcoholFrequency,
                           onChanged: (AlcoholFrequency newValue) {
                             context.setState(() {
-                              _alcoholFrequency = newValue;
                               context.input.alcoholFrequency = newValue;
                             });
                           },
@@ -124,56 +119,65 @@ Widget getAlcoholFrequencyRadioButtons(context) {
       )));
 }
 
-Widget getDiabetesRadioButtons() {
-  return(new YesNoRadioButtons("Diabetes"));
+Widget getDiabetesRadioButtons(MyHomePageState context) {
+  return(new YesNoRadioButtons("Diabetes", context.input.diabetes));
 }
-Widget getCurrentlySmokingRadioButtons() {
-  return(new YesNoRadioButtons("Currently Smoking"));
+Widget getCurrentlySmokingRadioButtons(MyHomePageState context) {
+  return(new YesNoRadioButtons("Currently Smoking", context.input.currentlySmoking));
 }
-Widget getNeverSmokedRadioButtons() {
-  return(new YesNoRadioButtons("Never Smoked"));
+Widget getNeverSmokedRadioButtons(MyHomePageState context) {
+  return(new YesNoRadioButtons("Never Smoked", context.input.neverSmoked));
 }
-Widget getCoughOnMostDaysRadioButtons() {
-  return(new YesNoRadioButtons("Cough on Most Days"));
+Widget getCoughOnMostDaysRadioButtons(MyHomePageState context) {
+  return(new YesNoRadioButtons("Cough on Most Days", context.input.coughOnMostDays));
 }
-Widget getAsthmaRadioButtons() {
-  return(new YesNoRadioButtons("Asthma"));
+Widget getAsthmaRadioButtons(MyHomePageState context) {
+  return(new YesNoRadioButtons("Asthma", context.input.asthma));
 }
-Widget getCOPDRadioButtons() {
-  return(new YesNoRadioButtons("COPD"));
+Widget getCOPDRadioButtons(MyHomePageState context) {
+  return(new YesNoRadioButtons("COPD", context.input.copd));
 }
-Widget getPreviouslySmokedRadioButtons() {
-  return (new YesNoRadioButtons("Previously Smoked"));
+Widget getPreviouslySmokedRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Previously Smoked", context.input.previouslySmoked));
 }
-Widget getSputumOnMostDaysRadioButtons() {
-  return (new YesNoRadioButtons("Sputum on Most Days"));
+Widget getSputumOnMostDaysRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Sputum on Most Days", context.input.sputumOnMostDays));
 }
-Widget getTuberculosisRadioButtons() {
-  return (new YesNoRadioButtons("Tuberculosis"));
+Widget getTuberculosisRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Tuberculosis", context.input.tuberculosis));
 }
-Widget getWheezeInChestInLastYearRadioButtons() {
-  return (new YesNoRadioButtons("Wheeze in Chest in Last Zear"));
+Widget getWheezeInChestInLastYearRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Wheeze in Chest in Last Year", context.input.wheezeInChestInLastYear));
 }
 
 enum YesNo { yes, no }
+class YesNoWrapper {
+  YesNo yesNo;
+  YesNoWrapper(yesNo) {
+    this.yesNo = yesNo;
+  }
+}
 
 class YesNoRadioButtons extends StatefulWidget {
   final String title;
+  final YesNoWrapper variableWrapper;
 
-  YesNoRadioButtons(this.title);
+  YesNoRadioButtons(this.title, this.variableWrapper);
 
   @override
   State<StatefulWidget> createState() {
-    return YesNoState(this.title);
+    return YesNoState(this.title, this.variableWrapper);
   }
 }
 
 class YesNoState extends State<YesNoRadioButtons> {
   YesNo variable;
   String title;
+  YesNoWrapper variableWrapper;
 
-  YesNoState(String newTitle) {
+  YesNoState(String newTitle, YesNoWrapper variableWrapper) {
     this.title = newTitle;
+    this.variableWrapper = variableWrapper;
   }
 
   @override
@@ -197,10 +201,10 @@ class YesNoState extends State<YesNoRadioButtons> {
                       Container(
                         child: Radio(
                           value: YesNo.yes,
-                          groupValue: this.variable,
+                          groupValue: this.variableWrapper.yesNo,
                           onChanged: (YesNo newValue) {
                             setState(() {
-                              this.variable = newValue;
+                              this.variableWrapper.yesNo = newValue;
                             });
                           },
                         ),
@@ -215,10 +219,10 @@ class YesNoState extends State<YesNoRadioButtons> {
                       Container(
                         child: Radio(
                           value: YesNo.no,
-                          groupValue: this.variable,
+                          groupValue: this.variableWrapper.yesNo,
                           onChanged: (YesNo newValue) {
                             setState(() {
-                              this.variable = newValue;
+                              this.variableWrapper.yesNo = newValue;
                             });
                           },
                         ),
