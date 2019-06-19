@@ -29,13 +29,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class Inputs {
-  double age = 18.0;
-  double height = 120.0;
-  double weight = 30;
-  double diastolicBloodPressure = 30.0;
-  double systolicBloodPressure = 70.0;
-  double noOfCigarettesPerDay = 0.0;
-  double noOfCigarettesPreviouslyPerDay = 0.0;
+  DoubleWrapper age = new DoubleWrapper(18.0);
+  DoubleWrapper height = new DoubleWrapper(120.0);
+  DoubleWrapper weight = new DoubleWrapper(30);
+  DoubleWrapper diastolicBloodPressure = new DoubleWrapper(30.0);
+  DoubleWrapper systolicBloodPressure = new DoubleWrapper(70.0);
+  DoubleWrapper noOfCigarettesPerDay = new DoubleWrapper(0.0);
+  DoubleWrapper noOfCigarettesPreviouslyPerDay = new DoubleWrapper(0.0);
   Sex sex;
   AlcoholFrequency alcoholFrequency;
   YesNoWrapper currentlySmoking = new YesNoWrapper(null);
