@@ -4,6 +4,7 @@ import 'charts/simple_bar_chart.dart';
 import 'widgets/radioButtons.dart';
 import 'widgets/sliders.dart';
 import 'predictions.dart';
+import 'package:bars_frontend/utils.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,33 +28,6 @@ class MyHomePage extends StatefulWidget {
 
   @override
   MyHomePageState createState() => MyHomePageState();
-}
-
-class Inputs {
-  DoubleWrapper age = new DoubleWrapper(18.0);
-  DoubleWrapper height = new DoubleWrapper(120.0);
-  DoubleWrapper weight = new DoubleWrapper(30);
-  DoubleWrapper diastolicBloodPressure = new DoubleWrapper(30.0);
-  DoubleWrapper systolicBloodPressure = new DoubleWrapper(70.0);
-  DoubleWrapper noOfCigarettesPerDay = new DoubleWrapper(0.0);
-  DoubleWrapper noOfCigarettesPreviouslyPerDay = new DoubleWrapper(0.0);
-  Sex sex;
-  AlcoholFrequency alcoholFrequency;
-  YesNoWrapper currentlySmoking = new YesNoWrapper(null);
-  YesNoWrapper neverSmoked = new YesNoWrapper(null);
-  YesNoWrapper coughOnMostDays = new YesNoWrapper(null);
-  YesNoWrapper asthma = new YesNoWrapper(null);
-  YesNoWrapper copd = new YesNoWrapper(null);
-  YesNoWrapper diabetes = new YesNoWrapper(null);
-  YesNoWrapper previouslySmoked = new YesNoWrapper(null);
-  YesNoWrapper sputumOnMostDays = new YesNoWrapper(null);
-  YesNoWrapper wheezeInChestInLastYear = new YesNoWrapper(null);
-  YesNoWrapper tuberculosis = new YesNoWrapper(null);
-}
-
-class StringWrapper {
-  String get;
-  StringWrapper(this.get);
 }
 
 class MyHomePageState extends State<MyHomePage> {

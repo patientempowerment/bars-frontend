@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:bars_frontend/main.dart';
 import 'charts/simple_bar_chart.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:bars_frontend/utils.dart';
 
 prepareModels(StringWrapper models) async {
   String newModels = await rootBundle.loadString('assets/models.json');

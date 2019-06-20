@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-
-enum Sex { female, male }
+import 'package:bars_frontend/utils.dart';
 
 Widget getSexRadioButtons(MyHomePageState context) {
   return (Padding(
@@ -60,7 +59,6 @@ Widget getSexRadioButtons(MyHomePageState context) {
       )));
 }
 
-enum AlcoholFrequency { never, daily }
 
 Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
   return (Padding(
@@ -150,16 +148,6 @@ Widget getWheezeInChestInLastYearRadioButtons(MyHomePageState context) {
   return (new YesNoRadioButtons("Wheeze in Chest in Last Year", context.input.wheezeInChestInLastYear, context));
 }
 
-enum YesNo { yes, no }
-class YesNoWrapper {
-  YesNo yesNo;
-  YesNoWrapper(yesNo) {
-    this.yesNo = yesNo;
-  }
-  double get() {
-    return yesNo == YesNo.yes ? 1.0 : 0.0;
-  }
-}
 
 class YesNoRadioButtons extends StatefulWidget {
   final String title;

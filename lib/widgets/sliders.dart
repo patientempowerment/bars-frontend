@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-
-class DoubleWrapper {
-  double get;
-  DoubleWrapper(this.get);
-}
+import 'package:bars_frontend/utils.dart';
 
 Widget getAgeSlider(MyHomePageState context) {
   return getSlider(context, "Age", context.input.age, 18.0, 99.0, 81);
