@@ -156,6 +156,9 @@ class YesNoWrapper {
   YesNoWrapper(yesNo) {
     this.yesNo = yesNo;
   }
+  double get() {
+    return yesNo == YesNo.yes ? 1.0 : 0.0;
+  }
 }
 
 class YesNoRadioButtons extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'charts/simple_bar_chart.dart';
 import 'widgets/radioButtons.dart';
 import 'widgets/sliders.dart';
-import 'dart:convert';
+import 'predictions.dart';
 
 void main() => runApp(MyApp());
 
@@ -51,22 +51,14 @@ class Inputs {
   YesNoWrapper tuberculosis = new YesNoWrapper(null);
 }
 
-String exampleResponse =
-    "\{\"COPD\":0.3,\"asthma\":1.0,\"diabetes\":0.0,\"tuberculosis\":0.7\}";
-
-getIllnessProbs(Inputs inputs) {
-  Map<String, dynamic> jsonResponse = jsonDecode(exampleResponse);
-
-  return [
-    IllnessProb('COPD', jsonResponse['COPD']),
-    IllnessProb('Asthma', jsonResponse['asthma']),
-    IllnessProb('Diabetes', jsonResponse['diabetes']),
-    IllnessProb('Tuberculosis', jsonResponse['tuberculosis']),
-  ];
+class StringWrapper {
+  String get;
+  StringWrapper(this.get);
 }
 
 class MyHomePageState extends State<MyHomePage> {
   Inputs input = new Inputs();
+  StringWrapper models = new StringWrapper("");
 
   List<charts.Series<IllnessProb, String>> mapChartData(
       List<IllnessProb> data) {
@@ -83,6 +75,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: not load models on every reload
+    prepareModels(models);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
