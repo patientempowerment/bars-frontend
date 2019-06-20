@@ -61,6 +61,9 @@ class AlcoholFrequencyWrapper {
       case AlcoholFrequency.daily:
         result = 1.0;
         break;
+      default:
+        result = 0.0;
+        break;
     }
     return result;
   }
