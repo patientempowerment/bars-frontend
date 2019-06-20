@@ -83,6 +83,12 @@ class YesNoWrapper {
   }
 }
 
+class Pair {
+  dynamic first;
+  dynamic second;
+  Pair(this.first, this.second);
+}
+
 class Inputs {
   DoubleWrapper age = new DoubleWrapper(18.0);
   AlcoholFrequencyWrapper alcoholFrequency = new AlcoholFrequencyWrapper(null);
