@@ -1,5 +1,6 @@
 class DoubleWrapper {
   double value;
+
   DoubleWrapper(this.value);
 
   double get() {
@@ -9,20 +10,71 @@ class DoubleWrapper {
 
 class StringWrapper {
   String value;
+
   StringWrapper(this.value);
 }
 
 enum Sex { female, male }
 
-enum AlcoholFrequency { never, daily }
+class SexWrapper {
+  Sex value;
+
+  SexWrapper(this.value);
+
+  double get() {
+    return this.value == Sex.female ? 1.0 : 0.0;
+  }
+}
+
+enum AlcoholFrequency {
+  never,
+  specialOccasions,
+  oneToThreeTimesAMonth,
+  OnceOrTwiceAWeek,
+  threeOrFourTimesAWeek,
+  daily
+}
+
+class AlcoholFrequencyWrapper {
+  AlcoholFrequency value;
+
+  AlcoholFrequencyWrapper(this.value);
+
+  double get() {
+    double result;
+    switch (this.value) {
+      case AlcoholFrequency.never:
+        result = 6.0;
+        break;
+      case AlcoholFrequency.specialOccasions:
+        result = 5.0;
+        break;
+      case AlcoholFrequency.oneToThreeTimesAMonth:
+        result = 4.0;
+        break;
+      case AlcoholFrequency.OnceOrTwiceAWeek:
+        result = 3.0;
+        break;
+      case AlcoholFrequency.threeOrFourTimesAWeek:
+        result = 2.0;
+        break;
+      case AlcoholFrequency.daily:
+        result = 1.0;
+        break;
+    }
+    return result;
+  }
+}
 
 enum YesNo { yes, no }
 
 class YesNoWrapper {
   YesNo yesNo;
+
   YesNoWrapper(yesNo) {
     this.yesNo = yesNo;
   }
+
   double get() {
     return yesNo == YesNo.yes ? 1.0 : 0.0;
   }
@@ -30,7 +82,7 @@ class YesNoWrapper {
 
 class Inputs {
   DoubleWrapper age = new DoubleWrapper(18.0);
-  AlcoholFrequency alcoholFrequency;
+  AlcoholFrequencyWrapper alcoholFrequency = new AlcoholFrequencyWrapper(null);
   YesNoWrapper asthma = new YesNoWrapper(null);
   YesNoWrapper copd = new YesNoWrapper(null);
   YesNoWrapper coughOnMostDays = new YesNoWrapper(null);
@@ -42,7 +94,7 @@ class Inputs {
   DoubleWrapper noOfCigarettesPerDay = new DoubleWrapper(0.0);
   DoubleWrapper noOfCigarettesPreviouslyPerDay = new DoubleWrapper(0.0);
   YesNoWrapper previouslySmoked = new YesNoWrapper(null);
-  Sex sex;
+  SexWrapper sex = new SexWrapper(null);
   YesNoWrapper sputumOnMostDays = new YesNoWrapper(null);
   DoubleWrapper systolicBloodPressure = new DoubleWrapper(70.0);
   YesNoWrapper tuberculosis = new YesNoWrapper(null);

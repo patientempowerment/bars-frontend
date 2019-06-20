@@ -30,6 +30,7 @@ double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
   double result = 0.0;
 
   result += getAddend(features, label, 'age', inputs);
+  result += getAddend(features, label, 'alcoholFrequency', inputs);
   result += getAddend(features, label, 'asthma', inputs);
   result += getAddend(features, label, 'COPD', inputs);
   result += getAddend(features, label, 'coughOnMostDays', inputs);
@@ -41,6 +42,7 @@ double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
   result += getAddend(features, label, 'noOfCigarettesPerDay', inputs);
   result += getAddend(features, label, 'noOfCigarettesPreviouslyPerDay', inputs);
   result += getAddend(features, label, 'previouslySmoked', inputs);
+  result += getAddend(features, label, 'sex', inputs);
   result += getAddend(features, label, 'sputumOnMostDays', inputs);
   result += getAddend(features, label, 'systolicBloodPressure', inputs);
   result += getAddend(features, label, 'tuberculosis', inputs);

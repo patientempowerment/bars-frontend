@@ -22,10 +22,10 @@ Widget getSexRadioButtons(MyHomePageState context) {
                       Container(
                         child: Radio(
                           value: Sex.female,
-                          groupValue: context.input.sex,
+                          groupValue: context.input.sex.value,
                           onChanged: (Sex newValue) {
                             context.setState(() {
-                              context.input.sex = newValue;
+                              context.input.sex.value = newValue;
                             });
                           },
                         ),
@@ -40,10 +40,10 @@ Widget getSexRadioButtons(MyHomePageState context) {
                       Container(
                         child: Radio(
                           value: Sex.male,
-                          groupValue: context.input.sex,
+                          groupValue: context.input.sex.value,
                           onChanged: (Sex newValue) {
                             context.setState(() {
-                              context.input.sex = newValue;
+                              context.input.sex.value = newValue;
                             });
                           },
                         ),
@@ -80,10 +80,10 @@ Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
                       Container(
                         child: Radio(
                           value: AlcoholFrequency.never,
-                          groupValue: context.input.alcoholFrequency,
+                          groupValue: context.input.alcoholFrequency.value,
                           onChanged: (AlcoholFrequency newValue) {
                             context.setState(() {
-                              context.input.alcoholFrequency = newValue;
+                              context.input.alcoholFrequency.value = newValue;
                             });
                           },
                         ),
@@ -98,10 +98,10 @@ Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
                       Container(
                         child: Radio(
                           value: AlcoholFrequency.daily,
-                          groupValue: context.input.alcoholFrequency,
+                          groupValue: context.input.alcoholFrequency.value,
                           onChanged: (AlcoholFrequency newValue) {
                             context.setState(() {
-                              context.input.alcoholFrequency = newValue;
+                              context.input.alcoholFrequency.value = newValue;
                             });
                           },
                         ),
