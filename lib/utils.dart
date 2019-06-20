@@ -1,11 +1,15 @@
 class DoubleWrapper {
-  double get;
-  DoubleWrapper(this.get);
+  double value;
+  DoubleWrapper(this.value);
+
+  double get() {
+    return this.value;
+  }
 }
 
 class StringWrapper {
-  String get;
-  StringWrapper(this.get);
+  String value;
+  StringWrapper(this.value);
 }
 
 enum Sex { female, male }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'package:bars_frontend/utils.dart';
 
 Widget getAgeSlider(MyHomePageState context) {
   return getSlider(context, "Age", context.input.age, 18.0, 99.0, 81);
@@ -34,14 +33,14 @@ Widget getSlider(context, String title, variable, double min, double max, int di
       Expanded(
         flex: 2,
         child: Slider(
-          value: variable.get,
+          value: variable.value,
           min: min,
           max: max,
           divisions: divisions,
-          label: '${variable.get.round()}',
+          label: '${variable.value.round()}',
           onChanged: (double value) {
             context.setState(() {
-              variable.get = value;
+              variable.value = value;
             });
           },
         ),
