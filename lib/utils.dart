@@ -58,7 +58,7 @@ class Inputs {
       'coughOnMostDays': this.coughOnMostDays,
       'currentlySmoking': this.currentlySmoking,
       'diabetes': this.diabetes,
-      'diastolicBloodPRessure': this.diastolicBloodPressure,
+      'diastolicBloodPressure': this.diastolicBloodPressure,
       'height': this.height,
       'neverSmoked': this.neverSmoked,
       'noOfCigarettesPerDay': this.noOfCigarettesPerDay,
