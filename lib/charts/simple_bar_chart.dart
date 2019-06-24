@@ -22,3 +22,16 @@ class IllnessProb {
 
   IllnessProb(this.illness, this.probability);
 }
+
+List<charts.Series<IllnessProb, String>> mapChartData(
+    List<IllnessProb> data) {
+  return [
+    charts.Series<IllnessProb, String>(
+      id: 'Sales',
+      colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+      domainFn: (IllnessProb sales, _) => sales.illness,
+      measureFn: (IllnessProb sales, _) => sales.probability,
+      data: data,
+    )
+  ];
+}
