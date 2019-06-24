@@ -16,11 +16,13 @@ getScrollableRadioButtons(MyHomePageState context, String title,
             flex: 2,
             child: Container(
               height: 100,
-              child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children:
-                      getScrollableActualButtons(context, buttonValues, groupValue)),
+              child: Scrollbar(
+                child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children:
+                        getScrollableActualButtons(context, buttonValues, groupValue)),
+              ),
             ),
           ),
         ],
