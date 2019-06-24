@@ -33,6 +33,7 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   Inputs input = new Inputs();
   StringWrapper models = new StringWrapper("");
+  bool predictMode = false;
 
   List<charts.Series<IllnessProb, String>> mapChartData(
       List<IllnessProb> data) {
@@ -84,9 +85,17 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            FloatingActionButton(
+              child: Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                setState(() {
+                  this.predictMode = true;
+                });
+              },
+            ),
             Expanded(
-              flex: 1,
-              child: SimpleBarChart(mapChartData(getIllnessProbs(input, models))),
+              child: SimpleBarChart(
+                  mapChartData(getIllnessProbs(input, models, predictMode))),
             ),
           ],
         ),
