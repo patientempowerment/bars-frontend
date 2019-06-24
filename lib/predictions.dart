@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
+import 'package:charcode/charcode.dart';
+
 import 'charts/simple_bar_chart.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bars_frontend/utils.dart';
@@ -10,44 +13,56 @@ prepareModels(StringWrapper models) async {
 }
 
 getIllnessProbs(Inputs inputs, StringWrapper models) {
-  Map<String, dynamic> jsonResponse = jsonDecode(models.value);
-  
-  double copdProb = computeProb('COPD', inputs, jsonResponse);
-  double asthmaProb = computeProb('asthma', inputs, jsonResponse);
-  double diabetesProb = computeProb('diabetes', inputs, jsonResponse);
-  double tuberculosisProb = computeProb('tuberculosis', inputs, jsonResponse);
+  if (models.value != "") {
+    Map<String, dynamic> jsonResponse = jsonDecode(models.value);
 
-  return [
-    IllnessProb('COPD', copdProb),
-    IllnessProb('Asthma', asthmaProb),
-    IllnessProb('Diabetes', diabetesProb),
-    IllnessProb('Tuberculosis', tuberculosisProb),
-  ];
+    double copdProb = computeProb('COPD', inputs, jsonResponse);
+    double asthmaProb = computeProb('asthma', inputs, jsonResponse);
+    double diabetesProb = computeProb('diabetes', inputs, jsonResponse);
+    double tuberculosisProb = computeProb('tuberculosis', inputs, jsonResponse);
+
+    return [
+      IllnessProb('COPD', copdProb),
+      IllnessProb('Asthma', asthmaProb),
+      IllnessProb('Diabetes', diabetesProb),
+      IllnessProb('Tuberculosis', tuberculosisProb),
+    ];
+  } else {
+    return [
+      IllnessProb('COPD', 0.0),
+      IllnessProb('Asthma', 0.0),
+      IllnessProb('Diabetes', 0.0),
+      IllnessProb('Tuberculosis', 0.0),
+    ];
+  }
 }
 
 double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
   Map<String, dynamic> features = json[label];
-  double result = 0.0;
+  double dot = 0.0;
 
-  result += getAddend(features, label, 'age', inputs);
-  result += getAddend(features, label, 'alcoholFrequency', inputs);
-  result += getAddend(features, label, 'asthma', inputs);
-  result += getAddend(features, label, 'COPD', inputs);
-  result += getAddend(features, label, 'coughOnMostDays', inputs);
-  result += getAddend(features, label, 'currentlySmoking', inputs);
-  result += getAddend(features, label, 'diabetes', inputs);
-  result += getAddend(features, label, 'diastolicBloodPressure', inputs);
-  result += getAddend(features, label, 'height', inputs);
-  result += getAddend(features, label, 'neverSmoked', inputs);
-  result += getAddend(features, label, 'noOfCigarettesPerDay', inputs);
-  result += getAddend(features, label, 'noOfCigarettesPreviouslyPerDay', inputs);
-  result += getAddend(features, label, 'previouslySmoked', inputs);
-  result += getAddend(features, label, 'sex', inputs);
-  result += getAddend(features, label, 'sputumOnMostDays', inputs);
-  result += getAddend(features, label, 'systolicBloodPressure', inputs);
-  result += getAddend(features, label, 'tuberculosis', inputs);
-  result += getAddend(features, label, 'weight', inputs);
-  result += getAddend(features, label, 'wheezeInChestInLastYear', inputs);
+  dot += getAddend(features, label, 'age', inputs);
+  dot += getAddend(features, label, 'alcoholFrequency', inputs);
+  dot += getAddend(features, label, 'asthma', inputs);
+  dot += getAddend(features, label, 'COPD', inputs);
+  dot += getAddend(features, label, 'coughOnMostDays', inputs);
+  dot += getAddend(features, label, 'currentlySmoking', inputs);
+  dot += getAddend(features, label, 'diabetes', inputs);
+  dot += getAddend(features, label, 'diastolicBloodPressure', inputs);
+  dot += getAddend(features, label, 'height', inputs);
+  dot += getAddend(features, label, 'neverSmoked', inputs);
+  dot += getAddend(features, label, 'noOfCigarettesPerDay', inputs);
+  dot += getAddend(features, label, 'noOfCigarettesPreviouslyPerDay', inputs);
+  dot += getAddend(features, label, 'previouslySmoked', inputs);
+  dot += getAddend(features, label, 'sex', inputs);
+  dot += getAddend(features, label, 'sputumOnMostDays', inputs);
+  dot += getAddend(features, label, 'systolicBloodPressure', inputs);
+  dot += getAddend(features, label, 'tuberculosis', inputs);
+  dot += getAddend(features, label, 'weight', inputs);
+  dot += getAddend(features, label, 'wheezeInChestInLastYear', inputs);
+
+  double result = 0.0;
+  result = 1 / (1 + pow($Epsilon, dot)); // TODO add intercept
 
   return result;
 }
