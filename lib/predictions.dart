@@ -46,29 +46,14 @@ double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
   Map<String, dynamic> features = json[label];
   double dot = 0.0;
 
-  dot += getAddend(features, label, 'age', inputs);
-  dot += getAddend(features, label, 'alcoholFrequency', inputs);
-  dot += getAddend(features, label, 'asthma', inputs);
-  dot += getAddend(features, label, 'COPD', inputs);
-  dot += getAddend(features, label, 'coughOnMostDays', inputs);
-  dot += getAddend(features, label, 'currentlySmoking', inputs);
-  dot += getAddend(features, label, 'diabetes', inputs);
-  dot += getAddend(features, label, 'diastolicBloodPressure', inputs);
-  dot += getAddend(features, label, 'height', inputs);
-  dot += getAddend(features, label, 'neverSmoked', inputs);
-  dot += getAddend(features, label, 'noOfCigarettesPerDay', inputs);
-  dot += getAddend(features, label, 'noOfCigarettesPreviouslyPerDay', inputs);
-  dot += getAddend(features, label, 'previouslySmoked', inputs);
-  dot += getAddend(features, label, 'sex', inputs);
-  dot += getAddend(features, label, 'sputumOnMostDays', inputs);
-  dot += getAddend(features, label, 'systolicBloodPressure', inputs);
-  dot += getAddend(features, label, 'tuberculosis', inputs);
-  dot += getAddend(features, label, 'weight', inputs);
-  dot += getAddend(features, label, 'wheezeInChestInLastYear', inputs);
+  var feature_names = ['age', 'alcoholFrequency', 'asthma', 'COPD', 'coughOnMostDays', 'currentlySmoking', 'diabetes', 'diastolicBloodPressure', 'height', 'neverSmoked', 'noOfCigarettesPerDay', 'noOfCigarettesPreviouslyPerDay', 'previouslySmoked', 'sex', 'sputumOnMostDays', 'systolicBloodPressure', 'tuberculosis', 'weight', 'wheezeInChestInLastYear'];
+  for (var feature_name in feature_names) {
+    dot += getAddend(features, label, feature_name, inputs);
+  }
 
   var intercept = features['intercept'];
 
-  double result = 1 / (1 + exp(-(intercept + dot)));
+  double result = 1 - (1 / (1 + exp(intercept + dot)));
   return result;
 }
 

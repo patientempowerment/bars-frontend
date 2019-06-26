@@ -22,7 +22,7 @@ class SexWrapper {
   SexWrapper(this.value);
 
   double get() {
-    return this.value == Sex.female ? 1.0 : 0.0;
+    return this.value == Sex.male ? 1.0 : 0.0;
   }
 }
 
