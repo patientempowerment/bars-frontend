@@ -16,10 +16,22 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-/// Quarter Sales data type.
-class QuarterSales {
-  final String quarter;
-  final double sales;
+class IllnessProb {
+  final String illness;
+  final double probability;
 
-  QuarterSales(this.quarter, this.sales);
+  IllnessProb(this.illness, this.probability);
+}
+
+List<charts.Series<IllnessProb, String>> mapChartData(
+    List<IllnessProb> data) {
+  return [
+    charts.Series<IllnessProb, String>(
+      id: 'Sales',
+      colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+      domainFn: (IllnessProb sales, _) => sales.illness,
+      measureFn: (IllnessProb sales, _) => sales.probability,
+      data: data,
+    )
+  ];
 }

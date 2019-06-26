@@ -1,178 +1,211 @@
 import 'package:flutter/material.dart';
+import 'package:bars_frontend/main.dart';
+import 'package:bars_frontend/utils.dart';
 
-enum Sex { female, male }
-Sex _sex;
-
-Widget getSexRadioButtons(context) {
+getScrollableRadioButtons(MyHomePageState context, String title,
+    List<Pair> buttonValues, groupValue) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
           Expanded(
             flex: 1,
-            child: Text("Sex"),
+            child: Text(title),
           ),
           Expanded(
             flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Radio(
-                          value: Sex.female,
-                          groupValue: _sex,
-                          onChanged: (Sex newValue) {
-                            context.setState(() {
-                              _sex = newValue;
-                            });
-                          },
-                        ),
-                      ),
-                      Text("female")
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Radio(
-                          value: Sex.male,
-                          groupValue: _sex,
-                          onChanged: (Sex newValue) {
-                            context.setState(() {
-                              _sex = newValue;
-                            });
-                          },
-                        ),
-                      ),
-                      Text("male"),
-                    ],
-                  ),
-                ),
-              ],
+            child: Container(
+              height: 100,
+              child: Scrollbar(
+                child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children:
+                        getScrollableActualButtons(context, buttonValues, groupValue)),
+              ),
             ),
           ),
         ],
       )));
 }
 
-enum AlcoholFrequency { never, daily }
-
-AlcoholFrequency _alcoholFrequency;
-
-Widget getAlcoholFrequencyRadioButtons(context) {
+getRadioButtons(MyHomePageState context, String title, List<Pair> buttonValues,
+    groupValue) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
           Expanded(
             flex: 1,
-            child: Text("Alcohol Frequency"),
+            child: Text(title),
           ),
           Expanded(
             flex: 2,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Radio(
-                          value: AlcoholFrequency.never,
-                          groupValue: _alcoholFrequency,
-                          onChanged: (AlcoholFrequency newValue) {
-                            context.setState(() {
-                              _alcoholFrequency = newValue;
-                            });
-                          },
-                        ),
-                      ),
-                      Text("never")
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Radio(
-                          value: AlcoholFrequency.daily,
-                          groupValue: _alcoholFrequency,
-                          onChanged: (AlcoholFrequency newValue) {
-                            context.setState(() {
-                              _alcoholFrequency = newValue;
-                            });
-                          },
-                        ),
-                      ),
-                      Text("daily"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: getActualButtons(context, buttonValues, groupValue)),
           ),
         ],
       )));
 }
 
-Widget getDiabetesRadioButtons() {
-  return(new YesNoRadioButtons("Diabetes"));
-}
-Widget getCurrentlySmokingRadioButtons() {
-  return(new YesNoRadioButtons("Currently Smoking"));
-}
-Widget getNeverSmokedRadioButtons() {
-  return(new YesNoRadioButtons("Never Smoked"));
-}
-Widget getCoughOnMostDaysRadioButtons() {
-  return(new YesNoRadioButtons("Cough on Most Days"));
-}
-Widget getAsthmaRadioButtons() {
-  return(new YesNoRadioButtons("Asthma"));
-}
-Widget getCOPDRadioButtons() {
-  return(new YesNoRadioButtons("COPD"));
-}
-Widget getPreviouslySmokedRadioButtons() {
-  return (new YesNoRadioButtons("Previously Smoked"));
-}
-Widget getSputumOnMostDaysRadioButtons() {
-  return (new YesNoRadioButtons("Sputum on Most Days"));
-}
-Widget getTuberculosisRadioButtons() {
-  return (new YesNoRadioButtons("Tuberculosis"));
-}
-Widget getWheezeInChestInLastYearRadioButtons() {
-  return (new YesNoRadioButtons("Wheeze in Chest in Last Zear"));
+getActualButtons(
+    MyHomePageState context, List<Pair> buttonValues, dynamic groupValue) {
+  List<Widget> result = new List();
+  for (Pair buttonValue in buttonValues) {
+    result.add(getRadioButton(
+        context, buttonValue.first, buttonValue.second, groupValue));
+  }
+  return result;
 }
 
-enum YesNo { yes, no }
+getScrollableActualButtons(
+    MyHomePageState context, List<Pair> buttonValues, dynamic groupValue) {
+  List<Widget> result = new List();
+  for (Pair buttonValue in buttonValues) {
+    result.add(getScrollableRadioButton(
+        context, buttonValue.first, buttonValue.second, groupValue));
+  }
+  return result;
+}
+
+getRadioButton(context, title, value, groupValue) {
+  return Container(
+    child: Column(
+      children: [
+        Container(
+          child: Radio(
+            value: value,
+            groupValue: groupValue.value,
+            onChanged: (dynamic newValue) {
+              context.setState(() {
+                groupValue.value = newValue;
+              });
+            },
+          ),
+        ),
+        Text(title)
+      ],
+    ),
+  );
+}
+
+getScrollableRadioButton(context, title, value, groupValue) {
+  return Container(
+    width: 100,
+    child: Column(
+      children: [
+        Container(
+          child: Radio(
+            value: value,
+            groupValue: groupValue.value,
+            onChanged: (dynamic newValue) {
+              context.setState(() {
+                groupValue.value = newValue;
+              });
+            },
+          ),
+        ),
+        Text(title, overflow: TextOverflow.clip, textAlign: TextAlign.center)
+      ],
+    ),
+  );
+}
+
+Widget getSexRadioButtons(MyHomePageState context) {
+  List<Pair> sexButtonValues = [
+    Pair('female', Sex.female),
+    Pair('male', Sex.male)
+  ];
+
+  return getRadioButtons(context, 'Sex', sexButtonValues, context.input.sex);
+}
+
+Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
+  List<Pair> alcoholButtonValues = [
+    Pair('never', AlcoholFrequency.never),
+    Pair('special occasions', AlcoholFrequency.specialOccasions),
+    Pair('one to three times a month', AlcoholFrequency.oneToThreeTimesAMonth),
+    Pair('once or twice a week', AlcoholFrequency.OnceOrTwiceAWeek),
+    Pair('three or four times a week', AlcoholFrequency.threeOrFourTimesAWeek),
+    Pair('daily', AlcoholFrequency.daily),
+  ];
+
+  return getScrollableRadioButtons(context, 'Alcohol Frequency',
+      alcoholButtonValues, context.input.alcoholFrequency);
+}
+
+Widget getDiabetesRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Diabetes", context.input.diabetes, context));
+}
+
+Widget getCurrentlySmokingRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons(
+      "Currently Smoking", context.input.currentlySmoking, context));
+}
+
+Widget getNeverSmokedRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons(
+      "Never Smoked", context.input.neverSmoked, context));
+}
+
+Widget getCoughOnMostDaysRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons(
+      "Cough on Most Days", context.input.coughOnMostDays, context));
+}
+
+Widget getAsthmaRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Asthma", context.input.asthma, context));
+}
+
+Widget getCOPDRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("COPD", context.input.copd, context));
+}
+
+Widget getPreviouslySmokedRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons(
+      "Previously Smoked", context.input.previouslySmoked, context));
+}
+
+Widget getSputumOnMostDaysRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons(
+      "Sputum on Most Days", context.input.sputumOnMostDays, context));
+}
+
+Widget getTuberculosisRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons(
+      "Tuberculosis", context.input.tuberculosis, context));
+}
+
+Widget getWheezeInChestInLastYearRadioButtons(MyHomePageState context) {
+  return (new YesNoRadioButtons("Wheeze in Chest in Last Year",
+      context.input.wheezeInChestInLastYear, context));
+}
 
 class YesNoRadioButtons extends StatefulWidget {
-  String title;
+  final String title;
+  final YesNoWrapper variableWrapper;
+  final MyHomePageState homePageState;
 
-  YesNoRadioButtons(String title) {
-    this.title = title;
-  }
+  YesNoRadioButtons(this.title, this.variableWrapper, this.homePageState);
 
   @override
   State<StatefulWidget> createState() {
-    return YesNoState(this.title);
+    return YesNoState(this.title, this.variableWrapper, this.homePageState);
   }
 }
 
 class YesNoState extends State<YesNoRadioButtons> {
   YesNo variable;
   String title;
+  YesNoWrapper variableWrapper;
+  MyHomePageState homePageState;
 
-  YesNoState(String newTitle) {
+  YesNoState(String newTitle, YesNoWrapper variableWrapper,
+      MyHomePageState homePageState) {
     this.title = newTitle;
+    this.variableWrapper = variableWrapper;
+    this.homePageState = homePageState;
   }
 
   @override
@@ -188,7 +221,7 @@ class YesNoState extends State<YesNoRadioButtons> {
           Expanded(
             flex: 2,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   child: Column(
@@ -196,10 +229,10 @@ class YesNoState extends State<YesNoRadioButtons> {
                       Container(
                         child: Radio(
                           value: YesNo.yes,
-                          groupValue: this.variable,
+                          groupValue: this.variableWrapper.yesNo,
                           onChanged: (YesNo newValue) {
-                            setState(() {
-                              this.variable = newValue;
+                            homePageState.setState(() {
+                              this.variableWrapper.yesNo = newValue;
                             });
                           },
                         ),
@@ -214,10 +247,10 @@ class YesNoState extends State<YesNoRadioButtons> {
                       Container(
                         child: Radio(
                           value: YesNo.no,
-                          groupValue: this.variable,
+                          groupValue: this.variableWrapper.yesNo,
                           onChanged: (YesNo newValue) {
-                            setState(() {
-                              this.variable = newValue;
+                            homePageState.setState(() {
+                              this.variableWrapper.yesNo = newValue;
                             });
                           },
                         ),
