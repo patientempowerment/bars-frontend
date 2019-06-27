@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
+import 'dialogs.dart';
+
 
 getScrollableRadioButtons(MyHomePageState context, String title,
     List<Pair> buttonValues, groupValue) {
@@ -20,8 +22,8 @@ getScrollableRadioButtons(MyHomePageState context, String title,
                 child: ListView(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    children:
-                        getScrollableActualButtons(context, buttonValues, groupValue)),
+                    children: getScrollableActualButtons(
+                        context, buttonValues, groupValue)),
               ),
             ),
           ),
@@ -29,7 +31,7 @@ getScrollableRadioButtons(MyHomePageState context, String title,
       )));
 }
 
-getRadioButtons(MyHomePageState context, String title, List<Pair> buttonValues,
+getRadioButtons(MyHomePageState context, MyDialogContentState dialogState, String title, List<Pair> buttonValues,
     groupValue) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
@@ -42,19 +44,19 @@ getRadioButtons(MyHomePageState context, String title, List<Pair> buttonValues,
           Expanded(
             flex: 2,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getActualButtons(context, buttonValues, groupValue)),
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: getActualButtons(context, dialogState, buttonValues, groupValue)),
           ),
         ],
       )));
 }
 
 getActualButtons(
-    MyHomePageState context, List<Pair> buttonValues, dynamic groupValue) {
+    MyHomePageState context, MyDialogContentState dialogState, List<Pair> buttonValues, dynamic groupValue, ) {
   List<Widget> result = new List();
   for (Pair buttonValue in buttonValues) {
     result.add(getRadioButton(
-        context, buttonValue.first, buttonValue.second, groupValue));
+        context, dialogState, buttonValue.first, buttonValue.second, groupValue));
   }
   return result;
 }
@@ -69,7 +71,7 @@ getScrollableActualButtons(
   return result;
 }
 
-getRadioButton(context, title, value, groupValue) {
+getRadioButton(context, MyDialogContentState dialogState, title, value, groupValue) {
   return Container(
     child: Column(
       children: [
@@ -81,6 +83,9 @@ getRadioButton(context, title, value, groupValue) {
               context.setState(() {
                 groupValue.value = newValue;
               });
+              if(dialogState != null) {
+                dialogState.setState(() {groupValue.value = newValue;});
+              }
             },
           ),
         ),
@@ -112,13 +117,13 @@ getScrollableRadioButton(context, title, value, groupValue) {
   );
 }
 
-Widget getSexRadioButtons(MyHomePageState context) {
+Widget getSexRadioButtons(MyHomePageState context, MyDialogContentState dialogState) {
   List<Pair> sexButtonValues = [
     Pair('female', Sex.female),
     Pair('male', Sex.male)
   ];
 
-  return getRadioButtons(context, 'Sex', sexButtonValues, context.input.sex);
+  return getRadioButtons(context, dialogState, 'Sex', sexButtonValues, context.input.sex);
 }
 
 Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {

@@ -54,7 +54,7 @@ class MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: ListView(
                       children: [
-                        getSexRadioButtons(this),
+                        getSexRadioButtons(this, null),
                         getAgeSlider(this),
                         getHeightSlider(this),
                         getWeightSlider(this),
@@ -100,7 +100,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(),
+                  getTopBubbleBar(this),
                 ],
               ),
             ),
