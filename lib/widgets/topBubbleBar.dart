@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'dialogs.dart';
-import 'sliders.dart';
-import 'radioButtons.dart';
-import 'package:bars_frontend/utils.dart';
 
 Widget getTopBubbleBar(MyHomePageState homePageState) {
   return Expanded(
     child: Column(
       children: <Widget>[
-        DragBubble(Offset.zero, homePageState),
+        DragBubble(Offset.zero, homePageState, "Sex", asyncSexInputDialog),
+        DragBubble(Offset.zero, homePageState, "Sex2", asyncSexInputDialog),
       ],
     ),
   );
@@ -18,20 +16,24 @@ Widget getTopBubbleBar(MyHomePageState homePageState) {
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final MyHomePageState homePageState;
+  final Function dialogFunction;
+  final String title;
 
-  DragBubble(this.initialOffset, this.homePageState);
+  DragBubble(this.initialOffset, this.homePageState, this.title, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
-    return _DragBubbleState(initialOffset, homePageState);
+    return _DragBubbleState(initialOffset, homePageState, title, dialogFunction);
   }
 }
 
 class _DragBubbleState extends State<DragBubble> {
   Offset offset;
-  MyHomePageState homePageState;
+  final MyHomePageState homePageState;
+  final Function dialogFunction;
+  final String title;
 
-  _DragBubbleState(this.offset, this.homePageState);
+  _DragBubbleState(this.offset, this.homePageState, this.title, this.dialogFunction);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class _DragBubbleState extends State<DragBubble> {
                       offset.dy + details.delta.dy);
                 });
               },
-              child: Bubble(homePageState),
+              child: Bubble(homePageState, title, dialogFunction),
             ),
           ),
         ],
@@ -59,8 +61,10 @@ class _DragBubbleState extends State<DragBubble> {
 
 class Bubble extends StatelessWidget {
   final MyHomePageState homePageState;
+  final Function dialogFunction;
+  final String title;
 
-  Bubble(this.homePageState);
+  Bubble(this.homePageState, this.title, this.dialogFunction);
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +82,8 @@ class Bubble extends StatelessWidget {
             ),
             child: new FlatButton(
               onPressed: () async {
-                final dynamic r =
-                    await _asyncSexInputDialog(context, homePageState, "sex");
-                print("Current team name is $r");
+                final dynamic r = await dialogFunction(context, homePageState);
+                print("Current value is $r");
               },
             ),
           ),
@@ -91,32 +94,3 @@ class Bubble extends StatelessWidget {
   }
 }
 
-Future<dynamic> _asyncSexInputDialog(BuildContext context,
-    MyHomePageState homePageState, String inputVariable) async {
-  //Widget widget = getSexRadioButtons(homePageState);
-
-  return _asyncInputDialog(context, homePageState, inputVariable, null);
-}
-
-Future<dynamic> _asyncInputDialog(
-    BuildContext context,
-    MyHomePageState homePageState,
-    String inputVariable,
-    Widget childWidget) async {
-  return showDialog<dynamic>(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      return AlertDialog(
-          content: MyDialogContent(homePageState),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop(homePageState.input.getVariable(inputVariable).value);
-              },
-              child: new Text('Ok'),
-            )
-          ]);
-    },
-  );
-}
