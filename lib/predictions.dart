@@ -43,21 +43,21 @@ getIllnessProbs(Inputs inputs, StringWrapper models, bool predictMode) {
 }
 
 double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
-  Map<String, dynamic> features = json[label];
+  Map<String, dynamic> features = json[label]["features"];
   double dot = 0.0;
 
-  var feature_names = ['age', 'alcoholFrequency', 'asthma', 'COPD', 'coughOnMostDays', 'currentlySmoking', 'diabetes', 'diastolicBloodPressure', 'height', 'neverSmoked', 'noOfCigarettesPerDay', 'noOfCigarettesPreviouslyPerDay', 'previouslySmoked', 'sex', 'sputumOnMostDays', 'systolicBloodPressure', 'tuberculosis', 'weight', 'wheezeInChestInLastYear'];
-  for (var feature_name in feature_names) {
+  List<String> feature_names = ['age', 'alcoholFrequency', 'asthma', 'COPD', 'coughOnMostDays', 'currentlySmoking', 'diabetes', 'diastolicBloodPressure', 'height', 'neverSmoked', 'noOfCigarettesPerDay', 'noOfCigarettesPreviouslyPerDay', 'previouslySmoked', 'sex', 'sputumOnMostDays', 'systolicBloodPressure', 'tuberculosis', 'weight', 'wheezeInChestInLastYear'];
+  for (String feature_name in feature_names) {
     dot += getAddend(features, label, feature_name, inputs);
   }
 
-  var intercept = features['intercept'];
+  double intercept = json[label]['intercept'];
 
   double result = 1 - (1 / (1 + exp(intercept + dot)));
   return result;
 }
 
-double getAddend(var features, String label, String feature, Inputs inputs) {
+double getAddend(Map<String, dynamic> features, String label, String feature, Inputs inputs) {
   var value = inputs.getVariable(feature).get();
   value ??= features[feature]['mean'];
   return label == feature ? 0.0 : value * features[feature]['coef'];
