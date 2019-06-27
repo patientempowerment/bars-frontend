@@ -3,7 +3,6 @@ import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'dialogs.dart';
 
-
 getScrollableRadioButtons(MyHomePageState context, String title,
     List<Pair> buttonValues, groupValue) {
   return (Padding(
@@ -31,8 +30,8 @@ getScrollableRadioButtons(MyHomePageState context, String title,
       )));
 }
 
-getRadioButtons(MyHomePageState context, MyDialogContentState dialogState, String title, List<Pair> buttonValues,
-    groupValue) {
+getRadioButtons(MyHomePageState context, MyDialogContentState dialogState,
+    String title, List<Pair> buttonValues, groupValue) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(
@@ -45,18 +44,23 @@ getRadioButtons(MyHomePageState context, MyDialogContentState dialogState, Strin
             flex: 2,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getActualButtons(context, dialogState, buttonValues, groupValue)),
+                children: getActualButtons(
+                    context, dialogState, buttonValues, groupValue)),
           ),
         ],
       )));
 }
 
 getActualButtons(
-    MyHomePageState context, MyDialogContentState dialogState, List<Pair> buttonValues, dynamic groupValue, ) {
+  MyHomePageState context,
+  MyDialogContentState dialogState,
+  List<Pair> buttonValues,
+  dynamic groupValue,
+) {
   List<Widget> result = new List();
   for (Pair buttonValue in buttonValues) {
-    result.add(getRadioButton(
-        context, dialogState, buttonValue.first, buttonValue.second, groupValue));
+    result.add(getRadioButton(context, dialogState, buttonValue.first,
+        buttonValue.second, groupValue));
   }
   return result;
 }
@@ -71,7 +75,8 @@ getScrollableActualButtons(
   return result;
 }
 
-getRadioButton(context, MyDialogContentState dialogState, title, value, groupValue) {
+getRadioButton(
+    context, MyDialogContentState dialogState, title, value, groupValue) {
   return Container(
     child: Column(
       children: [
@@ -83,8 +88,10 @@ getRadioButton(context, MyDialogContentState dialogState, title, value, groupVal
               context.setState(() {
                 groupValue.value = newValue;
               });
-              if(dialogState != null) {
-                dialogState.setState(() {groupValue.value = newValue;});
+              if (dialogState != null) {
+                dialogState.setState(() {
+                  groupValue.value = newValue;
+                });
               }
             },
           ),
@@ -117,13 +124,15 @@ getScrollableRadioButton(context, title, value, groupValue) {
   );
 }
 
-Widget getSexRadioButtons(MyHomePageState context, MyDialogContentState dialogState) {
+Widget getSexRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   List<Pair> sexButtonValues = [
     Pair('female', Sex.female),
     Pair('male', Sex.male)
   ];
 
-  return getRadioButtons(context, dialogState, 'Sex', sexButtonValues, context.input.sex);
+  return getRadioButtons(
+      context, dialogState, 'Sex', sexButtonValues, context.input.sex);
 }
 
 Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
@@ -140,63 +149,79 @@ Widget getAlcoholFrequencyRadioButtons(MyHomePageState context) {
       alcoholButtonValues, context.input.alcoholFrequency);
 }
 
-Widget getDiabetesRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("Diabetes", context.input.diabetes, context));
-}
-
-Widget getCurrentlySmokingRadioButtons(MyHomePageState context) {
+Widget getDiabetesRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   return (new YesNoRadioButtons(
-      "Currently Smoking", context.input.currentlySmoking, context));
+      "Diabetes", context.input.diabetes, context, dialogState));
 }
 
-Widget getNeverSmokedRadioButtons(MyHomePageState context) {
+Widget getCurrentlySmokingRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
+  return (new YesNoRadioButtons("Currently Smoking",
+      context.input.currentlySmoking, context, dialogState));
+}
+
+Widget getNeverSmokedRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   return (new YesNoRadioButtons(
-      "Never Smoked", context.input.neverSmoked, context));
+      "Never Smoked", context.input.neverSmoked, context, dialogState));
 }
 
-Widget getCoughOnMostDaysRadioButtons(MyHomePageState context) {
+Widget getCoughOnMostDaysRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
+  return (new YesNoRadioButtons("Cough on Most Days",
+      context.input.coughOnMostDays, context, dialogState));
+}
+
+Widget getAsthmaRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   return (new YesNoRadioButtons(
-      "Cough on Most Days", context.input.coughOnMostDays, context));
+      "Asthma", context.input.asthma, context, dialogState));
 }
 
-Widget getAsthmaRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("Asthma", context.input.asthma, context));
-}
-
-Widget getCOPDRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons("COPD", context.input.copd, context));
-}
-
-Widget getPreviouslySmokedRadioButtons(MyHomePageState context) {
+Widget getCOPDRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   return (new YesNoRadioButtons(
-      "Previously Smoked", context.input.previouslySmoked, context));
+      "COPD", context.input.copd, context, dialogState));
 }
 
-Widget getSputumOnMostDaysRadioButtons(MyHomePageState context) {
+Widget getPreviouslySmokedRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
+  return (new YesNoRadioButtons("Previously Smoked",
+      context.input.previouslySmoked, context, dialogState));
+}
+
+Widget getSputumOnMostDaysRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
+  return (new YesNoRadioButtons("Sputum on Most Days",
+      context.input.sputumOnMostDays, context, dialogState));
+}
+
+Widget getTuberculosisRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   return (new YesNoRadioButtons(
-      "Sputum on Most Days", context.input.sputumOnMostDays, context));
+      "Tuberculosis", context.input.tuberculosis, context, dialogState));
 }
 
-Widget getTuberculosisRadioButtons(MyHomePageState context) {
-  return (new YesNoRadioButtons(
-      "Tuberculosis", context.input.tuberculosis, context));
-}
-
-Widget getWheezeInChestInLastYearRadioButtons(MyHomePageState context) {
+Widget getWheezeInChestInLastYearRadioButtons(
+    MyHomePageState context, MyDialogContentState dialogState) {
   return (new YesNoRadioButtons("Wheeze in Chest in Last Year",
-      context.input.wheezeInChestInLastYear, context));
+      context.input.wheezeInChestInLastYear, context, dialogState));
 }
 
 class YesNoRadioButtons extends StatefulWidget {
   final String title;
   final YesNoWrapper variableWrapper;
   final MyHomePageState homePageState;
+  final MyDialogContentState dialogState;
 
-  YesNoRadioButtons(this.title, this.variableWrapper, this.homePageState);
+  YesNoRadioButtons(
+      this.title, this.variableWrapper, this.homePageState, this.dialogState);
 
   @override
   State<StatefulWidget> createState() {
-    return YesNoState(this.title, this.variableWrapper, this.homePageState);
+    return YesNoState(
+        this.title, this.variableWrapper, this.homePageState, this.dialogState);
   }
 }
 
@@ -205,13 +230,10 @@ class YesNoState extends State<YesNoRadioButtons> {
   String title;
   YesNoWrapper variableWrapper;
   MyHomePageState homePageState;
+  final MyDialogContentState dialogState;
 
-  YesNoState(String newTitle, YesNoWrapper variableWrapper,
-      MyHomePageState homePageState) {
-    this.title = newTitle;
-    this.variableWrapper = variableWrapper;
-    this.homePageState = homePageState;
-  }
+  YesNoState(
+      this.title, this.variableWrapper, this.homePageState, this.dialogState);
 
   @override
   Widget build(BuildContext context) {
@@ -234,11 +256,16 @@ class YesNoState extends State<YesNoRadioButtons> {
                       Container(
                         child: Radio(
                           value: YesNo.yes,
-                          groupValue: this.variableWrapper.yesNo,
+                          groupValue: this.variableWrapper.value,
                           onChanged: (YesNo newValue) {
                             homePageState.setState(() {
-                              this.variableWrapper.yesNo = newValue;
+                              this.variableWrapper.value = newValue;
                             });
+                            if (dialogState != null) {
+                              dialogState.setState(() {
+                                this.variableWrapper.value = newValue;
+                              });
+                            }
                           },
                         ),
                       ),
@@ -252,11 +279,16 @@ class YesNoState extends State<YesNoRadioButtons> {
                       Container(
                         child: Radio(
                           value: YesNo.no,
-                          groupValue: this.variableWrapper.yesNo,
+                          groupValue: this.variableWrapper.value,
                           onChanged: (YesNo newValue) {
                             homePageState.setState(() {
-                              this.variableWrapper.yesNo = newValue;
+                              this.variableWrapper.value = newValue;
                             });
+                            if (dialogState != null) {
+                              dialogState.setState(() {
+                                this.variableWrapper.value = newValue;
+                              });
+                            }
                           },
                         ),
                       ),

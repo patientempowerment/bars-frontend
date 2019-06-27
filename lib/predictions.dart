@@ -21,10 +21,10 @@ getIllnessProbs(Inputs inputs, StringWrapper models, bool predictMode) {
     double diabetesProb = computeProb('diabetes', inputs, jsonResponse);
     double tuberculosisProb = computeProb('tuberculosis', inputs, jsonResponse);
 
-    copdProb = inputs.copd.yesNo == YesNo.yes ? 1.0 : copdProb;
-    asthmaProb = inputs.asthma.yesNo == YesNo.yes ? 1.0 : asthmaProb;
-    diabetesProb = inputs.diabetes.yesNo == YesNo.yes ? 1.0 : diabetesProb;
-    tuberculosisProb = inputs.tuberculosis.yesNo == YesNo.yes ? 1.0 : tuberculosisProb;
+    copdProb = inputs.copd.value == YesNo.yes ? 1.0 : copdProb;
+    asthmaProb = inputs.asthma.value == YesNo.yes ? 1.0 : asthmaProb;
+    diabetesProb = inputs.diabetes.value == YesNo.yes ? 1.0 : diabetesProb;
+    tuberculosisProb = inputs.tuberculosis.value == YesNo.yes ? 1.0 : tuberculosisProb;
 
     return [
       IllnessProb('COPD', copdProb),

@@ -72,14 +72,14 @@ class AlcoholFrequencyWrapper {
 enum YesNo { yes, no }
 
 class YesNoWrapper {
-  YesNo yesNo;
+  YesNo value;
 
   YesNoWrapper(yesNo) {
-    this.yesNo = yesNo;
+    this.value = yesNo;
   }
 
   double get() {
-    return yesNo == YesNo.yes ? 1.0 : 0.0;
+    return value == YesNo.yes ? 1.0 : 0.0;
   }
 }
 
