@@ -36,9 +36,13 @@ class MyHomePageState extends State<MyHomePage> {
   StringWrapper models = new StringWrapper("");
   bool predictMode = false;
   bool successfulDrop = false;
+  double globalWidth;
+  double globalHeight;
 
   @override
   Widget build(BuildContext context) {
+    globalWidth = MediaQuery.of(context).size.width;
+    globalHeight = MediaQuery.of(context).size.height;
     prepareModels(models);
     return Stack(
       children: <Widget>[
@@ -100,7 +104,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(this),
+                  getTopBubbleBar(this, globalWidth, globalHeight),
                 ],
               ),
             ),

@@ -2,20 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'dialogs.dart';
 
-Widget getTopBubbleBar(MyHomePageState homePageState) {
+Widget getPatientImage(double globalWidth, double globalHeight) {
+  double width = 200;
+  return Positioned(
+    child: Image(image: AssetImage('assets/man-user.png'), width: width),
+    left: globalWidth / 2 - width / 2,
+    top: globalHeight / 4,
+  );
+}
+
+Widget getTopBubbleBar(
+    MyHomePageState homePageState, double globalWidth, double globalHeight) {
   return Expanded(
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Expanded(
           child: Stack(
             children: <Widget>[
-              DragBubble(Offset(0.0, 0.0), homePageState, "Sex", asyncSexInputDialog),
               DragBubble(
-                  Offset(100.0, 0.0), homePageState, "Wheeze", asyncWheezeInputDialog),
-              DragBubble(Offset(200.0, 0.0), homePageState, "COPD", asyncCOPDInputDialog),
+                  Offset(0.0, 0.0), homePageState, "Sex", asyncSexInputDialog),
+              DragBubble(Offset(100.0, 0.0), homePageState, "Wheeze",
+                  asyncWheezeInputDialog),
+              DragBubble(Offset(200.0, 0.0), homePageState, "COPD",
+                  asyncCOPDInputDialog),
               DragBubble(Offset(300, 0.0), homePageState, "Never Smoked",
                   asyncNeverSmokedInputDialog),
+              getPatientImage(globalWidth, globalHeight),
             ],
           ),
         ),
