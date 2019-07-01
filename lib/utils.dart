@@ -136,3 +136,10 @@ class Inputs {
     return map[variableName];
   }
 }
+
+class IllnessProb {
+  final String illness;
+  final double probability;
+
+  IllnessProb(this.illness, this.probability);
+}

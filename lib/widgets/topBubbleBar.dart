@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
+import '../predictions.dart';
+import '../utils.dart';
 import 'dialogs.dart';
 
 Widget getPatientImage(double width, Offset position) {
@@ -33,17 +35,23 @@ Widget getTopBubbleBar(
                   asyncNeverSmokedInputDialog),
               getPatientImage(imageDimensions, imagePosition),
               DiseaseBubble(
-                  "COPD", Offset(imagePosition.dx - 90, imagePosition.dy)),
-              DiseaseBubble("Asthma",
-                  Offset(imagePosition.dx + imageDimensions, imagePosition.dy)),
+                  "COPD",
+                  Offset(imagePosition.dx - 90, imagePosition.dy),
+                  homePageState),
+              DiseaseBubble(
+                  "Asthma",
+                  Offset(imagePosition.dx + imageDimensions, imagePosition.dy),
+                  homePageState),
               DiseaseBubble(
                   "Tuberculosis",
                   Offset(imagePosition.dx - 90,
-                      imagePosition.dy + imageDimensions)),
+                      imagePosition.dy + imageDimensions - 40),
+                  homePageState),
               DiseaseBubble(
                   "Diabetes",
                   Offset(imagePosition.dx + imageDimensions,
-                      imagePosition.dy + imageDimensions)),
+                      imagePosition.dy + imageDimensions - 40),
+                  homePageState),
             ],
           ),
         ),
@@ -145,25 +153,47 @@ class Bubble extends StatelessWidget {
 class DiseaseBubble extends StatelessWidget {
   final String title;
   final Offset position;
+  final MyHomePageState homePageState;
 
-  DiseaseBubble(this.title, this.position);
+  DiseaseBubble(this.title, this.position, this.homePageState);
+
+  double computeDimensions() {
+    List<IllnessProb> probs =
+        getIllnessProbs(homePageState.input, homePageState.models, true);
+    for (IllnessProb prob in probs) {
+      if (prob.illness == title) {
+        return prob.probability;
+      }
+    }
+    return 0.0; //this should never happen
+  }
 
   @override
   Widget build(BuildContext context) {
+    double dim = computeDimensions();
     return Positioned(
         top: position.dy,
         left: position.dx,
         child: Container(
-          width: 90,
-          height: 90,
+          width: 101,
+          height: 101,
           child: Column(
             children: <Widget>[
               Container(
-                width: 50.0,
-                height: 50.0,
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.orange,
+                width: 80,
+                height: 80,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: dim * 80,
+                      height: dim * 80,
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(

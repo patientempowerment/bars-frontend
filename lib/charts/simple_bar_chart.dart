@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:bars_frontend/utils.dart';
 
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -14,13 +15,6 @@ class SimpleBarChart extends StatelessWidget {
       animate: animate,
     );
   }
-}
-
-class IllnessProb {
-  final String illness;
-  final double probability;
-
-  IllnessProb(this.illness, this.probability);
 }
 
 List<charts.Series<IllnessProb, String>> mapChartData(

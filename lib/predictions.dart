@@ -12,7 +12,7 @@ prepareModels(StringWrapper models) async {
   return newModels;
 }
 
-getIllnessProbs(Inputs inputs, StringWrapper models, bool predictMode) {
+List<IllnessProb> getIllnessProbs(Inputs inputs, StringWrapper models, bool predictMode) {
   if (models.value != "" && predictMode) {
     Map<String, dynamic> jsonResponse = jsonDecode(models.value);
 
