@@ -32,10 +32,18 @@ Widget getTopBubbleBar(
               DragBubble(Offset(300, 0.0), homePageState, "Never Smoked",
                   asyncNeverSmokedInputDialog),
               getPatientImage(imageDimensions, imagePosition),
-              DiseaseBubble("COPD", Offset(imagePosition.dx - 90, imagePosition.dy)),
-              DiseaseBubble("Asthma", Offset(imagePosition.dx + imageDimensions, imagePosition.dy)),
-              DiseaseBubble("Tuberculosis", Offset(imagePosition.dx - 90, imagePosition.dy + imageDimensions)),
-              DiseaseBubble("Diabetes", Offset(imagePosition.dx + imageDimensions, imagePosition.dy + imageDimensions)),
+              DiseaseBubble(
+                  "COPD", Offset(imagePosition.dx - 90, imagePosition.dy)),
+              DiseaseBubble("Asthma",
+                  Offset(imagePosition.dx + imageDimensions, imagePosition.dy)),
+              DiseaseBubble(
+                  "Tuberculosis",
+                  Offset(imagePosition.dx - 90,
+                      imagePosition.dy + imageDimensions)),
+              DiseaseBubble(
+                  "Diabetes",
+                  Offset(imagePosition.dx + imageDimensions,
+                      imagePosition.dy + imageDimensions)),
             ],
           ),
         ),
@@ -82,6 +90,9 @@ class _DragBubbleState extends State<DragBubble> {
                 offset = Offset(
                     offset.dx + details.delta.dx, offset.dy + details.delta.dy);
               });
+            },
+            onPanEnd: (_) async {
+              final dynamic r = await dialogFunction(context, homePageState);
             },
             child: Bubble(homePageState, title, dialogFunction),
           ),
