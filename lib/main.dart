@@ -40,11 +40,17 @@ class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;
 
+
+  @override
+  initState() {
+    super.initState();
+    prepareModels(models, featureFactors);
+  }
+
   @override
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
-    prepareModels(models, featureFactors);
     return Stack(
       children: <Widget>[
         PageView(children: [

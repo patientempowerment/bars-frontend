@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bars_frontend/utils.dart';
 
-// cause name: (disease name: factor)
-
 /* import json
 features:
   aFeature:
@@ -43,36 +41,41 @@ features:
 
 List<String> diseases = ['COPD', 'diabetes', 'asthma', 'tuberculosis'];*/
 
-List<String> featureNames = [];
-List<String> labelNames = [];
+Map<String, dynamic> features = {};
+Map<String, dynamic> models = {};
 
-prepareModels(StringWrapper models, MapWrapper featureFactors) async {
+prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
 
-  String newModels = await rootBundle.loadString('assets/models.json');
+  String modelsResponse = await rootBundle.loadString('assets/models.json');
   String featuresResponse = await rootBundle.loadString('assets/features.json');
-  Map<String, dynamic> features = jsonDecode(featuresResponse);
-  Map<String, dynamic> labels = jsonDecode(newModels);
+  features = jsonDecode(featuresResponse);
+  models = jsonDecode(modelsResponse);
+  modelFactors.value = modelsResponse;
 
-  for (var feature in features.entries) {
-    featureNames.add(feature.key);
-  }
-  for (var label in labels.entries) {
-    labelNames.add(label.key);
-  }
-  models.value = newModels;
+  for (var label in models.entries) {
 
-  for (String name in labelNames) {
-    Map<String, dynamic> diseaseJson = labels[name]["features"];
-    for (String feature in featureNames) {
-      double coef = feature != name ? diseaseJson[feature]['coef'] : 0.0;
-      featureFactors.value[feature] == null
-          ? featureFactors.value[feature] = {name: coef}
-          : featureFactors.value[feature][name] = coef;
+    Map<String, dynamic> labelFeatures = label.value["features"];
+
+    for (var feature in features.entries) {
+
+      double coef = feature.key != label.key
+          ? labelFeatures[feature.key]['coef']
+          : 0.0; //TODO: why is this 0.0 and not null
+      featureFactors.value[feature.value] == null
+          ? featureFactors.value[feature.key] = {label: coef}
+          : featureFactors.value[feature.key][label] = coef;
     }
   }
-  return newModels;
+  return modelsResponse;
 }
-
+/*
+double coef = feature != disease
+          ? diseaseJson[feature]['coef']
+          : 0.0;
+      featureFactors.value[feature] == null
+          ? featureFactors.value[feature] = {disease: coef}
+          : featureFactors.value[feature][disease] = coef;
+ */
 List<IllnessProb> getIllnessProbs(
     Inputs inputs, StringWrapper models, bool predictMode) {
   if (models.value != "" && predictMode) {
@@ -106,14 +109,14 @@ List<IllnessProb> getIllnessProbs(
 }
 
 double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
-  Map<String, dynamic> features = json[label]["features"];
+  Map<String, dynamic> relevantFeatures = models[label]["features"];
   double dot = 0.0;
 
-  for (String feature_name in featureNames) {
-    dot += getAddend(features, label, feature_name, inputs);
+  for (var feature in features.entries) {
+    dot += getAddend(relevantFeatures, label, feature.key, inputs);
   }
 
-  double intercept = json[label]['intercept'];
+  double intercept = models[label]['intercept'];
 
   double result = 1 - (1 / (1 + exp(intercept + dot)));
   return result;
