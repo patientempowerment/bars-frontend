@@ -5,7 +5,21 @@ import 'package:bars_frontend/utils.dart';
 
 // cause name: (disease name: factor)
 
-List<String> featureNames = [
+/* import json
+features:
+  aFeature:
+    title: "a title"
+    choices:
+      Never: 0
+      Always: 2
+      Sometimes: 1
+  aSecondFeature:
+    title: "a second title"
+    slider_min: 0
+    slider_max 100
+ */
+
+/*List<String> featureNames = [
   'age',
   'alcoholFrequency',
   'asthma',
@@ -27,20 +41,33 @@ List<String> featureNames = [
   'wheezeInChestInLastYear'
 ];
 
-List<String> diseases = ['COPD', 'diabetes', 'asthma', 'tuberculosis'];
+List<String> diseases = ['COPD', 'diabetes', 'asthma', 'tuberculosis'];*/
+
+List<String> featureNames = [];
+List<String> labelNames = [];
 
 prepareModels(StringWrapper models, MapWrapper featureFactors) async {
-  String newModels = await rootBundle.loadString('assets/models.json');
-  models.value = newModels;
-  Map<String, dynamic> jsonResponse = jsonDecode(newModels);
 
-  for (String disease in diseases) {
-    Map<String, dynamic> diseaseJson = jsonResponse[disease]["features"];
+  String newModels = await rootBundle.loadString('assets/models.json');
+  String featuresResponse = await rootBundle.loadString('assets/features.json');
+  Map<String, dynamic> features = jsonDecode(featuresResponse);
+  Map<String, dynamic> labels = jsonDecode(newModels);
+
+  for (var feature in features.entries) {
+    featureNames.add(feature.key);
+  }
+  for (var label in labels.entries) {
+    labelNames.add(label.key);
+  }
+  models.value = newModels;
+
+  for (String name in labelNames) {
+    Map<String, dynamic> diseaseJson = labels[name]["features"];
     for (String feature in featureNames) {
-      double coef = feature != disease ? diseaseJson[feature]['coef'] : 0.0;
+      double coef = feature != name ? diseaseJson[feature]['coef'] : 0.0;
       featureFactors.value[feature] == null
-          ? featureFactors.value[feature] = {disease: coef}
-          : featureFactors.value[feature][disease] = coef;
+          ? featureFactors.value[feature] = {name: coef}
+          : featureFactors.value[feature][name] = coef;
     }
   }
   return newModels;

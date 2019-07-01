@@ -107,7 +107,7 @@ class _DragBubbleState extends State<DragBubble> {
             onPanEnd: (_) async {
               await dialogFunction(context, homePageState);
 
-              for (String disease in diseases) {
+              for (String disease in labelNames) {
                 if (featureFactors.value[feature][disease] > 0.1) {
                   colorIndex++;
                 }
