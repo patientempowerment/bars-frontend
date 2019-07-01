@@ -34,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   Inputs input = new Inputs();
   StringWrapper models = new StringWrapper("");
+  MapWrapper featureFactors = MapWrapper(Map());
   bool predictMode = false;
   bool successfulDrop = false;
   double globalWidth;
@@ -43,7 +44,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
-    prepareModels(models);
+    prepareModels(models, featureFactors);
     return Stack(
       children: <Widget>[
         PageView(children: [
@@ -104,7 +105,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(this, globalWidth, globalHeight),
+                  getTopBubbleBar(this, featureFactors, globalWidth, globalHeight),
                 ],
               ),
             ),

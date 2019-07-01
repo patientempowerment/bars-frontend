@@ -12,8 +12,8 @@ Widget getPatientImage(double width, Offset position) {
   );
 }
 
-Widget getTopBubbleBar(
-    MyHomePageState homePageState, double globalWidth, double globalHeight) {
+Widget getTopBubbleBar(MyHomePageState homePageState, MapWrapper featureFactors,
+    double globalWidth, double globalHeight) {
   double imageDimensions = 200;
   double xOffset = globalWidth / 2 - imageDimensions / 2;
   double yOffset = globalHeight / 4;
@@ -25,14 +25,14 @@ Widget getTopBubbleBar(
         Expanded(
           child: Stack(
             children: <Widget>[
-              DragBubble(
-                  Offset(0.0, 0.0), homePageState, "Sex", asyncSexInputDialog),
-              DragBubble(Offset(100.0, 0.0), homePageState, "Wheeze",
-                  asyncWheezeInputDialog),
-              DragBubble(Offset(200.0, 0.0), homePageState, "COPD",
-                  asyncCOPDInputDialog),
-              DragBubble(Offset(300, 0.0), homePageState, "Never Smoked",
-                  asyncNeverSmokedInputDialog),
+              DragBubble(Offset(0.0, 0.0), homePageState, featureFactors, "sex",
+                  "Sex", asyncSexInputDialog),
+              DragBubble(Offset(100.0, 0.0), homePageState, featureFactors,
+                  "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog),
+              DragBubble(Offset(200.0, 0.0), homePageState, featureFactors,
+                  "COPD", "COPD", asyncCOPDInputDialog),
+              DragBubble(Offset(300, 0.0), homePageState, featureFactors,
+                  "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog),
               getPatientImage(imageDimensions, imagePosition),
               DiseaseBubble(
                   "COPD",
@@ -64,26 +64,31 @@ class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final MyHomePageState homePageState;
   final Function dialogFunction;
+  final String feature;
   final String title;
+  final MapWrapper featureFactors;
 
-  DragBubble(
-      this.initialOffset, this.homePageState, this.title, this.dialogFunction);
+  DragBubble(this.initialOffset, this.homePageState, this.featureFactors,
+      this.feature, this.title, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
-    return _DragBubbleState(
-        initialOffset, homePageState, title, dialogFunction);
+    return _DragBubbleState(initialOffset, homePageState, featureFactors,
+        feature, title, dialogFunction);
   }
 }
 
 class _DragBubbleState extends State<DragBubble> {
   Offset offset;
+  int colorIndex = 0;
   final MyHomePageState homePageState;
+  final MapWrapper featureFactors;
   final Function dialogFunction;
   final String title;
+  final String feature;
 
-  _DragBubbleState(
-      this.offset, this.homePageState, this.title, this.dialogFunction);
+  _DragBubbleState(this.offset, this.homePageState, this.featureFactors,
+      this.feature, this.title, this.dialogFunction);
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +105,15 @@ class _DragBubbleState extends State<DragBubble> {
               });
             },
             onPanEnd: (_) async {
-              final dynamic r = await dialogFunction(context, homePageState);
+              await dialogFunction(context, homePageState);
+
+              for (String disease in diseases) {
+                if (featureFactors.value[feature][disease] > 0.1) {
+                  colorIndex++;
+                }
+              }
             },
-            child: Bubble(homePageState, title, dialogFunction),
+            child: Bubble(homePageState, title, dialogFunction, colorIndex),
           ),
         ),
       ],
@@ -114,8 +125,10 @@ class Bubble extends StatelessWidget {
   final MyHomePageState homePageState;
   final Function dialogFunction;
   final String title;
+  List<Color> colorGradient = [Colors.lightGreen, Colors.amber, Colors.orange, Colors.red];
+  final int colorIndex;
 
-  Bubble(this.homePageState, this.title, this.dialogFunction);
+  Bubble(this.homePageState, this.title, this.dialogFunction, this.colorIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +142,7 @@ class Bubble extends StatelessWidget {
             height: 50.0,
             decoration: new BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.lightGreen,
+              color: colorGradient[colorIndex],
             ),
             child: new FlatButton(
               onPressed: () async {

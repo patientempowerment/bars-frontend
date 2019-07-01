@@ -14,6 +14,11 @@ class StringWrapper {
   StringWrapper(this.value);
 }
 
+class MapWrapper {
+  Map value;
+
+  MapWrapper(this.value);
+}
 enum Sex { female, male }
 
 class SexWrapper {
