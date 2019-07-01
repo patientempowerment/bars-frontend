@@ -14,6 +14,11 @@ class StringWrapper {
   StringWrapper(this.value);
 }
 
+class MapWrapper {
+  Map value;
+
+  MapWrapper(this.value);
+}
 enum Sex { female, male }
 
 class SexWrapper {
@@ -72,14 +77,14 @@ class AlcoholFrequencyWrapper {
 enum YesNo { yes, no }
 
 class YesNoWrapper {
-  YesNo yesNo;
+  YesNo value;
 
   YesNoWrapper(yesNo) {
-    this.yesNo = yesNo;
+    this.value = yesNo;
   }
 
   double get() {
-    return yesNo == YesNo.yes ? 1.0 : 0.0;
+    return value == YesNo.yes ? 1.0 : 0.0;
   }
 }
 
@@ -135,4 +140,11 @@ class Inputs {
 
     return map[variableName];
   }
+}
+
+class IllnessProb {
+  final String illness;
+  final double probability;
+
+  IllnessProb(this.illness, this.probability);
 }

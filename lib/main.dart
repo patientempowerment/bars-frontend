@@ -34,12 +34,17 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   Inputs input = new Inputs();
   StringWrapper models = new StringWrapper("");
+  MapWrapper featureFactors = MapWrapper(Map());
   bool predictMode = false;
   bool successfulDrop = false;
+  double globalWidth;
+  double globalHeight;
 
   @override
   Widget build(BuildContext context) {
-    prepareModels(models);
+    globalWidth = MediaQuery.of(context).size.width;
+    globalHeight = MediaQuery.of(context).size.height;
+    prepareModels(models, featureFactors);
     return Stack(
       children: <Widget>[
         PageView(children: [
@@ -54,25 +59,25 @@ class MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: ListView(
                       children: [
-                        getSexRadioButtons(this),
+                        getSexRadioButtons(this, null),
                         getAgeSlider(this),
                         getHeightSlider(this),
                         getWeightSlider(this),
                         getDiastolicBloodPressureSlider(this),
                         getSystolicBloodPressureSlider(this),
                         getAlcoholFrequencyRadioButtons(this),
-                        getCurrentlySmokingRadioButtons(this),
-                        getNeverSmokedRadioButtons(this),
-                        getPreviouslySmokedRadioButtons(this),
+                        getCurrentlySmokingRadioButtons(this, null),
+                        getNeverSmokedRadioButtons(this, null),
+                        getPreviouslySmokedRadioButtons(this, null),
                         getNoOfCigarettesPerDaySlider(this),
                         getNoOfCigarettesPreviouslyPerDaySlider(this),
-                        getWheezeInChestInLastYearRadioButtons(this),
-                        getCoughOnMostDaysRadioButtons(this),
-                        getSputumOnMostDaysRadioButtons(this),
-                        getCOPDRadioButtons(this),
-                        getAsthmaRadioButtons(this),
-                        getDiabetesRadioButtons(this),
-                        getTuberculosisRadioButtons(this),
+                        getWheezeInChestInLastYearRadioButtons(this, null),
+                        getCoughOnMostDaysRadioButtons(this, null),
+                        getSputumOnMostDaysRadioButtons(this, null),
+                        getCOPDRadioButtons(this, null),
+                        getAsthmaRadioButtons(this, null),
+                        getDiabetesRadioButtons(this, null),
+                        getTuberculosisRadioButtons(this, null),
                       ],
                     ),
                   ),
@@ -100,7 +105,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(),
+                  getTopBubbleBar(this, featureFactors, globalWidth, globalHeight),
                 ],
               ),
             ),

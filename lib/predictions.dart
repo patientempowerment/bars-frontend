@@ -1,18 +1,53 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:charcode/charcode.dart';
-
-import 'charts/simple_bar_chart.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bars_frontend/utils.dart';
 
-prepareModels(StringWrapper models) async {
+// cause name: (disease name: factor)
+
+List<String> featureNames = [
+  'age',
+  'alcoholFrequency',
+  'asthma',
+  'COPD',
+  'coughOnMostDays',
+  'currentlySmoking',
+  'diabetes',
+  'diastolicBloodPressure',
+  'height',
+  'neverSmoked',
+  'noOfCigarettesPerDay',
+  'noOfCigarettesPreviouslyPerDay',
+  'previouslySmoked',
+  'sex',
+  'sputumOnMostDays',
+  'systolicBloodPressure',
+  'tuberculosis',
+  'weight',
+  'wheezeInChestInLastYear'
+];
+
+List<String> diseases = ['COPD', 'diabetes', 'asthma', 'tuberculosis'];
+
+prepareModels(StringWrapper models, MapWrapper featureFactors) async {
   String newModels = await rootBundle.loadString('assets/models.json');
   models.value = newModels;
+  Map<String, dynamic> jsonResponse = jsonDecode(newModels);
+
+  for (String disease in diseases) {
+    Map<String, dynamic> diseaseJson = jsonResponse[disease]["features"];
+    for (String feature in featureNames) {
+      double coef = feature != disease ? diseaseJson[feature]['coef'] : 0.0;
+      featureFactors.value[feature] == null
+          ? featureFactors.value[feature] = {disease: coef}
+          : featureFactors.value[feature][disease] = coef;
+    }
+  }
   return newModels;
 }
 
-getIllnessProbs(Inputs inputs, StringWrapper models, bool predictMode) {
+List<IllnessProb> getIllnessProbs(
+    Inputs inputs, StringWrapper models, bool predictMode) {
   if (models.value != "" && predictMode) {
     Map<String, dynamic> jsonResponse = jsonDecode(models.value);
 
@@ -21,10 +56,11 @@ getIllnessProbs(Inputs inputs, StringWrapper models, bool predictMode) {
     double diabetesProb = computeProb('diabetes', inputs, jsonResponse);
     double tuberculosisProb = computeProb('tuberculosis', inputs, jsonResponse);
 
-    copdProb = inputs.copd.yesNo == YesNo.yes ? 1.0 : copdProb;
-    asthmaProb = inputs.asthma.yesNo == YesNo.yes ? 1.0 : asthmaProb;
-    diabetesProb = inputs.diabetes.yesNo == YesNo.yes ? 1.0 : diabetesProb;
-    tuberculosisProb = inputs.tuberculosis.yesNo == YesNo.yes ? 1.0 : tuberculosisProb;
+    copdProb = inputs.copd.value == YesNo.yes ? 1.0 : copdProb;
+    asthmaProb = inputs.asthma.value == YesNo.yes ? 1.0 : asthmaProb;
+    diabetesProb = inputs.diabetes.value == YesNo.yes ? 1.0 : diabetesProb;
+    tuberculosisProb =
+        inputs.tuberculosis.value == YesNo.yes ? 1.0 : tuberculosisProb;
 
     return [
       IllnessProb('COPD', copdProb),
@@ -46,8 +82,7 @@ double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
   Map<String, dynamic> features = json[label]["features"];
   double dot = 0.0;
 
-  List<String> feature_names = ['age', 'alcoholFrequency', 'asthma', 'COPD', 'coughOnMostDays', 'currentlySmoking', 'diabetes', 'diastolicBloodPressure', 'height', 'neverSmoked', 'noOfCigarettesPerDay', 'noOfCigarettesPreviouslyPerDay', 'previouslySmoked', 'sex', 'sputumOnMostDays', 'systolicBloodPressure', 'tuberculosis', 'weight', 'wheezeInChestInLastYear'];
-  for (String feature_name in feature_names) {
+  for (String feature_name in featureNames) {
     dot += getAddend(features, label, feature_name, inputs);
   }
 
@@ -57,7 +92,8 @@ double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
   return result;
 }
 
-double getAddend(Map<String, dynamic> features, String label, String feature, Inputs inputs) {
+double getAddend(Map<String, dynamic> features, String label, String feature,
+    Inputs inputs) {
   var value = inputs.getVariable(feature).get();
   value ??= features[feature]['mean'];
   return label == feature ? 0.0 : value * features[feature]['coef'];
