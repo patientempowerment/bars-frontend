@@ -108,7 +108,7 @@ class _DragBubbleState extends State<DragBubble> {
               await dialogFunction(context, homePageState);
 
               for (var label in models.entries) {
-                if (featureFactors.value[feature][label.value] > 0.1) {
+                if (featureFactors.value[feature][label.key] > 0.1) {
                   colorIndex++;
                 }
               }
