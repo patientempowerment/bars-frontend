@@ -19,10 +19,17 @@ class SimpleBarChart extends StatelessWidget {
 
 List<charts.Series<IllnessProb, String>> mapChartData(
     List<IllnessProb> data) {
+  final List<Color> colorGradient = [
+    Colors.lightGreen,
+    Colors.amber,
+    Colors.orange,
+    Colors.red
+  ];
+
   return [
     charts.Series<IllnessProb, String>(
       id: 'Sales',
-      colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+      colorFn: (IllnessProb sales, __) => sales.probability < 0.5 ? charts.MaterialPalette.green.shadeDefault : charts.MaterialPalette.red.shadeDefault,//charts.MaterialPalette.indigo.shadeDefault,
       domainFn: (IllnessProb sales, _) => sales.illness,
       measureFn: (IllnessProb sales, _) => sales.probability,
       data: data,

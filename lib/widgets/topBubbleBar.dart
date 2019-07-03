@@ -153,7 +153,8 @@ class Bubble extends StatelessWidget {
       height: 90,
       child: Column(
         children: <Widget>[
-          Container(
+          AnimatedContainer(
+            duration: Duration(seconds: 1),
             width: 50.0,
             height: 50.0,
             decoration: new BoxDecoration(
