@@ -80,6 +80,12 @@ class DragBubble extends StatefulWidget {
 
 class _DragBubbleState extends State<DragBubble> {
   Offset offset;
+  final List<Color> colorGradient = [
+    Colors.lightGreen,
+    Colors.amber,
+    Colors.orange,
+    Colors.red
+  ];
   int colorIndex = 0;
   final MyHomePageState homePageState;
   final MapWrapper featureFactors;
@@ -108,12 +114,15 @@ class _DragBubbleState extends State<DragBubble> {
               await dialogFunction(context, homePageState);
 
               for (var label in models.entries) {
-                if (featureFactors.value[feature][label.key] > 0.1) {
+                if (featureFactors.value[feature] != null &&
+                    featureFactors.value[feature][label.key] > 0.1 &&
+                    colorIndex + 1 < colorGradient.length) {
                   colorIndex++;
                 }
               }
             },
-            child: Bubble(homePageState, title, dialogFunction, colorIndex),
+            child: Bubble(homePageState, title, dialogFunction, colorGradient,
+                colorIndex),
           ),
         ),
       ],
@@ -125,10 +134,11 @@ class Bubble extends StatelessWidget {
   final MyHomePageState homePageState;
   final Function dialogFunction;
   final String title;
-  List<Color> colorGradient = [Colors.lightGreen, Colors.amber, Colors.orange, Colors.red];
+  final colorGradient;
   final int colorIndex;
 
-  Bubble(this.homePageState, this.title, this.dialogFunction, this.colorIndex);
+  Bubble(this.homePageState, this.title, this.dialogFunction,
+      this.colorGradient, this.colorIndex);
 
   @override
   Widget build(BuildContext context) {
