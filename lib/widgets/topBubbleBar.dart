@@ -73,12 +73,12 @@ class DragBubble extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _DragBubbleState(initialOffset, homePageState, featureFactors,
+    return DragBubbleState(initialOffset, homePageState, featureFactors,
         feature, title, dialogFunction);
   }
 }
 
-class _DragBubbleState extends State<DragBubble> {
+class DragBubbleState extends State<DragBubble> {
   Offset offset;
   final List<Color> colorGradient = [
     Colors.lightGreen,
@@ -93,8 +93,20 @@ class _DragBubbleState extends State<DragBubble> {
   final String title;
   final String feature;
 
-  _DragBubbleState(this.offset, this.homePageState, this.featureFactors,
+  DragBubbleState(this.offset, this.homePageState, this.featureFactors,
       this.feature, this.title, this.dialogFunction);
+
+  computeNewColor() {
+    for (var label in models.entries) {
+      if (featureFactors.value[feature] != null &&
+          featureFactors.value[feature][label.key] > 0.1 &&
+          colorIndex + 1 < colorGradient.length) {
+        setState(() {
+          colorIndex++;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,16 +124,9 @@ class _DragBubbleState extends State<DragBubble> {
             },
             onPanEnd: (_) async {
               await dialogFunction(context, homePageState);
-
-              for (var label in models.entries) {
-                if (featureFactors.value[feature] != null &&
-                    featureFactors.value[feature][label.key] > 0.1 &&
-                    colorIndex + 1 < colorGradient.length) {
-                  colorIndex++;
-                }
-              }
+              computeNewColor();
             },
-            child: Bubble(homePageState, title, dialogFunction, colorGradient,
+            child: Bubble(homePageState, this, title, dialogFunction, colorGradient,
                 colorIndex),
           ),
         ),
@@ -132,12 +137,13 @@ class _DragBubbleState extends State<DragBubble> {
 
 class Bubble extends StatelessWidget {
   final MyHomePageState homePageState;
+  final DragBubbleState dragState;
   final Function dialogFunction;
   final String title;
   final colorGradient;
   final int colorIndex;
 
-  Bubble(this.homePageState, this.title, this.dialogFunction,
+  Bubble(this.homePageState, this.dragState, this.title, this.dialogFunction,
       this.colorGradient, this.colorIndex);
 
   @override
@@ -156,8 +162,8 @@ class Bubble extends StatelessWidget {
             ),
             child: new FlatButton(
               onPressed: () async {
-                final dynamic r = await dialogFunction(context, homePageState);
-                print("Current value is $r");
+                await dialogFunction(context, homePageState);
+                dragState.computeNewColor();
               },
             ),
           ),
