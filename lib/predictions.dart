@@ -61,9 +61,9 @@ prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
       double coef = feature.key != label.key
           ? labelFeatures[feature.key]['coef']
           : 0.0; //TODO: why is this 0.0 and not null
-      featureFactors.value[feature.value] == null
-          ? featureFactors.value[feature.key] = {label: coef}
-          : featureFactors.value[feature.key][label] = coef;
+      featureFactors.value[feature.key] == null
+          ? featureFactors.value[feature.key] = {label.key: coef}
+          : featureFactors.value[feature.key][label.key] = coef;
     }
   }
   return modelsResponse;
