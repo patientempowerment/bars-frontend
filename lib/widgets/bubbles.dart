@@ -153,6 +153,24 @@ class DiseaseBubble extends StatelessWidget {
     return 0.0; //this should never happen
   }
 
+  Color computeColor() {
+    final List<Color> colorGradient = [
+      Colors.lightGreen,
+      Colors.amber,
+      Colors.orange,
+      Colors.red
+    ];
+    List<IllnessProb> probs =
+        getIllnessProbs(homePageState.input, homePageState.models, true);
+    for (IllnessProb prob in probs) {
+      if (prob.illness == title) {
+        return colorGradient[
+            (prob.probability * (colorGradient.length - 1)).round().toInt()];
+      }
+    }
+    return Colors.black;
+  }
+
   @override
   Widget build(BuildContext context) {
     double dim = computeDimensions();
@@ -160,13 +178,20 @@ class DiseaseBubble extends StatelessWidget {
         top: position.dy,
         left: position.dx,
         child: Container(
-          width: 101,
-          height: 101,
+          width: 105,
+          height: 105,
           child: Column(
             children: <Widget>[
               Container(
-                width: 80,
-                height: 80,
+                width: 84,
+                height: 84,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: new Border.all(
+                      color: computeColor(),
+                      width: 2.0,
+                      style: BorderStyle.solid),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -175,7 +200,7 @@ class DiseaseBubble extends StatelessWidget {
                       height: dim * 80,
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.orange,
+                        color: computeColor(),
                       ),
                     ),
                   ],
