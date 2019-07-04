@@ -76,10 +76,8 @@ class DragBubbleState extends State<DragBubble> {
               computeNewColor(input);
             },
             child: Stack(
-              children: <Widget>[
-                Bubble(homePageState, this, title, dialogFunction,
-                    colorGradient, colorIndex),
-              ],
+              children: getParticles(homePageState, this, title, dialogFunction,
+                  colorGradient, colorIndex), // TODO change
             ),
           ),
         ),
@@ -116,10 +114,13 @@ class Bubble extends StatelessWidget {
             ),
             child: new FlatButton(
               onPressed: () async {
-                double input =
-                    (await dialogFunction(context, homePageState)).get();
-                dragState.computeNewColor(input);
+                var dialogInput = await dialogFunction(context, homePageState);
+                if (dialogInput != null) {
+                  double inputValue = dialogInput.get();
+                  dragState.computeNewColor(inputValue);
+                }
               },
+              child: Container(),
             ),
           ),
           Padding(
@@ -189,5 +190,40 @@ class DiseaseBubble extends StatelessWidget {
             ],
           ),
         ));
+  }
+}
+
+List<Widget> getParticles(homePageState, dragState, title, dialogFunction,
+    colorGradient, colorIndex) {
+  List<Widget> particleList = [
+    Bubble(homePageState, dragState, title, dialogFunction, colorGradient,
+        colorIndex)
+  ];
+  for (int i = 0; i < colorIndex; i++) {
+    particleList.add(Particle());
+  }
+  return particleList;
+}
+
+class Particle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 5,
+      height: 5,
+      child: Column(
+        children: <Widget>[
+          AnimatedContainer(
+            duration: Duration(seconds: 1),
+            width: 5,
+            height: 5,
+            decoration: new BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
