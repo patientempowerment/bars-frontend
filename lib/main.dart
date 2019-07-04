@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Patient Empowerment',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -56,7 +57,10 @@ class MyHomePageState extends State<MyHomePage> {
         PageView(children: [
           Scaffold(
             appBar: AppBar(
-              title: Text(widget.title),
+              title: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
+              ),
             ),
             body: Container(
               padding: EdgeInsets.all(40.0),
@@ -73,7 +77,7 @@ class MyHomePageState extends State<MyHomePage> {
                         getSystolicBloodPressureSlider(this),
                         getAlcoholFrequencyRadioButtons(this),
                         getCurrentlySmokingRadioButtons(this, null),
-                        getNeverSmokedRadioButtons(this, null),
+                        //getNeverSmokedRadioButtons(this, null),
                         getPreviouslySmokedRadioButtons(this, null),
                         getNoOfCigarettesPerDaySlider(this),
                         getNoOfCigarettesPreviouslyPerDaySlider(this),

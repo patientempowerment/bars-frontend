@@ -17,19 +17,20 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-List<charts.Series<IllnessProb, String>> mapChartData(
-    List<IllnessProb> data) {
-  final List<Color> colorGradient = [
-    Colors.lightGreen,
-    Colors.amber,
-    Colors.orange,
-    Colors.red
+List<charts.Series<IllnessProb, String>> mapChartData(List<IllnessProb> data) {
+  final List<dynamic> colorGradient = [
+    charts.Color.fromHex(code: "#8BC24A"),
+    charts.Color.fromHex(code: "#FEC007"),
+    charts.Color.fromHex(code: "#FE9800"),
+    charts.Color.fromHex(code: "#FE5722"),
+    charts.Color.fromHex(code: "#F34336"),
   ];
 
   return [
     charts.Series<IllnessProb, String>(
       id: 'Sales',
-      colorFn: (IllnessProb sales, __) => sales.probability < 0.5 ? charts.MaterialPalette.green.shadeDefault : charts.MaterialPalette.red.shadeDefault,//charts.MaterialPalette.indigo.shadeDefault,
+      colorFn: (IllnessProb sales, __) => colorGradient[
+          ((colorGradient.length - 1) * sales.probability).round().toInt()],
       domainFn: (IllnessProb sales, _) => sales.illness,
       measureFn: (IllnessProb sales, _) => sales.probability,
       data: data,
