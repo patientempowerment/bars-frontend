@@ -39,16 +39,21 @@ class DragBubbleState extends State<DragBubble> {
   DragBubbleState(this.offset, this.homePageState, this.featureFactors,
       this.feature, this.title, this.dialogFunction);
 
-  computeNewColor() {
+  computeNewColor(double input) {
+    int newColorIndex = 0;
     for (var label in models.entries) {
-      if (featureFactors.value[feature] != null &&
-          featureFactors.value[feature][label.key] > 0.1 &&
-          colorIndex + 1 < colorGradient.length) {
-        setState(() {
-          colorIndex++;
-        });
+      if (featureFactors.value[feature] != null) {
+        double factor = featureFactors.value[feature][label.key] * input;
+        factor = factor < 0 ? 0 : factor;
+        newColorIndex += factor.round().toInt();
       }
     }
+    newColorIndex = newColorIndex >= colorGradient.length
+        ? colorGradient.length - 1
+        : newColorIndex;
+    setState(() {
+      colorIndex = newColorIndex;
+    });
   }
 
   @override
@@ -66,13 +71,14 @@ class DragBubbleState extends State<DragBubble> {
               });
             },
             onPanEnd: (_) async {
-              await dialogFunction(context, homePageState);
-              computeNewColor();
+              double input =
+                  (await dialogFunction(context, homePageState)).get();
+              computeNewColor(input);
             },
             child: Stack(
               children: <Widget>[
-                Bubble(homePageState, this, title, dialogFunction, colorGradient,
-                    colorIndex),
+                Bubble(homePageState, this, title, dialogFunction,
+                    colorGradient, colorIndex),
               ],
             ),
           ),
@@ -110,8 +116,9 @@ class Bubble extends StatelessWidget {
             ),
             child: new FlatButton(
               onPressed: () async {
-                await dialogFunction(context, homePageState);
-                dragState.computeNewColor();
+                double input =
+                    (await dialogFunction(context, homePageState)).get();
+                dragState.computeNewColor(input);
               },
             ),
           ),
@@ -136,7 +143,7 @@ class DiseaseBubble extends StatelessWidget {
 
   double computeDimensions() {
     List<IllnessProb> probs =
-    getIllnessProbs(homePageState.input, homePageState.models, true);
+        getIllnessProbs(homePageState.input, homePageState.models, true);
     for (IllnessProb prob in probs) {
       if (prob.illness == title) {
         return prob.probability;

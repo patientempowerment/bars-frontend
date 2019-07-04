@@ -36,7 +36,7 @@ Future<dynamic> _asyncInputDialog(
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop(
-                      homePageState.input.getVariable(inputVariable).value);
+                      homePageState.input.getVariable(inputVariable));
                 },
                 child: new Text('Ok'),
               )
