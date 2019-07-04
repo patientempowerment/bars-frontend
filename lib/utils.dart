@@ -1,3 +1,7 @@
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+
+
 class DoubleWrapper {
   double value;
 
@@ -147,4 +151,31 @@ class IllnessProb {
   final double probability;
 
   IllnessProb(this.illness, this.probability);
+}
+
+readData() async {
+  String modelsResponse = await rootBundle.loadString('assets/models.json');
+  String featuresResponse = await rootBundle.loadString('assets/features.json');
+  Map<String, dynamic> features = jsonDecode(featuresResponse);
+  Map<String, dynamic> models = jsonDecode(modelsResponse);
+  /*for (var label in models.entries) {
+    Map<String, dynamic> labelFeatures = label.value["features"];
+
+    for (var feature in features.entries) {
+
+      double coef = feature.key != label.key
+          ? labelFeatures[feature.key]['coef']
+          : 0.0; //TODO: why is this 0.0 and not null
+      featureFactors.value[feature.key] == null
+          ? featureFactors.value[feature.key] = {label.key: coef}
+          : featureFactors.value[feature.key][label.key] = coef;
+    }
+  }*/
+  return Pair(models, features);
+}
+
+generateInputs(featureConfig) {
+  Map<String, dynamic> result;
+  featureConfig.forEach((k,v) => result["$k"] = null);
+  return result;
 }

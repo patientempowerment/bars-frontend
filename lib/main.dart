@@ -32,25 +32,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  Inputs input = new Inputs();
-  StringWrapper models = new StringWrapper("");
-  MapWrapper featureFactors = MapWrapper(Map());
+  //Inputs input = new Inputs();
+  //StringWrapper models = new StringWrapper("");
+  //MapWrapper featureFactors = MapWrapper(Map());
   bool predictMode = false;
   bool successfulDrop = false;
   double globalWidth;
   double globalHeight;
+  Map<String, dynamic> userInputs;
+  Map<String, dynamic> modelConfig;
+  Map<String, dynamic> featureConfig;
 
 
   @override
-  initState() {
-    super.initState();
-    prepareModels(models, featureFactors);
+  void initState() {
+    //super.initState();
+    readData().then((result) {
+      setState(() {
+        modelConfig = result[0];
+        featureConfig = result[1];
+        userInputs = generateInputs(featureConfig);
+        predictMode = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
+    if ((modelConfig == null) || (featureConfig == null)) {
+      return new Container();
+    }
+
     return Stack(
       children: <Widget>[
         PageView(children: [
@@ -97,7 +111,7 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                   Expanded(
                     child: SimpleBarChart(
-                        mapChartData(getIllnessProbs(input, models, predictMode))),
+                        mapChartData(getIllnessProbs(userInputs, models, predictMode))),
                   ),
                 ],
               ),

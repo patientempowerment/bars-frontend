@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:bars_frontend/utils.dart';
 
 /* import json
@@ -41,33 +40,9 @@ features:
 
 List<String> diseases = ['COPD', 'diabetes', 'asthma', 'tuberculosis'];*/
 
-Map<String, dynamic> features = {};
-Map<String, dynamic> models = {};
 
-prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
 
-  String modelsResponse = await rootBundle.loadString('assets/models.json');
-  String featuresResponse = await rootBundle.loadString('assets/features.json');
-  features = jsonDecode(featuresResponse);
-  models = jsonDecode(modelsResponse);
-  modelFactors.value = modelsResponse;
 
-  for (var label in models.entries) {
-
-    Map<String, dynamic> labelFeatures = label.value["features"];
-
-    for (var feature in features.entries) {
-
-      double coef = feature.key != label.key
-          ? labelFeatures[feature.key]['coef']
-          : 0.0; //TODO: why is this 0.0 and not null
-      featureFactors.value[feature.key] == null
-          ? featureFactors.value[feature.key] = {label.key: coef}
-          : featureFactors.value[feature.key][label.key] = coef;
-    }
-  }
-  return modelsResponse;
-}
 /*
 double coef = feature != disease
           ? diseaseJson[feature]['coef']
@@ -77,9 +52,15 @@ double coef = feature != disease
           : featureFactors.value[feature][disease] = coef;
  */
 List<IllnessProb> getIllnessProbs(
-    Inputs inputs, StringWrapper models, bool predictMode) {
-  if (models.value != "" && predictMode) {
-    Map<String, dynamic> jsonResponse = jsonDecode(models.value);
+    Map<String, dynamic> inputs, Map<String, dynamic> modelConfig, Map<String, dynamic> featureConfig, bool predictMode) {
+  if (predictMode) {
+
+    var probabilities = {};
+
+    modelConfig.forEach((k,v) => probabilities[k] = computeProb(v, inputs));
+
+    //TODO CHECK IF THIS STUFF MAKES SENSE
+
 
     double copdProb = computeProb('COPD', inputs, jsonResponse);
     double asthmaProb = computeProb('asthma', inputs, jsonResponse);
@@ -108,23 +89,17 @@ List<IllnessProb> getIllnessProbs(
   }
 }
 
-double computeProb(String label, Inputs inputs, Map<String, dynamic> json) {
-  Map<String, dynamic> relevantFeatures = models[label]["features"];
+double computeProb(Map<String, dynamic> modelValues, Map<String, dynamic> inputs) {
   double dot = 0.0;
 
-  for (var feature in features.entries) {
-    dot += getAddend(relevantFeatures, label, feature.key, inputs);
-  }
-
-  double intercept = models[label]['intercept'];
-
+  modelValues["features"].forEach((k,v) => dot += getSummand(v, inputs[k]));
+  double intercept = modelValues["intercept"];
   double result = 1 - (1 / (1 + exp(intercept + dot)));
   return result;
 }
 
-double getAddend(Map<String, dynamic> features, String label, String feature,
-    Inputs inputs) {
-  var value = inputs.getVariable(feature).get();
-  value ??= features[feature]['mean'];
-  return label == feature ? 0.0 : value * features[feature]['coef'];
+double getSummand(Map<String, dynamic> featureValues, var featureInput) {
+  featureInput ??= featureValues["mean"];
+  return featureInput * featureValues["coef"];
 }
+
