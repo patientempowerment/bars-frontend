@@ -51,18 +51,13 @@ double coef = feature != disease
           ? featureFactors.value[feature] = {disease: coef}
           : featureFactors.value[feature][disease] = coef;
  */
-List<IllnessProb> getIllnessProbs(
-    Map<String, dynamic> inputs, Map<String, dynamic> modelConfig, Map<String, dynamic> featureConfig, bool predictMode) {
+Map<String, dynamic> getIllnessProbs(
+    Map<String, dynamic> inputs, Map<String, dynamic> modelConfig, bool predictMode) {
+
+  Map<String, dynamic> probabilities = {};
   if (predictMode) {
-
-    var probabilities = {};
-
     modelConfig.forEach((k,v) => probabilities[k] = computeProb(v, inputs));
-
-    //TODO CHECK IF THIS STUFF MAKES SENSE
-
-
-    double copdProb = computeProb('COPD', inputs, jsonResponse);
+    /*double copdProb = computeProb('COPD', inputs, jsonResponse);
     double asthmaProb = computeProb('asthma', inputs, jsonResponse);
     double diabetesProb = computeProb('diabetes', inputs, jsonResponse);
     double tuberculosisProb = computeProb('tuberculosis', inputs, jsonResponse);
@@ -85,8 +80,11 @@ List<IllnessProb> getIllnessProbs(
       IllnessProb('Asthma', 0.0),
       IllnessProb('Diabetes', 0.0),
       IllnessProb('Tuberculosis', 0.0),
-    ];
+    ];*/
+  } else {
+    modelConfig.forEach((k,v) => probabilities[k] = 0);
   }
+  return probabilities;
 }
 
 double computeProb(Map<String, dynamic> modelValues, Map<String, dynamic> inputs) {

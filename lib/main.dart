@@ -111,7 +111,7 @@ class MyHomePageState extends State<MyHomePage> {
                   ),
                   Expanded(
                     child: SimpleBarChart(
-                        mapChartData(getIllnessProbs(userInputs, models, predictMode))),
+                        mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode))),
                   ),
                 ],
               ),
