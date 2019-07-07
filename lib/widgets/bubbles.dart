@@ -21,7 +21,8 @@ class DragBubble extends StatefulWidget {
   }
 }
 
-class DragBubbleState extends State<DragBubble> {
+class DragBubbleState extends State<DragBubble>
+    with SingleTickerProviderStateMixin {
   Offset offset;
   final List<Color> colorGradient = [
     Colors.lightGreen,
@@ -35,6 +36,8 @@ class DragBubbleState extends State<DragBubble> {
   final Function dialogFunction;
   final String title;
   final String feature;
+  AnimationController animationController;
+  Animation animation;
 
   DragBubbleState(this.offset, this.homePageState, this.featureFactors,
       this.feature, this.title, this.dialogFunction);
@@ -57,6 +60,17 @@ class DragBubbleState extends State<DragBubble> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+    animation = Tween(begin: 0, end: 60).animate(animationController)
+      ..addListener(() {
+        setState(() {});
+      });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -76,8 +90,15 @@ class DragBubbleState extends State<DragBubble> {
               computeNewColor(input);
             },
             child: Stack(
-              children: getParticles(homePageState, this, title, dialogFunction,
-                  colorGradient, colorIndex), // TODO change
+              children: getParticles(
+                  homePageState,
+                  this,
+                  title,
+                  dialogFunction,
+                  colorGradient,
+                  colorIndex,
+                  animationController,
+                  animation), // TODO change
             ),
           ),
         ),
@@ -93,9 +114,10 @@ class Bubble extends StatelessWidget {
   final String title;
   final colorGradient;
   final int colorIndex;
+  final animationController;
 
   Bubble(this.homePageState, this.dragState, this.title, this.dialogFunction,
-      this.colorGradient, this.colorIndex);
+      this.colorGradient, this.colorIndex, this.animationController);
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +140,7 @@ class Bubble extends StatelessWidget {
                 if (dialogInput != null) {
                   double inputValue = dialogInput.get();
                   dragState.computeNewColor(inputValue);
+                  animationController.forward();
                 }
               },
               child: Container(),
@@ -168,7 +191,7 @@ class DiseaseBubble extends StatelessWidget {
             (prob.probability * (colorGradient.length - 1)).round().toInt()];
       }
     }
-    return Colors.black;
+    return Colors.black; // this should never happen
   }
 
   @override
@@ -219,35 +242,37 @@ class DiseaseBubble extends StatelessWidget {
 }
 
 List<Widget> getParticles(homePageState, dragState, title, dialogFunction,
-    colorGradient, colorIndex) {
+    colorGradient, colorIndex, animationController, animation) {
   List<Widget> particleList = [
     Bubble(homePageState, dragState, title, dialogFunction, colorGradient,
-        colorIndex)
+        colorIndex, animationController)
   ];
   for (int i = 0; i < colorIndex; i++) {
-    particleList.add(Particle());
+    particleList.add(Particle(animation));
   }
   return particleList;
 }
 
 class Particle extends StatelessWidget {
+  final dynamic animation;
+
+  Particle(this.animation);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedPositioned(
+      top: 200,
+      duration: Duration(seconds: 1),
       width: 5,
       height: 5,
-      child: Column(
-        children: <Widget>[
-          AnimatedContainer(
-            duration: Duration(seconds: 1),
-            width: 5,
-            height: 5,
-            decoration: new BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black,
-            ),
-          ),
-        ],
+      child: AnimatedContainer(
+        duration: Duration(seconds: 1),
+        width: 5,
+        height: 5,
+        decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.black,
+        ),
       ),
     );
   }
