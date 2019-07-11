@@ -34,7 +34,7 @@ getScrollableRadioButtons(MyHomePageState context, String title,
 }
 
 getRadioButtons(MyHomePageState context, MyDialogContentState dialogState,
-    String title, List<Pair> buttonValues, groupValue) {
+    String title, List<Pair> buttonValues, groupValue, ) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(

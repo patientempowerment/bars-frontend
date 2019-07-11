@@ -83,12 +83,14 @@ class _DragBubbleState extends State<DragBubble> {
   int colorIndex = 0;
   final MyHomePageState homePageState;
   final MapWrapper featureFactors;
+  final Map<String, dynamic> featureConfig;
+  final Map<String, dynamic> modelConfig;
   final Function dialogFunction;
   final String title;
   final String feature;
 
   _DragBubbleState(this.offset, this.homePageState, this.featureFactors,
-      this.feature, this.title, this.dialogFunction);
+      this.feature, this.title, this.dialogFunction, this.featureConfig, this.modelConfig);
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class _DragBubbleState extends State<DragBubble> {
             onPanEnd: (_) async {
               await dialogFunction(context, homePageState);
 
-              for (var label in models.entries) {
+              for (var label in modelConfig.entries) {
                 if (featureFactors.value[feature][label.key] > 0.1) {
                   colorIndex++;
                 }

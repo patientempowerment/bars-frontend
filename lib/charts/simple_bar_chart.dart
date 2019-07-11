@@ -1,6 +1,8 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
+import 'package:tuple/tuple.dart';
+
 /*
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -30,7 +32,7 @@ List<charts.Series<IllnessProb, String>> mapChartData(List<IllnessProb> data) {
 }*/
 
 class SimpleBarChart extends StatelessWidget {
-  final Map<String, dynamic> labelValues;
+  final List<charts.Series<Tuple2<String, dynamic>, String>> labelValues;
   final bool animate;
 
   SimpleBarChart(this.labelValues, {this.animate = true});
@@ -43,13 +45,20 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-mapChartData(List<m> labelValues){
-  return [ //TODO: make a utils func that creates chars.series from maps
-    charts.Series<IllnessProb, String>(
+List<Tuple2<String, dynamic>> mapToTupleList(Map<String, dynamic> map){
+  List<Tuple2<String, dynamic>> list;
+  map.forEach((k,v) => list.add(Tuple2<String, dynamic>(k, v)));
+  return list;
+}
+
+mapChartData(Map<String, dynamic> labelValues){
+  var data = mapToTupleList(labelValues);
+  return [ //TODO: make a utils func that creates charts.series from maps
+    charts.Series<Tuple2<String, dynamic>, String>(
       id: 'barChart',
       colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
-      domainFn: labelValues.
-      measureFn: (IllnessProb sales, _) => sales.probability,
+      domainFn: (Tuple2<String, dynamic> tuple, _) => tuple.item1,
+      measureFn: (Tuple2<String, dynamic> tuple, _) => tuple.item2,
       data: data,
     )
   ];
