@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
@@ -65,22 +67,11 @@ class DragBubbleState extends State<DragBubble>
   getParticles() {
     List<Widget> particleList = List();
     for (int i = 0; i < colorIndex; i++) {
-      particleList.add(Particle(offset, Offset(0.0, 0.0), animation));
+      particleList.add(Particle(offset, Offset(0.0, 0.0)));
     }
     bubblePrototypeState.setState(() {
       bubblePrototypeState.particleList[this] = particleList;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    animationController =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    animation = Tween(begin: 0, end: 60).animate(animationController)
-      ..addListener(() {
-        setState(() {});
-      });
   }
 
   @override
@@ -144,7 +135,7 @@ class Bubble extends StatelessWidget {
                 if (dialogInput != null) {
                   double inputValue = dialogInput.get();
                   dragState.computeNewColor(inputValue);
-                  animationController.forward();
+                  dragState.getParticles();
                 }
               },
               child: Container(),
@@ -246,43 +237,46 @@ class DiseaseBubble extends StatelessWidget {
 }
 
 class Particle extends StatefulWidget {
-  final dynamic animation;
   Offset offset;
   final Offset targetOffset;
 
-  Particle(this.offset, this.targetOffset, this.animation);
+  Particle(this.offset, this.targetOffset);
 
   @override
   State<StatefulWidget> createState() {
-    return ParticleState(offset, targetOffset, animation);
+    return ParticleState(offset, targetOffset);
   }
-
 }
 
 class ParticleState extends State<Particle> {
-  final dynamic animation;
   Offset offset;
   final Offset targetOffset;
+  final timeout = const Duration(seconds: 1);
+  final ms = const Duration(milliseconds: 1);
 
+  startTimeout([int milliseconds]) {
+    var duration = milliseconds == null ? timeout : ms * milliseconds;
+    return new Timer(duration, handleTimeout);
+  }
 
-  ParticleState(this.offset, this.targetOffset, this.animation);
+  void handleTimeout() {
+    setState(() {
+      offset = targetOffset;
+    });
+  }
+
+  ParticleState(this.offset, this.targetOffset);
 
   @override
   Widget build(BuildContext context) {
+    startTimeout();
     return AnimatedPositioned(
       top: offset.dy,
       left: offset.dx,
       duration: Duration(seconds: 1),
       width: 5,
       height: 5,
-      child: FlatButton(
-        onPressed: () {
-          setState(() {
-            offset = targetOffset;
-          });
-        },
-        color: Colors.black,
-        child: Container(
+      child: Container(
           width: 5,
           height: 5,
           decoration: new BoxDecoration(
@@ -290,7 +284,6 @@ class ParticleState extends State<Particle> {
             color: Colors.black,
           ),
         ),
-      ),
     );
   }
 }
