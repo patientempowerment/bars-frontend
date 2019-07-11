@@ -253,16 +253,25 @@ class ParticleState extends State<Particle> {
   final Offset targetOffset;
   final timeout = const Duration(seconds: 1);
   final ms = const Duration(milliseconds: 1);
+  Timer timer;
 
   startTimeout([int milliseconds]) {
     var duration = milliseconds == null ? timeout : ms * milliseconds;
-    return new Timer(duration, handleTimeout);
+    timer = new Timer(duration, handleTimeout);
   }
 
   void handleTimeout() {
-    setState(() {
-      offset = targetOffset;
-    });
+    if (timer != null) {
+      setState(() {
+        offset = targetOffset;
+      });
+    }
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    timer = null;
   }
 
   ParticleState(this.offset, this.targetOffset);
