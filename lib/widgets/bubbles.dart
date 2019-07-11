@@ -64,11 +64,19 @@ class DragBubbleState extends State<DragBubble>
     });
   }
 
-  getParticles() {
+  getParticles(double input) {
     List<Widget> particleList = List();
-    for (int i = 0; i < colorIndex; i++) {
-      particleList.add(Particle(offset, Offset(0.0, 0.0)));
+    for (var label in models.entries) {
+      if (featureFactors.value[feature] != null) {
+        double factor = featureFactors.value[feature][label.key] * input;
+        factor = factor < 0 ? 0 : factor;
+        //match label to bubble
+        for (int i = 0; i < colorIndex * 50; i++) {
+          particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label.key]));
+        }
+      }
     }
+
     bubblePrototypeState.setState(() {
       bubblePrototypeState.particleList[this] = particleList;
     });
@@ -92,7 +100,7 @@ class DragBubbleState extends State<DragBubble>
                 double input =
                     (await dialogFunction(context, homePageState)).get();
                 computeNewColor(input);
-                getParticles();
+                getParticles(input);
               },
               child: Bubble(homePageState, this, title, dialogFunction,
                   colorGradient, colorIndex, animationController)),
@@ -135,7 +143,7 @@ class Bubble extends StatelessWidget {
                 if (dialogInput != null) {
                   double inputValue = dialogInput.get();
                   dragState.computeNewColor(inputValue);
-                  dragState.getParticles();
+                  dragState.getParticles(inputValue);
                 }
               },
               child: Container(),
@@ -282,7 +290,7 @@ class ParticleState extends State<Particle> {
     return AnimatedPositioned(
       top: offset.dy,
       left: offset.dx,
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 3),
       width: 5,
       height: 5,
       child: Container(
