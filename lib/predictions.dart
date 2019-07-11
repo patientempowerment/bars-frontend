@@ -2,85 +2,12 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:bars_frontend/utils.dart';
 
-/* import json
-features:
-  aFeature:
-    title: "a title"
-    choices:
-      Never: 0
-      Always: 2
-      Sometimes: 1
-  aSecondFeature:
-    title: "a second title"
-    slider_min: 0
-    slider_max 100
- */
-
-/*List<String> featureNames = [
-  'age',
-  'alcoholFrequency',
-  'asthma',
-  'COPD',
-  'coughOnMostDays',
-  'currentlySmoking',
-  'diabetes',
-  'diastolicBloodPressure',
-  'height',
-  'neverSmoked',
-  'noOfCigarettesPerDay',
-  'noOfCigarettesPreviouslyPerDay',
-  'previouslySmoked',
-  'sex',
-  'sputumOnMostDays',
-  'systolicBloodPressure',
-  'tuberculosis',
-  'weight',
-  'wheezeInChestInLastYear'
-];
-
-List<String> diseases = ['COPD', 'diabetes', 'asthma', 'tuberculosis'];*/
-
-
-
-
-/*
-double coef = feature != disease
-          ? diseaseJson[feature]['coef']
-          : 0.0;
-      featureFactors.value[feature] == null
-          ? featureFactors.value[feature] = {disease: coef}
-          : featureFactors.value[feature][disease] = coef;
- */
 Map<String, dynamic> getIllnessProbs(
     Map<String, dynamic> inputs, Map<String, dynamic> modelConfig, bool predictMode) {
 
   Map<String, dynamic> probabilities = {};
   if (predictMode) {
     modelConfig.forEach((k,v) => probabilities[k] = computeProb(v, inputs));
-    /*double copdProb = computeProb('COPD', inputs, jsonResponse);
-    double asthmaProb = computeProb('asthma', inputs, jsonResponse);
-    double diabetesProb = computeProb('diabetes', inputs, jsonResponse);
-    double tuberculosisProb = computeProb('tuberculosis', inputs, jsonResponse);
-
-    copdProb = inputs.copd.value == YesNo.yes ? 1.0 : copdProb;
-    asthmaProb = inputs.asthma.value == YesNo.yes ? 1.0 : asthmaProb;
-    diabetesProb = inputs.diabetes.value == YesNo.yes ? 1.0 : diabetesProb;
-    tuberculosisProb =
-        inputs.tuberculosis.value == YesNo.yes ? 1.0 : tuberculosisProb;
-
-    return [
-      IllnessProb('COPD', copdProb),
-      IllnessProb('Asthma', asthmaProb),
-      IllnessProb('Diabetes', diabetesProb),
-      IllnessProb('Tuberculosis', tuberculosisProb),
-    ];
-  } else {
-    return [
-      IllnessProb('COPD', 0.0),
-      IllnessProb('Asthma', 0.0),
-      IllnessProb('Diabetes', 0.0),
-      IllnessProb('Tuberculosis', 0.0),
-    ];*/
   } else {
     modelConfig.forEach((k,v) => probabilities[k] = 0);
   }

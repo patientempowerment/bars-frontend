@@ -3,34 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:tuple/tuple.dart';
 
-/*
-class SimpleBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
-  final bool animate;
-
-  SimpleBarChart(this.seriesList, {this.animate = true});
-
-  @override
-  Widget build(BuildContext context) {
-    return charts.BarChart(
-      seriesList,
-      animate: animate,
-    );
-  }
-}
-
-List<charts.Series<IllnessProb, String>> mapChartData(List<IllnessProb> data) {
-  return [
-    charts.Series<IllnessProb, String>(
-      id: 'Sales',
-      colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
-      domainFn: (IllnessProb sales, _) => sales.illness,
-      measureFn: (IllnessProb sales, _) => sales.probability,
-      data: data,
-    )
-  ];
-}*/
-
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series<Tuple2<String, dynamic>, String>> labelValues;
   final bool animate;
@@ -46,7 +18,7 @@ class SimpleBarChart extends StatelessWidget {
 }
 
 List<Tuple2<String, dynamic>> mapToTupleList(Map<String, dynamic> map){
-  List<Tuple2<String, dynamic>> list;
+  List<Tuple2<String, dynamic>> list = [];
   map.forEach((k,v) => list.add(Tuple2<String, dynamic>(k, v)));
   return list;
 }

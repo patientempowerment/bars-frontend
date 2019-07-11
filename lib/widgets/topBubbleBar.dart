@@ -12,7 +12,7 @@ Widget getPatientImage(double width, Offset position) {
   );
 }
 
-Widget getTopBubbleBar(MyHomePageState homePageState, MapWrapper featureFactors,
+Widget getTopBubbleBar(MyHomePageState homePageState, Map<String, dynamic> modelConfig,
     double globalWidth, double globalHeight) {
   double imageDimensions = 200;
   double xOffset = globalWidth / 2 - imageDimensions / 2;
@@ -25,13 +25,13 @@ Widget getTopBubbleBar(MyHomePageState homePageState, MapWrapper featureFactors,
         Expanded(
           child: Stack(
             children: <Widget>[
-              DragBubble(Offset(0.0, 0.0), homePageState, featureFactors, "sex",
+              DragBubble(Offset(0.0, 0.0), homePageState, modelConfig, "sex",
                   "Sex", asyncSexInputDialog),
-              DragBubble(Offset(100.0, 0.0), homePageState, featureFactors,
+              DragBubble(Offset(100.0, 0.0), homePageState, modelConfig,
                   "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog),
-              DragBubble(Offset(200.0, 0.0), homePageState, featureFactors,
+              DragBubble(Offset(200.0, 0.0), homePageState, modelConfig,
                   "COPD", "COPD", asyncCOPDInputDialog),
-              DragBubble(Offset(300, 0.0), homePageState, featureFactors,
+              DragBubble(Offset(300, 0.0), homePageState, modelConfig,
                   "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog),
               getPatientImage(imageDimensions, imagePosition),
               DiseaseBubble(
@@ -66,14 +66,14 @@ class DragBubble extends StatefulWidget {
   final Function dialogFunction;
   final String feature;
   final String title;
-  final MapWrapper featureFactors;
+  final Map<String, dynamic> modelConfig;
 
-  DragBubble(this.initialOffset, this.homePageState, this.featureFactors,
+  DragBubble(this.initialOffset, this.homePageState, this.modelConfig,
       this.feature, this.title, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
-    return _DragBubbleState(initialOffset, homePageState, featureFactors,
+    return _DragBubbleState(initialOffset, homePageState, modelConfig,
         feature, title, dialogFunction);
   }
 }
@@ -82,15 +82,13 @@ class _DragBubbleState extends State<DragBubble> {
   Offset offset;
   int colorIndex = 0;
   final MyHomePageState homePageState;
-  final MapWrapper featureFactors;
-  final Map<String, dynamic> featureConfig;
   final Map<String, dynamic> modelConfig;
   final Function dialogFunction;
   final String title;
   final String feature;
 
-  _DragBubbleState(this.offset, this.homePageState, this.featureFactors,
-      this.feature, this.title, this.dialogFunction, this.featureConfig, this.modelConfig);
+  _DragBubbleState(this.offset, this.homePageState, this.modelConfig,
+      this.feature, this.title, this.dialogFunction);
 
   @override
   Widget build(BuildContext context) {
@@ -109,11 +107,13 @@ class _DragBubbleState extends State<DragBubble> {
             onPanEnd: (_) async {
               await dialogFunction(context, homePageState);
 
-              for (var label in modelConfig.entries) {
-                if (featureFactors.value[feature][label.key] > 0.1) {
-                  colorIndex++;
-                }
-              }
+              modelConfig.forEach((k,v) {
+                v["features"].forEach((k2, v2) {
+                  if (v2["coef"] > 0.1) {
+                    colorIndex++;
+                  }
+                });
+              });
             },
             child: Bubble(homePageState, title, dialogFunction, colorIndex),
           ),
@@ -173,14 +173,11 @@ class DiseaseBubble extends StatelessWidget {
   DiseaseBubble(this.title, this.position, this.homePageState);
 
   double computeDimensions() {
-    List<IllnessProb> probs =
-        getIllnessProbs(homePageState.input, homePageState.models, true);
-    for (IllnessProb prob in probs) {
-      if (prob.illness == title) {
-        return prob.probability;
-      }
-    }
-    return 0.0; //this should never happen
+    double value = 0.0;
+    Map<String, dynamic> probs =
+        getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
+    probs.forEach((k,v) => (k == title) ? value = v :null);
+    return value;
   }
 
   @override

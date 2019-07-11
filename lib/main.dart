@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'charts/simple_bar_chart.dart';
-import 'widgets/radioButtons.dart';
-import 'widgets/sliders.dart';
 import 'predictions.dart';
 import 'package:bars_frontend/utils.dart';
 
@@ -46,12 +44,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    //super.initState();
     readData().then((result) {
       setState(() {
-        modelConfig = result[0];
-        featureConfig = result[1];
-        userInputs = generateInputs(featureConfig);
+        modelConfig = result.first;
+        featureConfig = result.second;
+        userInputs = generateDefaultInputValues(featureConfig);
         predictMode = true;
       });
     });
@@ -79,25 +76,8 @@ class MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: ListView(
                       children: [
-                        getSexRadioButtons(this, null),
-                        getAgeSlider(this),
-                        getHeightSlider(this),
-                        getWeightSlider(this),
-                        getDiastolicBloodPressureSlider(this),
-                        getSystolicBloodPressureSlider(this),
-                        getAlcoholFrequencyRadioButtons(this),
-                        getCurrentlySmokingRadioButtons(this, null),
-                        getNeverSmokedRadioButtons(this, null),
-                        getPreviouslySmokedRadioButtons(this, null),
-                        getNoOfCigarettesPerDaySlider(this),
-                        getNoOfCigarettesPreviouslyPerDaySlider(this),
-                        getWheezeInChestInLastYearRadioButtons(this, null),
-                        getCoughOnMostDaysRadioButtons(this, null),
-                        getSputumOnMostDaysRadioButtons(this, null),
-                        getCOPDRadioButtons(this, null),
-                        getAsthmaRadioButtons(this, null),
-                        getDiabetesRadioButtons(this, null),
-                        getTuberculosisRadioButtons(this, null),
+                        for(var feature in featureConfig.entries)
+                          buildInputWidget(this, feature, userInputs),
                       ],
                     ),
                   ),
@@ -125,7 +105,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(this, featureFactors, globalWidth, globalHeight),
+                  getTopBubbleBar(this, modelConfig, globalWidth, globalHeight),
                 ],
               ),
             ),

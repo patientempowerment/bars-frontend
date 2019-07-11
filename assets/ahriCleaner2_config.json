@@ -68,7 +68,7 @@
   "noOfCigarettesPreviouslyPerDay": {
     "slider_max": 140, 
     "slider_min": 0, 
-    "title": "noOfCigarettesPreviouslyPerDay"
+    "title": "Number of Cigarettes Previously per Day"
   }, 
   "previouslySmoked": {
     "choices": {
