@@ -65,7 +65,7 @@ class DragBubbleState extends State<DragBubble>
   getParticles() {
     List<Widget> particleList = List();
     for (int i = 0; i < colorIndex; i++) {
-      particleList.add(Particle(offset, animation));
+      particleList.add(Particle(offset, Offset(0.0, 0.0), animation));
     }
     bubblePrototypeState.setState(() {
       bubblePrototypeState.particleList[this] = particleList;
@@ -245,11 +245,27 @@ class DiseaseBubble extends StatelessWidget {
   }
 }
 
-class Particle extends StatelessWidget {
+class Particle extends StatefulWidget {
   final dynamic animation;
-  final Offset offset;
+  Offset offset;
+  final Offset targetOffset;
 
-  Particle(this.offset, this.animation);
+  Particle(this.offset, this.targetOffset, this.animation);
+
+  @override
+  State<StatefulWidget> createState() {
+    return ParticleState(offset, targetOffset, animation);
+  }
+
+}
+
+class ParticleState extends State<Particle> {
+  final dynamic animation;
+  Offset offset;
+  final Offset targetOffset;
+
+
+  ParticleState(this.offset, this.targetOffset, this.animation);
 
   @override
   Widget build(BuildContext context) {
@@ -259,13 +275,20 @@ class Particle extends StatelessWidget {
       duration: Duration(seconds: 1),
       width: 5,
       height: 5,
-      child: AnimatedContainer(
-        duration: Duration(seconds: 1),
-        width: 5,
-        height: 5,
-        decoration: new BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.black,
+      child: FlatButton(
+        onPressed: () {
+          setState(() {
+            offset = targetOffset;
+          });
+        },
+        color: Colors.black,
+        child: Container(
+          width: 5,
+          height: 5,
+          decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.black,
+          ),
         ),
       ),
     );
