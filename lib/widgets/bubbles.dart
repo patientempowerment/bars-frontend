@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
@@ -66,13 +67,14 @@ class DragBubbleState extends State<DragBubble>
 
   getParticles(double input) {
     List<Widget> particleList = List();
+    dynamic rdm = Random();
     for (var label in models.entries) {
       if (featureFactors.value[feature] != null) {
         double factor = featureFactors.value[feature][label.key] * input;
         factor = factor < 0 ? 0 : factor;
-        //match label to bubble
-        for (int i = 0; i < colorIndex * 50; i++) {
-          particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label.key]));
+        for (int i = 0; i < factor * 50; i++) {
+          int timerDuration = ((rdm.nextInt(60)/100+0.7)*1000).toInt();
+          particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label.key], timerDuration));
         }
       }
     }
@@ -247,23 +249,26 @@ class DiseaseBubble extends StatelessWidget {
 class Particle extends StatefulWidget {
   Offset offset;
   final Offset targetOffset;
+  final timerDuration;
 
-  Particle(this.offset, this.targetOffset);
+  Particle(this.offset, this.targetOffset, this.timerDuration);
 
   @override
   State<StatefulWidget> createState() {
-    return ParticleState(offset, targetOffset);
+    return ParticleState(offset, targetOffset, timerDuration);
   }
 }
 
 class ParticleState extends State<Particle> {
   Offset offset;
   final Offset targetOffset;
-  final timeout = const Duration(seconds: 1);
+  final int timerDuration;
+  dynamic timeout;
   final ms = const Duration(milliseconds: 1);
   Timer timer;
 
   startTimeout([int milliseconds]) {
+    timeout = Duration(milliseconds: timerDuration);
     var duration = milliseconds == null ? timeout : ms * milliseconds;
     timer = new Timer(duration, handleTimeout);
   }
@@ -282,7 +287,7 @@ class ParticleState extends State<Particle> {
     timer = null;
   }
 
-  ParticleState(this.offset, this.targetOffset);
+  ParticleState(this.offset, this.targetOffset, this.timerDuration);
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +295,7 @@ class ParticleState extends State<Particle> {
     return AnimatedPositioned(
       top: offset.dy,
       left: offset.dx,
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 2),
       width: 5,
       height: 5,
       child: Container(

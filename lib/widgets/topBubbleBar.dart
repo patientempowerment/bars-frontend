@@ -71,7 +71,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
         Offset(imagePosition.dx + imageDimensions,
             imagePosition.dy + imageDimensions - 40),
         homePageState);
-    
+
     diseaseBubbleOffsets["COPD"] = Offset(imagePosition.dx - 90, imagePosition.dy);
     diseaseBubbleOffsets["asthma"] =
         Offset(imagePosition.dx + imageDimensions, imagePosition.dy);
