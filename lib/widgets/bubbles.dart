@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:bars_frontend/predictions.dart';
+import 'topBubbleBar.dart';
 
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final MyHomePageState homePageState;
+  final BubblePrototypeState bubblePrototypeState;
   final Function dialogFunction;
   final String feature;
   final String title;
   final MapWrapper featureFactors;
 
-  DragBubble(this.initialOffset, this.homePageState, this.featureFactors,
-      this.feature, this.title, this.dialogFunction);
+  DragBubble(this.initialOffset, this.homePageState, this.bubblePrototypeState,
+      this.featureFactors, this.feature, this.title, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
-    return DragBubbleState(initialOffset, homePageState, featureFactors,
-        feature, title, dialogFunction);
+    return DragBubbleState(initialOffset, homePageState, bubblePrototypeState,
+        featureFactors, feature, title, dialogFunction);
   }
 }
 
@@ -32,6 +34,7 @@ class DragBubbleState extends State<DragBubble>
   ];
   int colorIndex = 0;
   final MyHomePageState homePageState;
+  final BubblePrototypeState bubblePrototypeState;
   final MapWrapper featureFactors;
   final Function dialogFunction;
   final String title;
@@ -39,8 +42,8 @@ class DragBubbleState extends State<DragBubble>
   AnimationController animationController;
   Animation animation;
 
-  DragBubbleState(this.offset, this.homePageState, this.featureFactors,
-      this.feature, this.title, this.dialogFunction);
+  DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState,
+      this.featureFactors, this.feature, this.title, this.dialogFunction);
 
   computeNewColor(double input) {
     int newColorIndex = 0;
@@ -56,6 +59,16 @@ class DragBubbleState extends State<DragBubble>
         : newColorIndex;
     setState(() {
       colorIndex = newColorIndex;
+    });
+  }
+
+  getParticles() {
+    List<Widget> particleList = List();
+    for (int i = 0; i < colorIndex; i++) {
+      particleList.add(Particle(offset, animation));
+    }
+    bubblePrototypeState.setState(() {
+      bubblePrototypeState.particleList[this] = particleList;
     });
   }
 
@@ -78,29 +91,20 @@ class DragBubbleState extends State<DragBubble>
           left: offset.dx,
           top: offset.dy,
           child: GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                offset = Offset(
-                    offset.dx + details.delta.dx, offset.dy + details.delta.dy);
-              });
-            },
-            onPanEnd: (_) async {
-              double input =
-                  (await dialogFunction(context, homePageState)).get();
-              computeNewColor(input);
-            },
-            child: Stack(
-              children: getParticles(
-                  homePageState,
-                  this,
-                  title,
-                  dialogFunction,
-                  colorGradient,
-                  colorIndex,
-                  animationController,
-                  animation), // TODO change
-            ),
-          ),
+              onPanUpdate: (details) {
+                setState(() {
+                  offset = Offset(offset.dx + details.delta.dx,
+                      offset.dy + details.delta.dy);
+                });
+              },
+              onPanEnd: (_) async {
+                double input =
+                    (await dialogFunction(context, homePageState)).get();
+                computeNewColor(input);
+                getParticles();
+              },
+              child: Bubble(homePageState, this, title, dialogFunction,
+                  colorGradient, colorIndex, animationController)),
         ),
       ],
     );
@@ -241,27 +245,17 @@ class DiseaseBubble extends StatelessWidget {
   }
 }
 
-List<Widget> getParticles(homePageState, dragState, title, dialogFunction,
-    colorGradient, colorIndex, animationController, animation) {
-  List<Widget> particleList = [
-    Bubble(homePageState, dragState, title, dialogFunction, colorGradient,
-        colorIndex, animationController)
-  ];
-  for (int i = 0; i < colorIndex; i++) {
-    particleList.add(Particle(animation));
-  }
-  return particleList;
-}
-
 class Particle extends StatelessWidget {
   final dynamic animation;
+  final Offset offset;
 
-  Particle(this.animation);
+  Particle(this.offset, this.animation);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedPositioned(
-      top: 200,
+      top: offset.dy,
+      left: offset.dx,
       duration: Duration(seconds: 1),
       width: 5,
       height: 5,

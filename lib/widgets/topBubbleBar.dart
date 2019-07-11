@@ -14,49 +14,89 @@ Widget getPatientImage(double width, Offset position) {
 
 Widget getTopBubbleBar(MyHomePageState homePageState, MapWrapper featureFactors,
     double globalWidth, double globalHeight) {
-  double imageDimensions = 200;
-  double xOffset = globalWidth / 2 - imageDimensions / 2;
-  double yOffset = globalHeight / 4;
-  Offset imagePosition = Offset(xOffset, yOffset);
-
-  return Expanded(
-    child: Row(
-      children: <Widget>[
-        Expanded(
-          child: Stack(
-            children: <Widget>[
-              DragBubble(Offset(0.0, 0.0), homePageState, featureFactors, "sex",
-                  "Sex", asyncSexInputDialog),
-              DragBubble(Offset(100.0, 0.0), homePageState, featureFactors,
-                  "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog),
-              DragBubble(Offset(200.0, 0.0), homePageState, featureFactors,
-                  "COPD", "COPD", asyncCOPDInputDialog),
-              DragBubble(Offset(300, 0.0), homePageState, featureFactors,
-                  "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog),
-              getPatientImage(imageDimensions, imagePosition),
-              DiseaseBubble(
-                  "COPD",
-                  Offset(imagePosition.dx - 90, imagePosition.dy),
-                  homePageState),
-              DiseaseBubble(
-                  "Asthma",
-                  Offset(imagePosition.dx + imageDimensions, imagePosition.dy),
-                  homePageState),
-              DiseaseBubble(
-                  "Tuberculosis",
-                  Offset(imagePosition.dx - 90,
-                      imagePosition.dy + imageDimensions - 40),
-                  homePageState),
-              DiseaseBubble(
-                  "Diabetes",
-                  Offset(imagePosition.dx + imageDimensions,
-                      imagePosition.dy + imageDimensions - 40),
-                  homePageState),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
+  return BubblePrototype(
+      homePageState, featureFactors, globalWidth, globalHeight);
 }
 
+class BubblePrototype extends StatefulWidget {
+  MyHomePageState homePageState;
+  MapWrapper featureFactors;
+  double globalWidth;
+  double globalHeight;
+
+  BubblePrototype(this.homePageState, this.featureFactors, this.globalWidth,
+      this.globalHeight);
+
+  @override
+  State<StatefulWidget> createState() {
+    return BubblePrototypeState(
+        homePageState, featureFactors, globalWidth, globalHeight);
+  }
+}
+
+class BubblePrototypeState extends State<BubblePrototype> {
+  MyHomePageState homePageState;
+  MapWrapper featureFactors;
+  double globalWidth;
+  double globalHeight;
+  double imageDimensions = 200;
+  double xOffset;
+  double yOffset;
+  Offset imagePosition;
+  Map<State, List<Widget>> particleList = Map();
+
+  BubblePrototypeState(this.homePageState, this.featureFactors,
+      this.globalWidth, this.globalHeight) {
+    xOffset = globalWidth / 2 - imageDimensions / 2;
+    yOffset = globalHeight / 4;
+    imagePosition = Offset(xOffset, yOffset);
+  }
+
+  List<Widget> getWidgets() {
+    List<Widget> list = List();
+
+    list.add(DragBubble(Offset(0.0, 0.0), homePageState, this, featureFactors,
+        "sex", "Sex", asyncSexInputDialog));
+    list.add(DragBubble(Offset(100.0, 0.0), homePageState, this, featureFactors,
+        "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog));
+    list.add(DragBubble(Offset(200.0, 0.0), homePageState, this, featureFactors,
+        "COPD", "COPD", asyncCOPDInputDialog));
+    list.add(DragBubble(Offset(300, 0.0), homePageState, this, featureFactors,
+        "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog));
+    list.add(getPatientImage(imageDimensions, imagePosition));
+    list.add(DiseaseBubble("COPD",
+        Offset(imagePosition.dx - 90, imagePosition.dy), homePageState));
+    list.add(DiseaseBubble(
+        "Asthma",
+        Offset(imagePosition.dx + imageDimensions, imagePosition.dy),
+        homePageState));
+    list.add(DiseaseBubble(
+        "Tuberculosis",
+        Offset(imagePosition.dx - 90, imagePosition.dy + imageDimensions - 40),
+        homePageState));
+    list.add(DiseaseBubble(
+        "Diabetes",
+        Offset(imagePosition.dx + imageDimensions,
+            imagePosition.dy + imageDimensions - 40),
+        homePageState));
+    for (List<Widget> particleList in particleList.values) {
+      for (Widget particle in particleList) {
+        list.add(particle);
+      }
+    }
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Stack(children: getWidgets()),
+          ),
+        ],
+      ),
+    );
+  }
+}
