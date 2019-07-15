@@ -14,12 +14,12 @@ class DragBubble extends StatefulWidget {
   final String feature;
   final String title;
   final Map<String, dynamic> modelConfig;
-  DragBubble(this.initialOffset, this.homePageState, this.modelConfig,
+  DragBubble(this.initialOffset, this.homePageState, this.bubblePrototypeState, this.modelConfig,
       this.feature, this.title, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
-    return _DragBubbleState(initialOffset, homePageState, modelConfig,
+    return DragBubbleState(initialOffset, homePageState, bubblePrototypeState, modelConfig,
         feature, title, dialogFunction);
   }
 }
@@ -44,13 +44,13 @@ class DragBubbleState extends State<DragBubble>
   Animation animation;
 
 
-      this.feature, this.title, this.dialogFunction);
-  _DragBubbleState(this.offset, this.homePageState, this.modelConfig,
+
+  DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState, this.modelConfig, this.feature, this.title, this.dialogFunction);
 
   computeNewColor(double input) {
     int newColorIndex = 0;
-    for (var label in models.entries) {
-      if (featureFactors.value[feature] != null) {
+    /*for (var label in modelConfig.entries) {
+      if (modelConfig.value[feature] != null) {
         factor = factor < 0 ? 0 : factor;
         double factor = featureFactors.value[feature][label.key] * input;
         newColorIndex += factor.round().toInt();
@@ -58,7 +58,7 @@ class DragBubbleState extends State<DragBubble>
     }
     newColorIndex = newColorIndex >= colorGradient.length
         ? colorGradient.length - 1
-        : newColorIndex;
+        : newColorIndex;*/
     setState(() {
       colorIndex = newColorIndex;
     });
@@ -67,7 +67,7 @@ class DragBubbleState extends State<DragBubble>
   getParticles(double input) {
     List<Widget> particleList = List();
     dynamic rdm = Random();
-    for (var label in models.entries) {
+    /*for (var label in models.entries) {
       if (featureFactors.value[feature] != null) {
         double factor = featureFactors.value[feature][label.key] * input;
         factor = factor < 0 ? 0 : factor;
@@ -76,7 +76,7 @@ class DragBubbleState extends State<DragBubble>
           particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label.key], timerDuration));
         }
       }
-    }
+    }*/
 
     bubblePrototypeState.setState(() {
       bubblePrototypeState.particleList[this] = particleList;
@@ -170,7 +170,8 @@ class DiseaseBubble extends StatelessWidget {
   DiseaseBubble(this.title, this.position, this.homePageState);
 
   double computeDimensions() {
-    List<IllnessProb> probs =
+    double value = 0.0;
+    Map<String, dynamic> probs =
     getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
     probs.forEach((k,v) => (k == title) ? value = v :null);
     return value;
@@ -184,12 +185,12 @@ class DiseaseBubble extends StatelessWidget {
       Colors.orange,
       Colors.red
     ];
-    List<IllnessProb> probs =
-        getIllnessProbs(homePageState.input, homePageState.models, true);
-    for (IllnessProb prob in probs) {
-      if (prob.illness == title) {
+    Map<String, dynamic> probs =
+        getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
+    for (var prob in probs.entries) {
+      if (prob.key == title) {
         return colorGradient[
-            (prob.probability * (colorGradient.length - 1)).round().toInt()];
+            (prob.value * (colorGradient.length - 1)).round().toInt()];
       }
     }
     return Colors.black; // this should never happen

@@ -16,28 +16,28 @@ Widget getPatientImage(double width, Offset position) {
 Widget getTopBubbleBar(MyHomePageState homePageState, Map<String, dynamic> modelConfig,
     double globalWidth, double globalHeight) {
   return BubblePrototype(
-      homePageState, featureFactors, globalWidth, globalHeight);
+      homePageState, modelConfig, globalWidth, globalHeight);
 }
 
 class BubblePrototype extends StatefulWidget {
   MyHomePageState homePageState;
-  MapWrapper featureFactors;
+  Map<String, dynamic> modelConfig;
   double globalWidth;
   double globalHeight;
 
-  BubblePrototype(this.homePageState, this.featureFactors, this.globalWidth,
+  BubblePrototype(this.homePageState, this.modelConfig, this.globalWidth,
       this.globalHeight);
 
   @override
   State<StatefulWidget> createState() {
     return BubblePrototypeState(
-        homePageState, featureFactors, globalWidth, globalHeight);
+        homePageState, modelConfig, globalWidth, globalHeight);
   }
 }
 
 class BubblePrototypeState extends State<BubblePrototype> {
   MyHomePageState homePageState;
-  MapWrapper featureFactors;
+  Map<String, dynamic> modelConfig;
   double globalWidth;
   double globalHeight;
   double imageDimensions = 200;
@@ -47,7 +47,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
   Map<String, Offset> diseaseBubbleOffsets = Map();
   Map<State, List<Widget>> particleList = Map();
 
-  BubblePrototypeState(this.homePageState, this.featureFactors,
+  BubblePrototypeState(this.homePageState, this.modelConfig,
       this.globalWidth, this.globalHeight) {
     xOffset = globalWidth / 2 - imageDimensions / 2;
     yOffset = globalHeight / 4;
@@ -83,13 +83,13 @@ class BubblePrototypeState extends State<BubblePrototype> {
         imagePosition.dx + imageDimensions,
         imagePosition.dy + imageDimensions - 40);
 
-    list.add(DragBubble(Offset(0.0, 0.0), homePageState, this, featureFactors,
+    list.add(DragBubble(Offset(0.0, 0.0), homePageState, this, modelConfig,
         "sex", "Sex", asyncSexInputDialog));
-    list.add(DragBubble(Offset(100.0, 0.0), homePageState, this, featureFactors,
+    list.add(DragBubble(Offset(100.0, 0.0), homePageState, this, modelConfig,
         "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog));
-    list.add(DragBubble(Offset(200.0, 0.0), homePageState, this, featureFactors,
+    list.add(DragBubble(Offset(200.0, 0.0), homePageState, this, modelConfig,
         "COPD", "COPD", asyncCOPDInputDialog));
-    list.add(DragBubble(Offset(300, 0.0), homePageState, this, featureFactors,
+    list.add(DragBubble(Offset(300, 0.0), homePageState, this, modelConfig,
         "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog));
     list.add(getPatientImage(imageDimensions, imagePosition));
     list.add(COPDBubble);
