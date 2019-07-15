@@ -11,16 +11,16 @@ class DragBubble extends StatefulWidget {
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
   final Function dialogFunction;
-  final String feature;
-  final String title;
+  final MapEntry<String, dynamic> feature;
   final Map<String, dynamic> modelConfig;
+
   DragBubble(this.initialOffset, this.homePageState, this.bubblePrototypeState, this.modelConfig,
-      this.feature, this.title, this.dialogFunction);
+      this.feature, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
     return DragBubbleState(initialOffset, homePageState, bubblePrototypeState, modelConfig,
-        feature, title, dialogFunction);
+        feature, dialogFunction);
   }
 }
 
@@ -32,12 +32,11 @@ class DragBubbleState extends State<DragBubble>
   final BubblePrototypeState bubblePrototypeState;
   final Map<String, dynamic> modelConfig;
   final Function dialogFunction;
-  final String title;
-  final String feature;
+  final MapEntry<String, dynamic> feature;
   AnimationController animationController;
   Animation animation;
 
-  DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState, this.modelConfig, this.feature, this.title, this.dialogFunction);
+  DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState, this.modelConfig, this.feature, this.dialogFunction);
 
   // TODO: also use computeColorByFactor method?
   computeNewColor(double input) {
@@ -94,7 +93,7 @@ class DragBubbleState extends State<DragBubble>
                 computeNewColor(input);
                 getParticles(input);
               },
-              child: Bubble(homePageState, this, title, dialogFunction, colorIndex, animationController)),
+              child: Bubble(homePageState, this, feature.value["title"], dialogFunction, colorIndex, animationController)),
         ),
       ],
     );

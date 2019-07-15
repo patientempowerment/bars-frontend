@@ -83,14 +83,13 @@ class BubblePrototypeState extends State<BubblePrototype> {
         imagePosition.dx + imageDimensions,
         imagePosition.dy + imageDimensions - 40);
 
-    list.add(DragBubble(Offset(0.0, 0.0), homePageState, this, modelConfig,
-        "sex", "Sex", asyncSexInputDialog));
-    list.add(DragBubble(Offset(100.0, 0.0), homePageState, this, modelConfig,
-        "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog));
-    list.add(DragBubble(Offset(200.0, 0.0), homePageState, this, modelConfig,
-        "COPD", "COPD", asyncCOPDInputDialog));
-    list.add(DragBubble(Offset(300, 0.0), homePageState, this, modelConfig,
-        "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog));
+    double featureBubbleOffset = 0.0;
+    for(MapEntry<String, dynamic> feature in homePageState.featureConfig.entries) {
+      list.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
+      feature, asyncInputDialog));
+      featureBubbleOffset += 100.0;
+    }
+
     list.add(getPatientImage(imageDimensions, imagePosition));
     list.add(COPDBubble);
     list.add(asthmaBubble);
