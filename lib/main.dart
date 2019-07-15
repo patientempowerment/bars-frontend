@@ -81,7 +81,7 @@ class MyHomePageState extends State<MyHomePage> {
                     child: ListView(
                       children: [
                         for(var feature in featureConfig.entries)
-                          buildInputWidget(this, feature, userInputs),
+                          buildInputWidget(this, this, feature, userInputs),
                       ],
                     ),
                   ),

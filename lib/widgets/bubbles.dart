@@ -89,7 +89,7 @@ class DragBubbleState extends State<DragBubble>
               },
               onPanEnd: (_) async {
                 double input =
-                    (await dialogFunction(context, homePageState)).get();
+                    (await dialogFunction(context, homePageState, feature)).get();
                 computeNewColor(input);
                 getParticles(input);
               },

@@ -1,26 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
-/*
-Future<dynamic> asyncSexInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "sex", buildInputWidget);
-}
 
-Future<dynamic> asyncWheezeInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "wheezeInChestInLastYear", buildInputWidget);
-}
-
-Future<dynamic> asyncCOPDInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "COPD", buildInputWidget);
-}
-
-Future<dynamic> asyncNeverSmokedInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "neverSmoked", buildInputWidget);
-}*/
 Future<dynamic> extraAsyncInputDialog(BuildContext context,
     MyHomePageState homePageState,
 MapEntry<String, dynamic> feature) async {
@@ -82,6 +63,6 @@ class MyDialogContentState extends State<MyDialogContent> {
   Widget build(BuildContext context) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [buildInputWidget(homePageState, feature, homePageState.userInputs)]);
+        children: [buildInputWidget(homePageState, this, feature, homePageState.userInputs)]);
   }
 }
