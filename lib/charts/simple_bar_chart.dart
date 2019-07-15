@@ -24,11 +24,19 @@ List<Tuple2<String, dynamic>> mapToTupleList(Map<String, dynamic> map){
 }
 
 mapChartData(Map<String, dynamic> labelValues){
+    final List<dynamic> colorGradient = [
+      charts.Color.fromHex(code: "#8BC24A"),
+      charts.Color.fromHex(code: "#FEC007"),
+      charts.Color.fromHex(code: "#FE9800"),
+      charts.Color.fromHex(code: "#FE5722"),
+      charts.Color.fromHex(code: "#F34336"),
+    ];
   var data = mapToTupleList(labelValues);
   return [ //TODO: make a utils func that creates charts.series from maps
     charts.Series<Tuple2<String, dynamic>, String>(
       id: 'barChart',
-      colorFn: (_, __) => charts.MaterialPalette.indigo.shadeDefault,
+      colorFn: (Tuple2<String, dynamic> tuple, __) => colorGradient[
+      ((colorGradient.length - 1) * tuple.item2).round().toInt()],
       domainFn: (Tuple2<String, dynamic> tuple, _) => tuple.item1,
       measureFn: (Tuple2<String, dynamic> tuple, _) => tuple.item2,
       data: data,

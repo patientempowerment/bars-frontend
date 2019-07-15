@@ -49,16 +49,16 @@ class DragBubbleState extends State<DragBubble>
 
   computeNewColor(double input) {
     int newColorIndex = 0;
-    /*for (var label in modelConfig.entries) {
-      if (modelConfig.value[feature] != null) {
+    for (String label in modelConfig.keys) {
+      if (modelConfig[label]['features'][feature] != null) {
+        double factor = modelConfig[label]['features'][feature]['coef'] * input;
         factor = factor < 0 ? 0 : factor;
-        double factor = featureFactors.value[feature][label.key] * input;
         newColorIndex += factor.round().toInt();
       }
     }
     newColorIndex = newColorIndex >= colorGradient.length
         ? colorGradient.length - 1
-        : newColorIndex;*/
+        : newColorIndex;
     setState(() {
       colorIndex = newColorIndex;
     });
@@ -67,16 +67,16 @@ class DragBubbleState extends State<DragBubble>
   getParticles(double input) {
     List<Widget> particleList = List();
     dynamic rdm = Random();
-    /*for (var label in models.entries) {
-      if (featureFactors.value[feature] != null) {
-        double factor = featureFactors.value[feature][label.key] * input;
+    for (String label in modelConfig.keys) {
+      if (modelConfig[label]['features'][feature] != null) {
+        double factor = modelConfig[label]['features'][feature]['coef'] * input;
         factor = factor < 0 ? 0 : factor;
         for (int i = 0; i < factor * 50; i++) {
           int timerDuration = ((rdm.nextInt(60)/100+0.7)*1000).toInt();
-          particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label.key], timerDuration));
+          particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label], timerDuration));
         }
       }
-    }*/
+    }
 
     bubblePrototypeState.setState(() {
       bubblePrototypeState.particleList[this] = particleList;
@@ -173,7 +173,7 @@ class DiseaseBubble extends StatelessWidget {
     double value = 0.0;
     Map<String, dynamic> probs =
     getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
-    probs.forEach((k,v) => (k == title) ? value = v :null);
+    probs.forEach((k,v) => (k.toLowerCase() == title.toLowerCase()) ? value = v :null);
     return value;
   }
 
@@ -188,7 +188,7 @@ class DiseaseBubble extends StatelessWidget {
     Map<String, dynamic> probs =
         getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
     for (var prob in probs.entries) {
-      if (prob.key == title) {
+      if (prob.key.toLowerCase() == title.toLowerCase()) {
         return colorGradient[
             (prob.value * (colorGradient.length - 1)).round().toInt()];
       }
