@@ -190,3 +190,20 @@ buildInputWidget(MyHomePageState context, MapEntry<String, dynamic> feature, Map
     throw new Exception("Input Widget not supported: " + feature.key);
   }
 }
+final List<Color> colorGradient = [
+  Colors.lightGreen,
+  Colors.amber,
+  Colors.orange,
+  Colors.red
+];
+
+Color computeColor(int index) {
+  index = index >= colorGradient.length
+      ? colorGradient.length - 1
+      : index;
+  return colorGradient[index];
+}
+
+Color computeColorByFactor(double factor) {
+  return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];
+}

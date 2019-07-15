@@ -27,12 +27,6 @@ class DragBubble extends StatefulWidget {
 class DragBubbleState extends State<DragBubble>
     with SingleTickerProviderStateMixin {
   Offset offset;
-  final List<Color> colorGradient = [
-    Colors.lightGreen,
-    Colors.amber,
-    Colors.orange,
-    Colors.red
-  ];
   int colorIndex = 0;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
@@ -43,10 +37,9 @@ class DragBubbleState extends State<DragBubble>
   AnimationController animationController;
   Animation animation;
 
-
-
   DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState, this.modelConfig, this.feature, this.title, this.dialogFunction);
 
+  // TODO: also use computeColorByFactor method?
   computeNewColor(double input) {
     int newColorIndex = 0;
     for (String label in modelConfig.keys) {
@@ -56,9 +49,7 @@ class DragBubbleState extends State<DragBubble>
         newColorIndex += factor.round().toInt();
       }
     }
-    newColorIndex = newColorIndex >= colorGradient.length
-        ? colorGradient.length - 1
-        : newColorIndex;
+
     setState(() {
       colorIndex = newColorIndex;
     });
@@ -103,8 +94,7 @@ class DragBubbleState extends State<DragBubble>
                 computeNewColor(input);
                 getParticles(input);
               },
-              child: Bubble(homePageState, this, title, dialogFunction,
-                  colorGradient, colorIndex, animationController)),
+              child: Bubble(homePageState, this, title, dialogFunction, colorIndex, animationController)),
         ),
       ],
     );
@@ -116,12 +106,11 @@ class Bubble extends StatelessWidget {
   final DragBubbleState dragState;
   final Function dialogFunction;
   final String title;
-  final colorGradient;
   final int colorIndex;
   final animationController;
 
   Bubble(this.homePageState, this.dragState, this.title, this.dialogFunction,
-      this.colorGradient, this.colorIndex, this.animationController);
+      this.colorIndex, this.animationController);
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +125,7 @@ class Bubble extends StatelessWidget {
             height: 50.0,
             decoration: new BoxDecoration(
               shape: BoxShape.circle,
-              color: colorGradient[colorIndex],
+              color: computeColor(colorIndex),
             ),
             child: new FlatButton(
               onPressed: () async {
@@ -179,18 +168,11 @@ class DiseaseBubble extends StatelessWidget {
 
 
   Color computeColor() {
-    final List<Color> colorGradient = [
-      Colors.lightGreen,
-      Colors.amber,
-      Colors.orange,
-      Colors.red
-    ];
     Map<String, dynamic> probs =
         getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
     for (var prob in probs.entries) {
       if (prob.key.toLowerCase() == title.toLowerCase()) {
-        return colorGradient[
-            (prob.value * (colorGradient.length - 1)).round().toInt()];
+        return computeColorByFactor(prob.value);
       }
     }
     return Colors.black; // this should never happen
