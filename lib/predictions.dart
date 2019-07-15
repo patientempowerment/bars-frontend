@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bars_frontend/utils.dart';
+import 'package:http/http.dart' as http;
 
 /* import json
 features:
@@ -45,12 +46,21 @@ Map<String, dynamic> features = {};
 Map<String, dynamic> models = {};
 
 prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
-
-  String modelsResponse = await rootBundle.loadString('assets/models.json');
+  var server_address = "http://172.20.24.28:5050";
+  http.Response modelsResponse = await http.post(server_address + '/models', headers: {"Content-Type": "application/json"}, body: '''{
+    "labels": [
+      "COPD",
+      "asthma",
+      "diabetes",
+      "tuberculosis"
+    ]
+  }'''); // TODO: proper generation of body from some internal list of labels
+  print('Response body: ${modelsResponse.body}');
   String featuresResponse = await rootBundle.loadString('assets/features.json');
+  String modelsString = modelsResponse.body;
   features = jsonDecode(featuresResponse);
-  models = jsonDecode(modelsResponse);
-  modelFactors.value = modelsResponse;
+  models = jsonDecode(modelsString);
+  modelFactors.value = modelsString;
 
   for (var label in models.entries) {
 
@@ -66,7 +76,7 @@ prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
           : featureFactors.value[feature.key][label.key] = coef;
     }
   }
-  return modelsResponse;
+  return modelsString;
 }
 /*
 double coef = feature != disease
