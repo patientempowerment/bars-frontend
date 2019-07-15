@@ -72,12 +72,14 @@ class BubblePrototypeState extends State<BubblePrototype> {
             imagePosition.dy + imageDimensions - 40),
         homePageState);
 
-    diseaseBubbleOffsets["COPD"] = Offset(imagePosition.dx - 90, imagePosition.dy);
+    diseaseBubbleOffsets["COPD"] =
+        Offset(imagePosition.dx - 90, imagePosition.dy);
     diseaseBubbleOffsets["asthma"] =
         Offset(imagePosition.dx + imageDimensions, imagePosition.dy);
     diseaseBubbleOffsets["tuberculosis"] =
         Offset(imagePosition.dx - 90, imagePosition.dy + imageDimensions - 40);
-    diseaseBubbleOffsets["diabetes"] = Offset(imagePosition.dx + imageDimensions,
+    diseaseBubbleOffsets["diabetes"] = Offset(
+        imagePosition.dx + imageDimensions,
         imagePosition.dy + imageDimensions - 40);
 
     list.add(DragBubble(Offset(0.0, 0.0), homePageState, this, featureFactors,
