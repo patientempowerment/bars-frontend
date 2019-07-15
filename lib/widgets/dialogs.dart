@@ -6,17 +6,22 @@ Future<dynamic> asyncSexInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
   return _asyncInputDialog(context, homePageState, "sex", getSexRadioButtons);
 }
+
 Future<dynamic> asyncWheezeInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "wheezeInChestInLastYear", getWheezeInChestInLastYearRadioButtons);
+  return _asyncInputDialog(context, homePageState, "wheezeInChestInLastYear",
+      getWheezeInChestInLastYearRadioButtons);
 }
+
 Future<dynamic> asyncCOPDInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
   return _asyncInputDialog(context, homePageState, "COPD", getCOPDRadioButtons);
 }
+
 Future<dynamic> asyncNeverSmokedInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "neverSmoked", getNeverSmokedRadioButtons);
+  return _asyncInputDialog(
+      context, homePageState, "neverSmoked", getNeverSmokedRadioButtons);
 }
 
 Future<dynamic> _asyncInputDialog(
@@ -28,19 +33,27 @@ Future<dynamic> _asyncInputDialog(
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: 10.0),
-        child: AlertDialog(
-            content: MyDialogContent(homePageState, widgetFunction),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(
-                      homePageState.input.getVariable(inputVariable).value);
-                },
-                child: new Text('Ok'),
-              )
-            ]),
+      return Container(
+        child: SimpleDialog(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: Column(
+                children: <Widget>[
+                  MyDialogContent(homePageState, widgetFunction),
+                  Container(height: 50),
+                  SimpleDialogOption(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pop(homePageState.input.getVariable(inputVariable));
+                    },
+                    child: new Text('Ok'),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       );
     },
   );

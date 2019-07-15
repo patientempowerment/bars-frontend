@@ -13,11 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Patient Empowerment',
+      debugShowCheckedModeBanner: false,
+      title: 'Empower',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Patient Empowerment'),
+      home: MyHomePage(title: 'Empower'),
     );
   }
 }
@@ -41,16 +42,25 @@ class MyHomePageState extends State<MyHomePage> {
   double globalHeight;
 
   @override
+  initState() {
+    super.initState();
+    prepareModels(models, featureFactors);
+  }
+
+  @override
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
-    prepareModels(models, featureFactors);
     return Stack(
       children: <Widget>[
         PageView(children: [
           Scaffold(
             appBar: AppBar(
-              title: Text(widget.title),
+              title: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child:
+                    new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
+              ),
             ),
             body: Container(
               padding: EdgeInsets.all(40.0),
@@ -67,7 +77,7 @@ class MyHomePageState extends State<MyHomePage> {
                         getSystolicBloodPressureSlider(this),
                         getAlcoholFrequencyRadioButtons(this),
                         getCurrentlySmokingRadioButtons(this, null),
-                        getNeverSmokedRadioButtons(this, null),
+                        //getNeverSmokedRadioButtons(this, null),
                         getPreviouslySmokedRadioButtons(this, null),
                         getNoOfCigarettesPerDaySlider(this),
                         getNoOfCigarettesPreviouslyPerDaySlider(this),
@@ -90,8 +100,8 @@ class MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                   Expanded(
-                    child: SimpleBarChart(
-                        mapChartData(getIllnessProbs(input, models, predictMode))),
+                    child: SimpleBarChart(mapChartData(
+                        getIllnessProbs(input, models, predictMode))),
                   ),
                 ],
               ),
@@ -99,13 +109,18 @@ class MyHomePageState extends State<MyHomePage> {
           ),
           Scaffold(
             appBar: AppBar(
-              title: Text(widget.title),
+              title: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child:
+                    new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
+              ),
             ),
             body: Container(
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(this, featureFactors, globalWidth, globalHeight),
+                  getTopBubbleBar(
+                      this, featureFactors, globalWidth, globalHeight),
                 ],
               ),
             ),
