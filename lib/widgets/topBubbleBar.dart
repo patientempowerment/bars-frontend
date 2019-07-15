@@ -3,6 +3,7 @@ import 'package:bars_frontend/main.dart';
 import 'bubbles.dart';
 import '../utils.dart';
 import 'dialogs.dart';
+import 'bubbles.dart';
 
 Widget getPatientImage(double width, Offset position) {
   return Positioned(
@@ -12,7 +13,7 @@ Widget getPatientImage(double width, Offset position) {
   );
 }
 
-Widget getTopBubbleBar(MyHomePageState homePageState, MapWrapper featureFactors,
+Widget getTopBubbleBar(MyHomePageState homePageState, Map<String, dynamic> modelConfig,
     double globalWidth, double globalHeight) {
   return BubblePrototype(
       homePageState, featureFactors, globalWidth, globalHeight);

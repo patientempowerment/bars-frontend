@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'radioButtons.dart';
+import 'package:bars_frontend/utils.dart';
 
 Future<dynamic> asyncSexInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "sex", getSexRadioButtons);
+  return _asyncInputDialog(context, homePageState, "sex", buildInputWidget);
 }
 
 Future<dynamic> asyncWheezeInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "wheezeInChestInLastYear",
-      getWheezeInChestInLastYearRadioButtons);
+  return _asyncInputDialog(context, homePageState, "wheezeInChestInLastYear", buildInputWidget);
 }
 
 Future<dynamic> asyncCOPDInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "COPD", getCOPDRadioButtons);
+  return _asyncInputDialog(context, homePageState, "COPD", buildInputWidget);
 }
 
 Future<dynamic> asyncNeverSmokedInputDialog(
     BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(
-      context, homePageState, "neverSmoked", getNeverSmokedRadioButtons);
+  return _asyncInputDialog(context, homePageState, "neverSmoked", buildInputWidget);
 }
 
 Future<dynamic> _asyncInputDialog(

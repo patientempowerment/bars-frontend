@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'charts/simple_bar_chart.dart';
-import 'widgets/radioButtons.dart';
-import 'widgets/sliders.dart';
 import 'predictions.dart';
 import 'package:bars_frontend/utils.dart';
 
@@ -40,17 +38,30 @@ class MyHomePageState extends State<MyHomePage> {
   bool successfulDrop = false;
   double globalWidth;
   double globalHeight;
+  Map<String, dynamic> userInputs;
+  Map<String, dynamic> modelConfig;
+  Map<String, dynamic> featureConfig;
 
   @override
-  initState() {
-    super.initState();
-    prepareModels(models, featureFactors);
+  void initState() {
+    readData().then((result) {
+      setState(() {
+        modelConfig = result.first;
+        featureConfig = result.second;
+        userInputs = generateDefaultInputValues(featureConfig);
+        predictMode = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
+    if ((modelConfig == null) || (featureConfig == null)) {
+      return new Container();
+    }
+
     return Stack(
       children: <Widget>[
         PageView(children: [
@@ -69,25 +80,8 @@ class MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: ListView(
                       children: [
-                        getSexRadioButtons(this, null),
-                        getAgeSlider(this),
-                        getHeightSlider(this),
-                        getWeightSlider(this),
-                        getDiastolicBloodPressureSlider(this),
-                        getSystolicBloodPressureSlider(this),
-                        getAlcoholFrequencyRadioButtons(this),
-                        getCurrentlySmokingRadioButtons(this, null),
-                        //getNeverSmokedRadioButtons(this, null),
-                        getPreviouslySmokedRadioButtons(this, null),
-                        getNoOfCigarettesPerDaySlider(this),
-                        getNoOfCigarettesPreviouslyPerDaySlider(this),
-                        getWheezeInChestInLastYearRadioButtons(this, null),
-                        getCoughOnMostDaysRadioButtons(this, null),
-                        getSputumOnMostDaysRadioButtons(this, null),
-                        getCOPDRadioButtons(this, null),
-                        getAsthmaRadioButtons(this, null),
-                        getDiabetesRadioButtons(this, null),
-                        getTuberculosisRadioButtons(this, null),
+                        for(var feature in featureConfig.entries)
+                          buildInputWidget(this, feature, userInputs),
                       ],
                     ),
                   ),
@@ -100,8 +94,8 @@ class MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                   Expanded(
-                    child: SimpleBarChart(mapChartData(
-                        getIllnessProbs(input, models, predictMode))),
+                    child: SimpleBarChart(
+                        mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode))),
                   ),
                 ],
               ),
@@ -119,8 +113,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(
-                      this, featureFactors, globalWidth, globalHeight),
+                  getTopBubbleBar(this, modelConfig, globalWidth, globalHeight),
                 ],
               ),
             ),

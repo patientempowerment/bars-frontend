@@ -1,3 +1,10 @@
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+import 'widgets/radioButtons.dart';
+import 'widgets/sliders.dart';
+import 'package:bars_frontend/main.dart';
+import 'package:flutter/material.dart';
+
 class DoubleWrapper {
   double value;
 
@@ -147,4 +154,39 @@ class IllnessProb {
   final double probability;
 
   IllnessProb(this.illness, this.probability);
+}
+
+readData() async {
+  String modelsResponse = await rootBundle.loadString('assets/ahriCleaner2_models.json');
+  String featuresResponse = await rootBundle.loadString('assets/ahriCleaner2_config.json');
+  Map<String, dynamic> features = jsonDecode(featuresResponse);
+  Map<String, dynamic> models = jsonDecode(modelsResponse);
+  return Pair(models, features);
+}
+
+generateDefaultInputValues(featureConfig) {
+  Map<String, dynamic> defaultInputs = {};
+  featureConfig.forEach((k,v) {
+    if (v["choices"] != null) {
+      defaultInputs["$k"] = 0;
+    }
+    else {
+      defaultInputs["$k"] = v["slider_min"].toDouble();
+    }
+  });
+  return defaultInputs;
+}
+
+buildInputWidget(MyHomePageState context, MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
+  if (feature.value["choices"] != null) {
+    var buttons = getRadioButtonInputRow(context, feature, userInputs);
+    return buttons;
+  }
+  else if (feature.value["slider_min"] != null) {
+    var slider = getSliderInputRow(context, feature, userInputs[feature.key]);
+    return slider;
+  }
+  else {
+    throw new Exception("Input Widget not supported: " + feature.key);
+  }
 }

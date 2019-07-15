@@ -6,7 +6,6 @@ import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:bars_frontend/predictions.dart';
 import 'topBubbleBar.dart';
-
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final MyHomePageState homePageState;
@@ -14,15 +13,14 @@ class DragBubble extends StatefulWidget {
   final Function dialogFunction;
   final String feature;
   final String title;
-  final MapWrapper featureFactors;
-
-  DragBubble(this.initialOffset, this.homePageState, this.bubblePrototypeState,
-      this.featureFactors, this.feature, this.title, this.dialogFunction);
+  final Map<String, dynamic> modelConfig;
+  DragBubble(this.initialOffset, this.homePageState, this.modelConfig,
+      this.feature, this.title, this.dialogFunction);
 
   @override
   State<StatefulWidget> createState() {
-    return DragBubbleState(initialOffset, homePageState, bubblePrototypeState,
-        featureFactors, feature, title, dialogFunction);
+    return _DragBubbleState(initialOffset, homePageState, modelConfig,
+        feature, title, dialogFunction);
   }
 }
 
@@ -38,22 +36,23 @@ class DragBubbleState extends State<DragBubble>
   int colorIndex = 0;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
-  final MapWrapper featureFactors;
+  final Map<String, dynamic> modelConfig;
   final Function dialogFunction;
   final String title;
   final String feature;
   AnimationController animationController;
   Animation animation;
 
-  DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState,
-      this.featureFactors, this.feature, this.title, this.dialogFunction);
+
+      this.feature, this.title, this.dialogFunction);
+  _DragBubbleState(this.offset, this.homePageState, this.modelConfig,
 
   computeNewColor(double input) {
     int newColorIndex = 0;
     for (var label in models.entries) {
       if (featureFactors.value[feature] != null) {
-        double factor = featureFactors.value[feature][label.key] * input;
         factor = factor < 0 ? 0 : factor;
+        double factor = featureFactors.value[feature][label.key] * input;
         newColorIndex += factor.round().toInt();
       }
     }
@@ -172,14 +171,11 @@ class DiseaseBubble extends StatelessWidget {
 
   double computeDimensions() {
     List<IllnessProb> probs =
-        getIllnessProbs(homePageState.input, homePageState.models, true);
-    for (IllnessProb prob in probs) {
-      if (prob.illness == title) {
-        return prob.probability;
-      }
-    }
-    return 0.0; //this should never happen
+    getIllnessProbs(homePageState.userInputs, homePageState.modelConfig, true);
+    probs.forEach((k,v) => (k == title) ? value = v :null);
+    return value;
   }
+
 
   Color computeColor() {
     final List<Color> colorGradient = [
