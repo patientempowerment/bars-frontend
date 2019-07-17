@@ -43,8 +43,8 @@ class DragBubbleState extends State<DragBubble>
   computeNewColor(double input) {
     int newColorIndex = 0;
     for (String label in modelConfig.keys) {
-      if (modelConfig[label]['features'][feature] != null) {
-        double factor = modelConfig[label]['features'][feature]['coef'] * input;
+      if (modelConfig[label]['features'][feature.key] != null) {
+        double factor = modelConfig[label]['features'][feature.key]['coef'] * input;
         factor = factor < 0 ? 0 : factor;
         newColorIndex += factor.round().toInt();
       }
@@ -59,8 +59,8 @@ class DragBubbleState extends State<DragBubble>
     List<Widget> particleList = List();
     dynamic rdm = Random();
     for (String label in modelConfig.keys) {
-      if (modelConfig[label]['features'][feature] != null) {
-        double factor = modelConfig[label]['features'][feature]['coef'] * input;
+      if (modelConfig[label]['features'][feature.key] != null) {
+        double factor = modelConfig[label]['features'][feature.key]['coef'] * input;
         factor = factor < 0 ? 0 : factor;
         for (int i = 0; i < factor * 50; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
