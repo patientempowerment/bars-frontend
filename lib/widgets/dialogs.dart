@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 
-Future<dynamic> extraAsyncInputDialog(BuildContext context,
-    MyHomePageState homePageState,
-MapEntry<String, dynamic> feature) async {
-  return asyncInputDialog(context, homePageState, feature);
-}
 Future<dynamic> asyncInputDialog(
     BuildContext context,
     MyHomePageState homePageState,
@@ -61,8 +56,14 @@ class MyDialogContentState extends State<MyDialogContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [buildInputWidget(homePageState, this, feature, homePageState.userInputs)]);
+    return Container(
+        height: 200,
+        width: 500,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildInputWidget(
+                  homePageState, this, feature, homePageState.userInputs)
+            ]));
   }
 }

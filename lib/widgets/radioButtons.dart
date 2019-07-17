@@ -4,7 +4,7 @@ import 'package:bars_frontend/utils.dart';
 import 'dialogs.dart';
 
 
-getRadioButtonInputRow(MyHomePageState context, feature, userInputs) {
+getRadioButtonInputRow(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature, userInputs) {
   return (
     Padding(
       padding: EdgeInsets.only(bottom: 5.0),
@@ -24,7 +24,7 @@ getRadioButtonInputRow(MyHomePageState context, feature, userInputs) {
                   scrollDirection: Axis.horizontal,
                   children: [
                     for (var choice in feature.value["choices"].entries)
-                      getRadioButton(context, choice.key, choice.value, feature.key)
+                      getRadioButton(homePageState, context, choice.key, choice.value, feature.key)
                   ]
                 ),
               ),
@@ -36,7 +36,7 @@ getRadioButtonInputRow(MyHomePageState context, feature, userInputs) {
   );
 }
 
-getRadioButton(context, title, value, featureKey) {
+getRadioButton(homePageState, context, title, value, featureKey) {
   return Container(
     width: 100,
     child: Column(
@@ -44,10 +44,10 @@ getRadioButton(context, title, value, featureKey) {
         Container(
           child: Radio(
             value: value,
-            groupValue: context.userInputs[featureKey],
+            groupValue: homePageState.userInputs[featureKey],
             onChanged: (dynamic newValue) {
               context.setState(() {
-                context.userInputs[featureKey] = newValue;
+                homePageState.userInputs[featureKey] = newValue;
               });
             },
           ),

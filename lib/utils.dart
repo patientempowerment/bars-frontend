@@ -179,7 +179,7 @@ generateDefaultInputValues(featureConfig) {
 
 buildInputWidget(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
   if (feature.value["choices"] != null) {
-    var buttons = getRadioButtonInputRow(context, feature, userInputs);
+    var buttons = getRadioButtonInputRow(homePageState, context, feature, userInputs);
     return buttons;
   }
   else if (feature.value["slider_min"] != null) {

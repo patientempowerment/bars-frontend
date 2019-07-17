@@ -86,7 +86,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
     double featureBubbleOffset = 0.0;
     for(MapEntry<String, dynamic> feature in homePageState.featureConfig.entries) {
       list.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
-      feature, asyncInputDialog));
+      feature));
       featureBubbleOffset += 100.0;
     }
 
