@@ -47,18 +47,15 @@ Map<String, dynamic> models = {};
 
 prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
   var server_address = "http://172.20.24.28:5050";
-  http.Response modelsResponse = await http.post(server_address + '/models', headers: {"Content-Type": "application/json"}, body: '''{
-    "labels": [
-      "COPD",
-      "asthma",
-      "diabetes",
-      "tuberculosis"
-    ]
-  }'''); // TODO: proper generation of body from some internal list of labels
-  print('Response body: ${modelsResponse.body}');
-  String featuresResponse = await rootBundle.loadString('assets/features.json');
+
+  var databaseNameJSON = await rootBundle.loadString('assets/database.conf'); //TODO (far out): gather this info not from file but thru user input
+  http.Response configResponse = await http.post(server_address + '/config', headers: {"Content-Type": "application/json"}, body: databaseNameJSON);
+  String configString = configResponse.body;
+  features = jsonDecode(configString);
+
+  var labelsJSON = await rootBundle.loadString('assets/labels.conf'); // TODO (far out): gather this info not from file but thru user input
+  http.Response modelsResponse = await http.post(server_address + '/models', headers: {"Content-Type": "application/json"}, body: labelsJSON);
   String modelsString = modelsResponse.body;
-  features = jsonDecode(featuresResponse);
   models = jsonDecode(modelsString);
   modelFactors.value = modelsString;
 
