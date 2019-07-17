@@ -1,16 +1,26 @@
 {
-  "COPD": {
+  "sex": {
     "choices": {
-      "No": 0, 
-      "Yes": 1
-    }, 
-    "title": "COPD"
-  }, 
+      "female": 0,
+      "male": 1
+    },
+    "title": "Sex"
+  },
   "age": {
-    "slider_max": 70, 
-    "slider_min": 38, 
+    "slider_max": 70,
+    "slider_min": 18,
     "title": "Age"
-  }, 
+  },
+  "weight": {
+    "slider_max": 197,
+    "slider_min": 32,
+    "title": "Weight"
+  },
+  "height": {
+    "slider_max": 220,
+    "slider_min": 120,
+    "title": "Height"
+  },
   "alcoholFrequency": {
     "choices": {
       "never": 6,
@@ -19,100 +29,90 @@
       "once or twice a week": 3,
       "three of four times a week": 2,
       "daily": 1
-    }, 
+    },
     "title": "Alcohol Frequency"
-  }, 
+  },
+  "currentlySmoking": {
+    "choices": {
+      "No": 0,
+      "Yes": 1
+    },
+    "title": "Currently Smoking"
+  },
+  "noOfCigarettesPerDay": {
+    "slider_max": 50,
+    "slider_min": 0,
+    "title": "Number of Cigarettes per Day"
+  },
+  "previouslySmoked": {
+    "choices": {
+      "No": 0,
+      "Yes": 1
+    },
+    "title": "Previously Smoked"
+  },
+  "noOfCigarettesPreviouslyPerDay": {
+    "slider_max": 50,
+    "slider_min": 0,
+    "title": "Number of Cigarettes Previously per Day"
+  },
+  "diastolicBloodPressure": {
+    "slider_max": 150,
+    "slider_min": 30,
+    "title": "Diastolic Blood Pressure"
+  },
+  "systolicBloodPressure": {
+    "slider_max": 260,
+    "slider_min": 70,
+    "title": "Systolic Blood Pressure"
+  },
+  "wheezeInChestInLastYear": {
+    "choices": {
+      "No": 0,
+      "Yes": 1
+    },
+    "title": "Wheeze in Chest in Last Year"
+  },
+  "coughOnMostDays": {
+    "choices": {
+      "No": 0,
+      "Yes": 1
+    },
+    "title": "Cough on Most Days"
+  },
+  "sputumOnMostDays": {
+    "choices": {
+      "No": 0,
+      "Yes": 1
+    },
+    "title": "Sputum on Most Days"
+  },
+  "COPD": {
+    "choices": {
+      "No": 0, 
+      "Yes": 1
+    }, 
+    "title": "COPD"
+  },
   "asthma": {
     "choices": {
       "No": 0, 
       "Yes": 1
     }, 
     "title": "Asthma"
-  }, 
-  "coughOnMostDays": {
-    "choices": {
-      "No": 0, 
-      "Yes": 1
-    }, 
-    "title": "Cough on Most Days"
-  }, 
-  "currentlySmoking": {
-    "choices": {
-      "No": 0, 
-      "Yes": 1
-    }, 
-    "title": "Currently Smoking"
-  }, 
+  },
   "diabetes": {
     "choices": {
       "No": 0, 
       "Yes": 1
     }, 
     "title": "Diabetes"
-  }, 
-  "diastolicBloodPressure": {
-    "slider_max": 142, 
-    "slider_min": 37, 
-    "title": "Diastolic Blood Pressure"
-  }, 
-  "height": {
-    "slider_max": 204, 
-    "slider_min": 122, 
-    "title": "Height"
-  }, 
-  "noOfCigarettesPerDay": {
-    "slider_max": 140,
-    "slider_min": 0,
-    "title": "Number of Cigarettes per Day"
-  }, 
-  "noOfCigarettesPreviouslyPerDay": {
-    "slider_max": 140, 
-    "slider_min": 0, 
-    "title": "Number of Cigarettes Previously per Day"
-  }, 
-  "previouslySmoked": {
-    "choices": {
-      "No": 0, 
-      "Yes": 1
-    }, 
-    "title": "Previously Smoked"
-  }, 
-  "sex": {
-    "choices": {
-      "female": 0, 
-      "male": 1
-    }, 
-    "title": "Sex"
-  }, 
-  "sputumOnMostDays": {
-    "choices": {
-      "No": 0, 
-      "Yes": 1
-    }, 
-    "title": "Sputum on Most Days"
-  }, 
-  "systolicBloodPressure": {
-    "slider_max": 249, 
-    "slider_min": 79, 
-    "title": "Systolic Blood Pressure"
-  }, 
+  },
   "tuberculosis": {
     "choices": {
       "No": 0, 
       "Yes": 1
     }, 
     "title": "Tuberculosis"
-  }, 
-  "weight": {
-    "slider_max": 197, 
-    "slider_min": 32, 
-    "title": "Weight"
-  }, 
-  "wheezeInChestInLastYear": {
-    "choices": {
-      "No": 0, 
-      "Yes": 1
-    }, 
-    "title": "Wheeze in Chest in Last Year"
   }
 }
