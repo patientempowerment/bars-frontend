@@ -40,12 +40,12 @@ class DragBubbleState extends State<DragBubble>
       this.modelConfig, this.feature);
 
   // TODO: also use computeColorByFactor method?
-  computeNewColor(double input) {
+  computeNewColor() {
     int newColorIndex = 0;
     for (String label in modelConfig.keys) {
       if (modelConfig[label]['features'][feature.key] != null) {
-        double factor =
-            modelConfig[label]['features'][feature.key]['coef'] * input;
+        double factor = modelConfig[label]['features'][feature.key]['coef'] *
+            homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
         newColorIndex += factor.round().toInt();
       }
@@ -56,13 +56,13 @@ class DragBubbleState extends State<DragBubble>
     });
   }
 
-  getParticles(double input) {
+  getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
     for (String label in modelConfig.keys) {
       if (modelConfig[label]['features'][feature.key] != null) {
-        double factor =
-            modelConfig[label]['features'][feature.key]['coef'] * input;
+        double factor = modelConfig[label]['features'][feature.key]['coef'] *
+            homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
         for (int i = 0; i < factor * 5; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
@@ -79,6 +79,7 @@ class DragBubbleState extends State<DragBubble>
 
   @override
   Widget build(BuildContext context) {
+    computeNewColor();
     return Stack(
       children: <Widget>[
         Positioned(
@@ -290,9 +291,8 @@ invokeDialog(context, homePageState, feature, dragState) {
     var dialogInput = await asyncInputDialog(context, homePageState, feature);
 
     if (dialogInput != null) {
-      double inputValue = dialogInput.toDouble();
-      dragState.computeNewColor(inputValue);
-      dragState.getParticles(inputValue);
+      dragState.computeNewColor();
+      dragState.getParticles();
     }
   };
 }
