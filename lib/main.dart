@@ -1,3 +1,4 @@
+import 'package:bars_frontend/widgets/resetButtons.dart';
 import 'package:flutter/material.dart';
 import 'charts/simple_bar_chart.dart';
 import 'predictions.dart';
@@ -100,6 +101,7 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            floatingActionButton: ResetButton(this),
           ),
           Scaffold(
             appBar: AppBar(
@@ -117,6 +119,7 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            floatingActionButton: ResetButton(this),
           ),
         ]),
       ],
