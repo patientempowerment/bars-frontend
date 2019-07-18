@@ -14,17 +14,11 @@ Widget getPatientImage(double width, Offset position) {
   );
 }
 
-Widget getTopBubbleBar(MyHomePageState homePageState, Map<String, dynamic> modelConfig,
-    double globalWidth, double globalHeight) {
-  return BubblePrototype(
-      homePageState, modelConfig, globalWidth, globalHeight);
-}
-
 class BubblePrototype extends StatefulWidget {
-  MyHomePageState homePageState;
-  Map<String, dynamic> modelConfig;
-  double globalWidth;
-  double globalHeight;
+  final MyHomePageState homePageState;
+  final Map<String, dynamic> modelConfig;
+  final double globalWidth;
+  final double globalHeight;
 
   BubblePrototype(this.homePageState, this.modelConfig, this.globalWidth,
       this.globalHeight);
