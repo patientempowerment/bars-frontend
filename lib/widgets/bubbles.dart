@@ -6,86 +6,80 @@ import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:bars_frontend/predictions.dart';
 import 'topBubbleBar.dart';
+import 'dialogs.dart';
 
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
-  final Function dialogFunction;
-  final String feature;
-  final String title;
-  final MapWrapper featureFactors;
+  final MapEntry<String, dynamic> feature;
+  final Map<String, dynamic> modelConfig;
 
   DragBubble(this.initialOffset, this.homePageState, this.bubblePrototypeState,
-      this.featureFactors, this.feature, this.title, this.dialogFunction);
+      this.modelConfig, this.feature);
 
   @override
   State<StatefulWidget> createState() {
     return DragBubbleState(initialOffset, homePageState, bubblePrototypeState,
-        featureFactors, feature, title, dialogFunction);
+        modelConfig, feature);
   }
 }
 
 class DragBubbleState extends State<DragBubble>
     with SingleTickerProviderStateMixin {
   Offset offset;
-  final List<Color> colorGradient = [
-    Colors.lightGreen,
-    Colors.amber,
-    Colors.orange,
-    Colors.red
-  ];
   int colorIndex = 0;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
-  final MapWrapper featureFactors;
-  final Function dialogFunction;
-  final String title;
-  final String feature;
+  final Map<String, dynamic> modelConfig;
+  final MapEntry<String, dynamic> feature;
   AnimationController animationController;
   Animation animation;
 
   DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState,
-      this.featureFactors, this.feature, this.title, this.dialogFunction);
+      this.modelConfig, this.feature);
 
-  computeNewColor(double input) {
+  // TODO: also use computeColorByFactor method?
+  computeNewColor() {
     int newColorIndex = 0;
-    for (var label in models.entries) {
-      if (featureFactors.value[feature] != null) {
-        double factor = featureFactors.value[feature][label.key] * input;
+    for (String label in modelConfig.keys) {
+      if (modelConfig[label]['features'][feature.key] != null) {
+        double factor = modelConfig[label]['features'][feature.key]['coef'] *
+            homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
         newColorIndex += factor.round().toInt();
       }
     }
-    newColorIndex = newColorIndex >= colorGradient.length
-        ? colorGradient.length - 1
-        : newColorIndex;
+
     setState(() {
       colorIndex = newColorIndex;
     });
   }
 
-  getParticles(double input) {
-    List<Widget> particleList = List();
+  getParticles() {
+    List<Particle> particles = List();
     dynamic rdm = Random();
-    for (var label in models.entries) {
-      if (featureFactors.value[feature] != null) {
-        double factor = featureFactors.value[feature][label.key] * input;
+    for (String label in modelConfig.keys) {
+      if (modelConfig[label]['features'][feature.key] != null) {
+        double factor = modelConfig[label]['features'][feature.key]['coef'] *
+            homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
-        for (int i = 0; i < factor * 50; i++) {
-          int timerDuration = ((rdm.nextInt(60)/100+0.7)*1000).toInt();
-          particleList.add(Particle(offset, bubblePrototypeState.diseaseBubbleOffsets[label.key], timerDuration));
+        for (int i = 0; i < factor * 5; i++) {
+          int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
+          particles.add(Particle(offset,
+              bubblePrototypeState.labelBubbleOffsets[label], timerDuration));
         }
       }
     }
-
     bubblePrototypeState.setState(() {
-      bubblePrototypeState.particleList[this] = particleList;
+      //bubblePrototypeState.particles.forEach((Particle p) => p.state.dispose());
+      bubblePrototypeState.particles = particles;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    computeNewColor();
     return Stack(
       children: <Widget>[
         Positioned(
@@ -98,14 +92,9 @@ class DragBubbleState extends State<DragBubble>
                       offset.dy + details.delta.dy);
                 });
               },
-              onPanEnd: (_) async {
-                double input =
-                    (await dialogFunction(context, homePageState)).get();
-                computeNewColor(input);
-                getParticles(input);
-              },
-              child: Bubble(homePageState, this, title, dialogFunction,
-                  colorGradient, colorIndex, animationController)),
+              onPanEnd: invokeDialog(context, homePageState, feature, this),
+              child: Bubble(homePageState, this, feature.value["title"],
+                  feature, colorIndex, animationController)),
         ),
       ],
     );
@@ -115,14 +104,13 @@ class DragBubbleState extends State<DragBubble>
 class Bubble extends StatelessWidget {
   final MyHomePageState homePageState;
   final DragBubbleState dragState;
-  final Function dialogFunction;
   final String title;
-  final colorGradient;
+  final MapEntry<String, dynamic> feature;
   final int colorIndex;
   final animationController;
 
-  Bubble(this.homePageState, this.dragState, this.title, this.dialogFunction,
-      this.colorGradient, this.colorIndex, this.animationController);
+  Bubble(this.homePageState, this.dragState, this.title, this.feature,
+      this.colorIndex, this.animationController);
 
   @override
   Widget build(BuildContext context) {
@@ -137,17 +125,11 @@ class Bubble extends StatelessWidget {
             height: 50.0,
             decoration: new BoxDecoration(
               shape: BoxShape.circle,
-              color: colorGradient[colorIndex],
+              color: computeColor(colorIndex),
             ),
             child: new FlatButton(
-              onPressed: () async {
-                var dialogInput = await dialogFunction(context, homePageState);
-                if (dialogInput != null) {
-                  double inputValue = dialogInput.get();
-                  dragState.computeNewColor(inputValue);
-                  dragState.getParticles(inputValue);
-                }
-              },
+              onPressed:
+                  invokeDialog(context, homePageState, feature, dragState),
               child: Container(),
             ),
           ),
@@ -163,37 +145,28 @@ class Bubble extends StatelessWidget {
   }
 }
 
-class DiseaseBubble extends StatelessWidget {
+class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
   final MyHomePageState homePageState;
 
-  DiseaseBubble(this.title, this.position, this.homePageState);
+  LabelBubble(this.title, this.position, this.homePageState);
 
   double computeDimensions() {
-    List<IllnessProb> probs =
-        getIllnessProbs(homePageState.input, homePageState.models, true);
-    for (IllnessProb prob in probs) {
-      if (prob.illness == title) {
-        return prob.probability;
-      }
-    }
-    return 0.0; //this should never happen
+    double value = 0.0;
+    Map<String, dynamic> probs = getIllnessProbs(
+        homePageState.userInputs, homePageState.modelConfig, true);
+    probs.forEach(
+        (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
+    return value;
   }
 
   Color computeColor() {
-    final List<Color> colorGradient = [
-      Colors.lightGreen,
-      Colors.amber,
-      Colors.orange,
-      Colors.red
-    ];
-    List<IllnessProb> probs =
-        getIllnessProbs(homePageState.input, homePageState.models, true);
-    for (IllnessProb prob in probs) {
-      if (prob.illness == title) {
-        return colorGradient[
-            (prob.probability * (colorGradient.length - 1)).round().toInt()];
+    Map<String, dynamic> probs = getIllnessProbs(
+        homePageState.userInputs, homePageState.modelConfig, true);
+    for (var prob in probs.entries) {
+      if (prob.key.toLowerCase() == title.toLowerCase()) {
+        return computeColorByFactor(prob.value);
       }
     }
     return Colors.black; // this should never happen
@@ -223,9 +196,10 @@ class DiseaseBubble extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Container(
+                    AnimatedContainer(
                       width: dim * 80,
                       height: dim * 80,
+                      duration: Duration(seconds: 3),
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         color: computeColor(),
@@ -250,12 +224,14 @@ class Particle extends StatefulWidget {
   Offset offset;
   final Offset targetOffset;
   final timerDuration;
+  State state;
 
   Particle(this.offset, this.targetOffset, this.timerDuration);
 
   @override
   State<StatefulWidget> createState() {
-    return ParticleState(offset, targetOffset, timerDuration);
+    state = ParticleState(offset, targetOffset, timerDuration);
+    return state;
   }
 }
 
@@ -274,7 +250,7 @@ class ParticleState extends State<Particle> {
   }
 
   void handleTimeout() {
-    if (timer != null) {
+    if (timer != null && offset != targetOffset) {
       setState(() {
         offset = targetOffset;
       });
@@ -299,13 +275,24 @@ class ParticleState extends State<Particle> {
       width: 5,
       height: 5,
       child: Container(
-          width: 5,
-          height: 5,
-          decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.black,
-          ),
+        width: 5,
+        height: 5,
+        decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.black,
         ),
+      ),
     );
   }
+}
+
+invokeDialog(context, homePageState, feature, dragState) {
+  return ([_]) async {
+    var dialogInput = await asyncInputDialog(context, homePageState, feature);
+
+    if (dialogInput != null) {
+      dragState.computeNewColor();
+      dragState.getParticles();
+    }
+  };
 }

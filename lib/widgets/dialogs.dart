@@ -1,34 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'radioButtons.dart';
+import 'package:bars_frontend/utils.dart';
 
-Future<dynamic> asyncSexInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "sex", getSexRadioButtons);
-}
-
-Future<dynamic> asyncWheezeInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "wheezeInChestInLastYear",
-      getWheezeInChestInLastYearRadioButtons);
-}
-
-Future<dynamic> asyncCOPDInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(context, homePageState, "COPD", getCOPDRadioButtons);
-}
-
-Future<dynamic> asyncNeverSmokedInputDialog(
-    BuildContext context, MyHomePageState homePageState) async {
-  return _asyncInputDialog(
-      context, homePageState, "neverSmoked", getNeverSmokedRadioButtons);
-}
-
-Future<dynamic> _asyncInputDialog(
+Future<dynamic> asyncInputDialog(
     BuildContext context,
     MyHomePageState homePageState,
-    String inputVariable,
-    Function widgetFunction) async {
+    MapEntry<String, dynamic> feature) async {
   return showDialog<dynamic>(
     context: context,
     barrierDismissible: true,
@@ -40,12 +17,12 @@ Future<dynamic> _asyncInputDialog(
               padding: const EdgeInsets.all(50.0),
               child: Column(
                 children: <Widget>[
-                  MyDialogContent(homePageState, widgetFunction),
+                  MyDialogContent(homePageState, feature),
                   Container(height: 50),
                   SimpleDialogOption(
                     onPressed: () {
                       Navigator.of(context)
-                          .pop(homePageState.input.getVariable(inputVariable));
+                          .pop(homePageState.userInputs[feature.key]);
                     },
                     child: new Text('Ok'),
                   ),
@@ -61,26 +38,32 @@ Future<dynamic> _asyncInputDialog(
 
 class MyDialogContent extends StatefulWidget {
   final MyHomePageState homePageState;
-  final Function widgetFunction;
+  final MapEntry<String, dynamic> feature;
 
-  MyDialogContent(this.homePageState, this.widgetFunction);
+  MyDialogContent(this.homePageState, this.feature);
 
   @override
   State<StatefulWidget> createState() {
-    return new MyDialogContentState(homePageState, widgetFunction);
+    return new MyDialogContentState(homePageState, feature);
   }
 }
 
 class MyDialogContentState extends State<MyDialogContent> {
   final MyHomePageState homePageState;
-  final Function widgetFunction;
+  final MapEntry<String, dynamic> feature;
 
-  MyDialogContentState(this.homePageState, this.widgetFunction);
+  MyDialogContentState(this.homePageState, this.feature);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [widgetFunction(homePageState, this)]);
+    return Container(
+        height: 200,
+        width: 500,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildInputWidget(
+                  homePageState, this, feature, homePageState.userInputs)
+            ]));
   }
 }
