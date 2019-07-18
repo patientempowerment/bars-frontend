@@ -72,7 +72,6 @@ class DragBubbleState extends State<DragBubble>
       }
     }
     bubblePrototypeState.setState(() {
-      //bubblePrototypeState.particles.forEach((Particle p) => p.state.dispose());
       bubblePrototypeState.particles = particles;
     });
   }
