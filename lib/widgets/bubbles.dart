@@ -50,7 +50,6 @@ class DragBubbleState extends State<DragBubble>
         newColorIndex += factor.round().toInt();
       }
     }
-
     setState(() {
       colorIndex = newColorIndex;
     });
@@ -153,9 +152,9 @@ class LabelBubble extends StatelessWidget {
 
   double computeDimensions() {
     double value = 0.0;
-    Map<String, dynamic> probs = getIllnessProbs(
+    Map<String, dynamic> probabilities = getIllnessProbs(
         homePageState.userInputs, homePageState.modelConfig, true);
-    probs.forEach(
+    probabilities.forEach(
         (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
     return value;
   }
