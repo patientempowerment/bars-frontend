@@ -67,7 +67,7 @@ class DragBubbleState extends State<DragBubble>
         for (int i = 0; i < factor * 5; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
           particles.add(Particle(offset,
-              bubblePrototypeState.labelBubbleOffsets[label], timerDuration, 1));
+              bubblePrototypeState.labelBubbleOffsets[label], timerDuration, colorIndex));
         }
       }
     }
@@ -224,17 +224,17 @@ class Particle extends StatefulWidget {
   Offset offset;
   Offset targetOffset;
   final timerDuration;
-  double correspondingFactor;
+  int colorIndex;
   State state;
 
-  Particle(this.offset, this.targetOffset, this.timerDuration, this.correspondingFactor){
+  Particle(this.offset, this.targetOffset, this.timerDuration, this.colorIndex){
     offset = Offset(offset.dx+45, offset.dy+20);
     targetOffset = Offset(targetOffset.dx+50, targetOffset.dy+40);
   }
 
   @override
   State<StatefulWidget> createState() {
-    state = ParticleState(offset, targetOffset, timerDuration, correspondingFactor);
+    state = ParticleState(offset, targetOffset, timerDuration, colorIndex);
     return state;
   }
 }
@@ -246,7 +246,7 @@ class ParticleState extends State<Particle> {
   dynamic timeout;
   final ms = const Duration(milliseconds: 1);
   Timer timer;
-  double correspondingFactor;
+  int colorIndex;
 
   startTimeout([int milliseconds]) {
     timeout = Duration(milliseconds: timerDuration);
@@ -268,7 +268,7 @@ class ParticleState extends State<Particle> {
     timer = null;
   }
 
-  ParticleState(this.offset, this.targetOffset, this.timerDuration, this.correspondingFactor);
+  ParticleState(this.offset, this.targetOffset, this.timerDuration, this.colorIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +284,7 @@ class ParticleState extends State<Particle> {
         height: 5,
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
-          color: computeColorByFactor(correspondingFactor),
+          color: computeColor(colorIndex.round()),
         ),
       ),
     );
