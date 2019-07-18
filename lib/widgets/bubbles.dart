@@ -67,7 +67,7 @@ class DragBubbleState extends State<DragBubble>
         for (int i = 0; i < factor * 5; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
           particles.add(Particle(offset,
-              bubblePrototypeState.labelBubbleOffsets[label], timerDuration, factor));
+              bubblePrototypeState.labelBubbleOffsets[label], timerDuration, 1));
         }
       }
     }
