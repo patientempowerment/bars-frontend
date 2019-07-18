@@ -107,7 +107,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  getTopBubbleBar(this, modelConfig, globalWidth, globalHeight),
+                  BubblePrototype(this, modelConfig, globalWidth, globalHeight),
                 ],
               ),
             ),
