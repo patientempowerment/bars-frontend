@@ -32,9 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  Inputs input = new Inputs();
-  StringWrapper models = new StringWrapper("");
-  MapWrapper featureFactors = MapWrapper(Map());
   bool predictMode = false;
   bool successfulDrop = false;
   double globalWidth;

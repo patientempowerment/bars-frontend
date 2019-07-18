@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:bars_frontend/utils.dart';
 
-Map<String, dynamic> getIllnessProbs(
-    Map<String, dynamic> inputs, Map<String, dynamic> modelConfig, bool predictMode) {
-
+Map<String, dynamic> getIllnessProbs(Map<String, dynamic> inputs, Map<String, dynamic> modelConfig, bool predictMode) {
   Map<String, dynamic> probabilities = {};
   if (predictMode) {
     modelConfig.forEach((k,v) => probabilities[k] = computeProb(v, inputs));
