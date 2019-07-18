@@ -67,7 +67,7 @@ class DragBubbleState extends State<DragBubble>
         for (int i = 0; i < factor * 5; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
           particles.add(Particle(offset,
-              bubblePrototypeState.labelBubbleOffsets[label], timerDuration));
+              bubblePrototypeState.labelBubbleOffsets[label], timerDuration, factor));
         }
       }
     }
@@ -222,15 +222,19 @@ class LabelBubble extends StatelessWidget {
 
 class Particle extends StatefulWidget {
   Offset offset;
-  final Offset targetOffset;
+  Offset targetOffset;
   final timerDuration;
+  double correspondingFactor;
   State state;
 
-  Particle(this.offset, this.targetOffset, this.timerDuration);
+  Particle(this.offset, this.targetOffset, this.timerDuration, this.correspondingFactor){
+    offset = Offset(offset.dx+45, offset.dy+20);
+    targetOffset = Offset(targetOffset.dx+50, targetOffset.dy+40);
+  }
 
   @override
   State<StatefulWidget> createState() {
-    state = ParticleState(offset, targetOffset, timerDuration);
+    state = ParticleState(offset, targetOffset, timerDuration, correspondingFactor);
     return state;
   }
 }
@@ -242,6 +246,7 @@ class ParticleState extends State<Particle> {
   dynamic timeout;
   final ms = const Duration(milliseconds: 1);
   Timer timer;
+  double correspondingFactor;
 
   startTimeout([int milliseconds]) {
     timeout = Duration(milliseconds: timerDuration);
@@ -263,7 +268,7 @@ class ParticleState extends State<Particle> {
     timer = null;
   }
 
-  ParticleState(this.offset, this.targetOffset, this.timerDuration);
+  ParticleState(this.offset, this.targetOffset, this.timerDuration, this.correspondingFactor);
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +284,7 @@ class ParticleState extends State<Particle> {
         height: 5,
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.black,
+          color: computeColorByFactor(correspondingFactor),
         ),
       ),
     );
