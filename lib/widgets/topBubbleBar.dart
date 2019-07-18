@@ -45,7 +45,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
   double yOffset;
   Offset imagePosition;
   Map<String, Offset> diseaseBubbleOffsets = Map();
-  Map<State, List<Widget>> particleList = Map();
+  List<Particle> particles = List();
 
   BubblePrototypeState(this.homePageState, this.modelConfig,
       this.globalWidth, this.globalHeight) {
@@ -55,7 +55,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
   }
 
   List<Widget> getWidgets() {
-    List<Widget> list = List();
+    List<Widget> widgets = List();
 
     Widget COPDBubble = DiseaseBubble(
         "COPD", Offset(imagePosition.dx - 90, imagePosition.dy), homePageState);
@@ -85,22 +85,20 @@ class BubblePrototypeState extends State<BubblePrototype> {
 
     double featureBubbleOffset = 0.0;
     for(MapEntry<String, dynamic> feature in homePageState.featureConfig.entries) {
-      list.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
+      widgets.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
       feature));
       featureBubbleOffset += 100.0;
     }
 
-    list.add(getPatientImage(imageDimensions, imagePosition));
-    list.add(COPDBubble);
-    list.add(asthmaBubble);
-    list.add(tbBubble);
-    list.add(diabetesBubble);
-    for (List<Widget> particleList in particleList.values) {
-      for (Widget particle in particleList) {
-        list.add(particle);
+    widgets.add(getPatientImage(imageDimensions, imagePosition));
+    widgets.add(COPDBubble);
+    widgets.add(asthmaBubble);
+    widgets.add(tbBubble);
+    widgets.add(diabetesBubble);
+      for (Particle particle in particles) {
+        widgets.add(particle);
       }
-    }
-    return list;
+    return widgets;
   }
 
   @override

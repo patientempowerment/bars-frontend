@@ -44,7 +44,8 @@ class DragBubbleState extends State<DragBubble>
     int newColorIndex = 0;
     for (String label in modelConfig.keys) {
       if (modelConfig[label]['features'][feature.key] != null) {
-        double factor = modelConfig[label]['features'][feature.key]['coef'] * input;
+        double factor =
+            modelConfig[label]['features'][feature.key]['coef'] * input;
         factor = factor < 0 ? 0 : factor;
         newColorIndex += factor.round().toInt();
       }
@@ -56,22 +57,23 @@ class DragBubbleState extends State<DragBubble>
   }
 
   getParticles(double input) {
-    List<Widget> particleList = List();
+    List<Particle> particles = List();
     dynamic rdm = Random();
     for (String label in modelConfig.keys) {
       if (modelConfig[label]['features'][feature.key] != null) {
-        double factor = modelConfig[label]['features'][feature.key]['coef'] * input;
+        double factor =
+            modelConfig[label]['features'][feature.key]['coef'] * input;
         factor = factor < 0 ? 0 : factor;
-        for (int i = 0; i < factor * 50; i++) {
+        for (int i = 0; i < factor * 5; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
-          particleList.add(Particle(offset,
+          particles.add(Particle(offset,
               bubblePrototypeState.diseaseBubbleOffsets[label], timerDuration));
         }
       }
     }
-
     bubblePrototypeState.setState(() {
-      bubblePrototypeState.particleList[this] = particleList;
+      //bubblePrototypeState.particles.forEach((Particle p) => p.state.dispose());
+      bubblePrototypeState.particles = particles;
     });
   }
 
@@ -220,12 +222,14 @@ class Particle extends StatefulWidget {
   Offset offset;
   final Offset targetOffset;
   final timerDuration;
+  State state;
 
   Particle(this.offset, this.targetOffset, this.timerDuration);
 
   @override
   State<StatefulWidget> createState() {
-    return ParticleState(offset, targetOffset, timerDuration);
+    state = ParticleState(offset, targetOffset, timerDuration);
+    return state;
   }
 }
 
@@ -244,7 +248,7 @@ class ParticleState extends State<Particle> {
   }
 
   void handleTimeout() {
-    if (timer != null) {
+    if (timer != null && offset != targetOffset) {
       setState(() {
         offset = targetOffset;
       });
