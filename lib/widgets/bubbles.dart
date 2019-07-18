@@ -195,9 +195,10 @@ class DiseaseBubble extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Container(
+                    AnimatedContainer(
                       width: dim * 80,
                       height: dim * 80,
+                      duration: Duration(seconds: 3),
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         color: computeColor(),
