@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
+import 'dart:math';
 import 'bubbles.dart';
-import '../utils.dart';
-import 'dialogs.dart';
 
 Widget getPatientImage(double width, Offset position) {
   return Positioned(
@@ -12,95 +11,70 @@ Widget getPatientImage(double width, Offset position) {
   );
 }
 
-Widget getTopBubbleBar(MyHomePageState homePageState, MapWrapper featureFactors,
-    double globalWidth, double globalHeight) {
-  return BubblePrototype(
-      homePageState, featureFactors, globalWidth, globalHeight);
-}
-
 class BubblePrototype extends StatefulWidget {
-  MyHomePageState homePageState;
-  MapWrapper featureFactors;
-  double globalWidth;
-  double globalHeight;
+  final MyHomePageState homePageState;
+  final Map<String, dynamic> modelConfig;
+  final double globalWidth;
+  final double globalHeight;
 
-  BubblePrototype(this.homePageState, this.featureFactors, this.globalWidth,
+  BubblePrototype(this.homePageState, this.modelConfig, this.globalWidth,
       this.globalHeight);
 
   @override
   State<StatefulWidget> createState() {
     return BubblePrototypeState(
-        homePageState, featureFactors, globalWidth, globalHeight);
+        homePageState, modelConfig, globalWidth, globalHeight);
   }
 }
 
 class BubblePrototypeState extends State<BubblePrototype> {
   MyHomePageState homePageState;
-  MapWrapper featureFactors;
+  Map<String, dynamic> modelConfig;
   double globalWidth;
   double globalHeight;
   double imageDimensions = 200;
   double xOffset;
   double yOffset;
   Offset imagePosition;
-  Map<String, Offset> diseaseBubbleOffsets = Map();
-  Map<State, List<Widget>> particleList = Map();
+  Map<String, Offset> labelBubbleOffsets = Map();
+  List<Particle> particles = List();
 
-  BubblePrototypeState(this.homePageState, this.featureFactors,
+  BubblePrototypeState(this.homePageState, this.modelConfig,
       this.globalWidth, this.globalHeight) {
     xOffset = globalWidth / 2 - imageDimensions / 2;
-    yOffset = globalHeight / 4;
+    yOffset = globalHeight / 3;
     imagePosition = Offset(xOffset, yOffset);
   }
 
   List<Widget> getWidgets() {
-    List<Widget> list = List();
+    List<Widget> widgets = List();
+    var boundingRadius = sqrt(pow((imageDimensions/2),2)*2) + 50;
+    var angle = 0.0;
+    var step = (2*pi)/modelConfig.length;
+    Offset imageCenter = Offset(imagePosition.dx+imageDimensions/2, imagePosition.dy+imageDimensions/2);
 
-    Widget COPDBubble = DiseaseBubble(
-        "COPD", Offset(imagePosition.dx - 90, imagePosition.dy), homePageState);
-    Widget asthmaBubble = DiseaseBubble(
-        "Asthma",
-        Offset(imagePosition.dx + imageDimensions, imagePosition.dy),
-        homePageState);
-    Widget tbBubble = DiseaseBubble(
-        "Tuberculosis",
-        Offset(imagePosition.dx - 90, imagePosition.dy + imageDimensions - 40),
-        homePageState);
-    Widget diabetesBubble = DiseaseBubble(
-        "Diabetes",
-        Offset(imagePosition.dx + imageDimensions,
-            imagePosition.dy + imageDimensions - 40),
-        homePageState);
+    modelConfig.forEach((k,v) {
+      var x = (boundingRadius * cos(angle)-45).round(); //45 comes from bubble container height(90) and width(90) divided by 2
+      var y = (boundingRadius * sin(angle)-45).round();
+      LabelBubble labelBubble = LabelBubble(
+        k, Offset(imageCenter.dx + x, imageCenter.dy + y), homePageState);
+      labelBubbleOffsets[k] = Offset(imageCenter.dx + x, imageCenter.dy + y);
+      angle += step;
+      widgets.add(labelBubble);
+    });
 
-    diseaseBubbleOffsets["COPD"] =
-        Offset(imagePosition.dx - 90, imagePosition.dy);
-    diseaseBubbleOffsets["asthma"] =
-        Offset(imagePosition.dx + imageDimensions, imagePosition.dy);
-    diseaseBubbleOffsets["tuberculosis"] =
-        Offset(imagePosition.dx - 90, imagePosition.dy + imageDimensions - 40);
-    diseaseBubbleOffsets["diabetes"] = Offset(
-        imagePosition.dx + imageDimensions,
-        imagePosition.dy + imageDimensions - 40);
-
-    list.add(DragBubble(Offset(0.0, 0.0), homePageState, this, featureFactors,
-        "sex", "Sex", asyncSexInputDialog));
-    list.add(DragBubble(Offset(100.0, 0.0), homePageState, this, featureFactors,
-        "wheezeInChestInLastYear", "Wheeze", asyncWheezeInputDialog));
-    list.add(DragBubble(Offset(200.0, 0.0), homePageState, this, featureFactors,
-        "COPD", "COPD", asyncCOPDInputDialog));
-    list.add(DragBubble(Offset(300, 0.0), homePageState, this, featureFactors,
-        "neverSmoked", "Never Smoked", asyncNeverSmokedInputDialog));
-    list.add(getPatientImage(imageDimensions, imagePosition));
-    list.add(COPDBubble);
-    list.add(asthmaBubble);
-    list.add(tbBubble);
-    list.add(diabetesBubble);
-    for (List<Widget> particleList in particleList.values) {
-      for (Widget particle in particleList) {
-        list.add(particle);
-      }
+    double featureBubbleOffset = 0.0;
+    for(MapEntry<String, dynamic> feature in homePageState.featureConfig.entries) {
+      widgets.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
+      feature));
+      featureBubbleOffset += 100.0;
     }
-    return list;
+
+    widgets.add(getPatientImage(imageDimensions, imagePosition));
+      for (Particle particle in particles) {
+        widgets.add(particle);
+      }
+    return widgets;
   }
 
   @override
