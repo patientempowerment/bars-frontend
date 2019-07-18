@@ -1,4 +1,4 @@
-import 'package:bars_frontend/widgets/resetButtons.dart';
+import 'package:bars_frontend/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'charts/simple_bar_chart.dart';
 import 'predictions.dart';
@@ -50,7 +50,6 @@ class MyHomePageState extends State<MyHomePage> {
         modelConfig = result.first;
         featureConfig = result.second;
         userInputs = generateDefaultInputValues(featureConfig);
-        predictMode = true;
       });
     });
   }
@@ -86,14 +85,7 @@ class MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                  FloatingActionButton(
-                    child: Icon(Icons.arrow_forward_ios),
-                    onPressed: () {
-                      setState(() {
-                        this.predictMode = true;
-                      });
-                    },
-                  ),
+                  PredictModeButton(this),
                   Expanded(
                     child: SimpleBarChart(
                         mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode))),
