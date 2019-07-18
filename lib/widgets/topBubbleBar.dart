@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
+import 'dart:math';
 import 'bubbles.dart';
 import '../utils.dart';
 import 'dialogs.dart';
@@ -44,20 +45,36 @@ class BubblePrototypeState extends State<BubblePrototype> {
   double xOffset;
   double yOffset;
   Offset imagePosition;
-  Map<String, Offset> diseaseBubbleOffsets = Map();
+  Map<String, Offset> labelBubbleOffsets = Map();
   List<Particle> particles = List();
 
   BubblePrototypeState(this.homePageState, this.modelConfig,
       this.globalWidth, this.globalHeight) {
     xOffset = globalWidth / 2 - imageDimensions / 2;
-    yOffset = globalHeight / 4;
+    yOffset = globalHeight / 3;
     imagePosition = Offset(xOffset, yOffset);
   }
 
   List<Widget> getWidgets() {
     List<Widget> widgets = List();
+    var boundingRadius = sqrt(pow((imageDimensions/2),2)*2) + 50;
+    var angle = 0.0;
+    var step = (2*pi)/modelConfig.length;
+    Offset imageCenter = Offset(imagePosition.dx+imageDimensions/2, imagePosition.dy+imageDimensions/2);
+    //createLabelBubble
+    //calculate distance,
+    //calculate positions
 
-    Widget COPDBubble = DiseaseBubble(
+    modelConfig.forEach((k,v) {
+      var x = (boundingRadius * cos(angle)-45).round(); //45 comes from bubble container height(90) and width(90) divided by 2
+      var y = (boundingRadius * sin(angle)-45).round();
+      LabelBubble labelBubble = LabelBubble(
+        k, Offset(imageCenter.dx + x, imageCenter.dy + y), homePageState);
+      labelBubbleOffsets[k] = Offset(imageCenter.dx + x, imageCenter.dy + y);
+      angle += step;
+      widgets.add(labelBubble);
+    });
+    /*Widget COPDBubble = DiseaseBubble(
         "COPD", Offset(imagePosition.dx - 90, imagePosition.dy), homePageState);
     Widget asthmaBubble = DiseaseBubble(
         "Asthma",
@@ -81,8 +98,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
         Offset(imagePosition.dx - 90, imagePosition.dy + imageDimensions - 40);
     diseaseBubbleOffsets["diabetes"] = Offset(
         imagePosition.dx + imageDimensions,
-        imagePosition.dy + imageDimensions - 40);
-
+        imagePosition.dy + imageDimensions - 40);*/
     double featureBubbleOffset = 0.0;
     for(MapEntry<String, dynamic> feature in homePageState.featureConfig.entries) {
       widgets.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
@@ -91,10 +107,10 @@ class BubblePrototypeState extends State<BubblePrototype> {
     }
 
     widgets.add(getPatientImage(imageDimensions, imagePosition));
-    widgets.add(COPDBubble);
-    widgets.add(asthmaBubble);
-    widgets.add(tbBubble);
-    widgets.add(diabetesBubble);
+    //widgets.add(COPDBubble);
+    //widgets.add(asthmaBubble);
+    //widgets.add(tbBubble);
+    //widgets.add(diabetesBubble);
       for (Particle particle in particles) {
         widgets.add(particle);
       }

@@ -67,7 +67,7 @@ class DragBubbleState extends State<DragBubble>
         for (int i = 0; i < factor * 5; i++) {
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
           particles.add(Particle(offset,
-              bubblePrototypeState.diseaseBubbleOffsets[label], timerDuration));
+              bubblePrototypeState.labelBubbleOffsets[label], timerDuration));
         }
       }
     }
@@ -144,12 +144,12 @@ class Bubble extends StatelessWidget {
   }
 }
 
-class DiseaseBubble extends StatelessWidget {
+class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
   final MyHomePageState homePageState;
 
-  DiseaseBubble(this.title, this.position, this.homePageState);
+  LabelBubble(this.title, this.position, this.homePageState);
 
   double computeDimensions() {
     double value = 0.0;
