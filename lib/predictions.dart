@@ -46,17 +46,30 @@ Map<String, dynamic> features = {};
 Map<String, dynamic> models = {};
 
 prepareModels(StringWrapper modelFactors, MapWrapper featureFactors) async {
-  var server_address = "http://172.20.24.28:5050";
+  String serverJSON = await rootBundle.loadString('assets/server.conf'); // TODO (far out): gather this info not from file but thru GUI input
+  Map<String, dynamic> serverConfig = jsonDecode(serverJSON);
+  String serverAddress = serverConfig["address"];
+  String databaseJSON = jsonEncode(serverConfig["database"]);
+  String configString;
+  try {
+    http.Response configResponse = await http.post(serverAddress + '/config',
+        headers: {"Content-Type": "application/json"}, body: databaseJSON);
+    configString = configResponse.body;
+  } catch (e) { // something with the web request went wrong, use local file fallback
+    configString = await rootBundle.loadString('assets/features.json');
+  }
+  features = jsonDecode(configString); // TODO @merger: this is where you get access to the loaded config json
 
-  var databaseNameJSON = await rootBundle.loadString('assets/database.conf'); //TODO (far out): gather this info not from file but thru user input
-  http.Response configResponse = await http.post(server_address + '/config', headers: {"Content-Type": "application/json"}, body: databaseNameJSON);
-  String configString = configResponse.body;
-  features = jsonDecode(configString);
-
-  var labelsJSON = await rootBundle.loadString('assets/labels.conf'); // TODO (far out): gather this info not from file but thru user input
-  http.Response modelsResponse = await http.post(server_address + '/models', headers: {"Content-Type": "application/json"}, body: labelsJSON);
-  String modelsString = modelsResponse.body;
-  models = jsonDecode(modelsString);
+  String labelsJSON = await rootBundle.loadString('assets/labels.conf'); // TODO (far out): gather this info not from file but thru GUI input
+  String modelsString;
+  try {
+    http.Response modelsResponse = await http.post(serverAddress + '/models',
+        headers: {"Content-Type": "application/json"}, body: labelsJSON);
+    modelsString = modelsResponse.body;
+  } catch (e) { // something with the web request went wrong, use local file fallback
+    modelsString = await rootBundle.loadString('assets/models.json');
+  }
+  models = jsonDecode(modelsString); // TODO @merger: this is where you get access to the loaded models json
   modelFactors.value = modelsString;
 
   for (var label in models.entries) {
