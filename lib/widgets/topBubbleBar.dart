@@ -64,10 +64,11 @@ class BubblePrototypeState extends State<BubblePrototype> {
     });
 
     double featureBubbleOffset = 0.0;
+    double featureBubbleWidth = (globalWidth - 20) / homePageState.featureConfig.entries.length;
     for(MapEntry<String, dynamic> feature in homePageState.featureConfig.entries) {
-      widgets.add(DragBubble(Offset(featureBubbleOffset, 0.0), homePageState, this, modelConfig,
+      widgets.add(DragBubble(Offset(featureBubbleOffset, 0.0), featureBubbleWidth - 5, homePageState, this, modelConfig,
       feature));
-      featureBubbleOffset += 100.0;
+      featureBubbleOffset += featureBubbleWidth;
     }
 
     widgets.add(getPatientImage(imageDimensions, imagePosition));

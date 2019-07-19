@@ -10,18 +10,19 @@ import 'dialogs.dart';
 
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
+  final double bubbleWidth;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
   final Map<String, dynamic> modelConfig;
 
-  DragBubble(this.initialOffset, this.homePageState, this.bubblePrototypeState,
-      this.modelConfig, this.feature);
+  DragBubble(this.initialOffset, this.bubbleWidth, this.homePageState,
+      this.bubblePrototypeState, this.modelConfig, this.feature);
 
   @override
   State<StatefulWidget> createState() {
-    return DragBubbleState(initialOffset, homePageState, bubblePrototypeState,
-        modelConfig, feature);
+    return DragBubbleState(initialOffset, bubbleWidth, homePageState,
+        bubblePrototypeState, modelConfig, feature);
   }
 }
 
@@ -35,9 +36,17 @@ class DragBubbleState extends State<DragBubble>
   final MapEntry<String, dynamic> feature;
   AnimationController animationController;
   Animation animation;
+  double bubbleWidth;
+  bool isSmall;
 
-  DragBubbleState(this.offset, this.homePageState, this.bubblePrototypeState,
-      this.modelConfig, this.feature);
+  DragBubbleState(this.offset, this.bubbleWidth, this.homePageState,
+      this.bubblePrototypeState, this.modelConfig, this.feature);
+
+  @override
+  initState() {
+    isSmall = true;
+    super.initState();
+  }
 
   // TODO: also use computeColorByFactor method?
   computeNewColor() {
@@ -84,6 +93,12 @@ class DragBubbleState extends State<DragBubble>
           left: offset.dx,
           top: offset.dy,
           child: GestureDetector(
+              onPanStart: (details) {
+                setState(() {
+                  bubbleWidth = 90;
+                  isSmall = false;
+                });
+              },
               onPanUpdate: (details) {
                 setState(() {
                   offset = Offset(offset.dx + details.delta.dx,
@@ -91,8 +106,15 @@ class DragBubbleState extends State<DragBubble>
                 });
               },
               onPanEnd: invokeDialog(context, homePageState, feature, this),
-              child: Bubble(homePageState, this, feature.value["title"],
-                  feature, colorIndex, animationController)),
+              child: Bubble(
+                  homePageState,
+                  this,
+                  feature.value["title"],
+                  feature,
+                  colorIndex,
+                  animationController,
+                  bubbleWidth,
+                  isSmall)),
         ),
       ],
     );
@@ -106,38 +128,54 @@ class Bubble extends StatelessWidget {
   final MapEntry<String, dynamic> feature;
   final int colorIndex;
   final animationController;
+  final double bubbleWidth;
+  final bool isSmall;
 
-  Bubble(this.homePageState, this.dragState, this.title, this.feature,
-      this.colorIndex, this.animationController);
+  Bubble(
+      this.homePageState,
+      this.dragState,
+      this.title,
+      this.feature,
+      this.colorIndex,
+      this.animationController,
+      this.bubbleWidth,
+      this.isSmall);
+
+  composeBubble(context) {
+    List<Widget> bubbleWidgets = List();
+
+    bubbleWidgets.add(AnimatedContainer(
+      duration: Duration(seconds: 1),
+      width: bubbleWidth,
+      decoration: new BoxDecoration(
+        shape: BoxShape.circle,
+        color: computeColor(colorIndex),
+      ),
+      child: new FlatButton(
+        onPressed: invokeDialog(context, homePageState, feature, dragState),
+        child: Container(),
+      ),
+    ));
+    if (!isSmall) {
+      bubbleWidgets.add(Padding(
+        padding: EdgeInsets.only(top: 5.0),
+        child: Container(
+          width: bubbleWidth,
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ));
+    }
+    return bubbleWidgets;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 90,
-      height: 90,
       child: Column(
-        children: <Widget>[
-          AnimatedContainer(
-            duration: Duration(seconds: 1),
-            width: 50.0,
-            height: 50.0,
-            decoration: new BoxDecoration(
-              shape: BoxShape.circle,
-              color: computeColor(colorIndex),
-            ),
-            child: new FlatButton(
-              onPressed:
-                  invokeDialog(context, homePageState, feature, dragState),
-              child: Container(),
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.only(top: 5.0),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-              )),
-        ],
+        children: composeBubble(context),
       ),
     );
   }
