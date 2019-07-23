@@ -9,12 +9,14 @@ import 'package:http/http.dart' as http;
 class Pair {
   dynamic first;
   dynamic second;
+
   Pair(this.first, this.second);
 }
 
 readData() async {
   // load server address, DB name and collection name
-  String serverConfigJSON = await rootBundle.loadString('assets/server.conf'); // TODO (far out): gather all this info not from file but thru GUI input
+  String serverConfigJSON = await rootBundle.loadString(
+      'assets/server.conf'); // TODO (far out): gather all this info not from file but thru GUI input
   Map<String, dynamic> serverConfig = jsonDecode(serverConfigJSON);
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
@@ -29,16 +31,19 @@ readData() async {
     featureConfigString = await rootBundle.loadString(localFallbacks["feature-config"]);
   }
 */
-  featureConfigString = await rootBundle.loadString(localFallbacks["feature-config"]);
+  featureConfigString =
+      await rootBundle.loadString(localFallbacks["feature-config"]);
   Map<String, dynamic> features = jsonDecode(featureConfigString);
 
-  String labelsJSON = await rootBundle.loadString('assets/labels.conf'); // TODO (far out): gather this info not from file but thru GUI input
+  String labelsJSON = await rootBundle.loadString(
+      'assets/labels.conf'); // TODO (far out): gather this info not from file but thru GUI input
   String modelsString;
   try {
     http.Response modelsResponse = await http.post(serverAddress + '/models',
         headers: {"Content-Type": "application/json"}, body: labelsJSON);
     modelsString = modelsResponse.body;
-  } catch (e) { // something with the web request went wrong, use local file fallback
+  } catch (e) {
+    // something with the web request went wrong, use local file fallback
     modelsString = await rootBundle.loadString(localFallbacks["models"]);
   }
   Map<String, dynamic> models = jsonDecode(modelsString);
@@ -48,44 +53,39 @@ readData() async {
 
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
-  featureConfig.forEach((k,v) {
+  featureConfig.forEach((k, v) {
     if (v["choices"] != null) {
       defaultInputs["$k"] = 0;
-    }
-    else {
+    } else {
       defaultInputs["$k"] = v["slider_min"].toDouble();
     }
   });
   return defaultInputs;
 }
 
-buildInputWidget(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
+buildInputWidget(MyHomePageState homePageState, State context,
+    MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
   if (feature.value["choices"] != null) {
-    var buttons = getRadioButtonInputRow(homePageState, context, feature, userInputs);
+    var buttons =
+        getRadioButtonInputRow(homePageState, context, feature, userInputs);
     return buttons;
-  }
-  else if (feature.value["slider_min"] != null) {
-    var slider = getSliderInputRow(homePageState, context, feature, userInputs[feature.key]);
+  } else if (feature.value["slider_min"] != null) {
+    var slider = getSliderInputRow(
+        homePageState, context, feature, userInputs[feature.key]);
     return slider;
-  }
-  else {
+  } else {
     throw new Exception("Input Widget not supported: " + feature.key);
   }
 }
-final List<Color> colorGradient = [
-  Colors.lightGreen,
-  Colors.amber,
-  Colors.orange,
-  Colors.red
-];
-
-Color computeColor(int index) {
-  index = index >= colorGradient.length
-      ? colorGradient.length - 1
-      : index;
-  return colorGradient[index];
-}
 
 Color computeColorByFactor(double factor) {
+  final List<Color> colorGradient = [
+    Colors.lightGreen,
+    Colors.amber,
+    Colors.orange,
+    Colors.red
+  ];
+
+  factor = factor > 1 ? 1 : factor;
   return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];
 }

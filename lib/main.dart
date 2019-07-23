@@ -84,15 +84,15 @@ class MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: ListView(
                       children: [
-                        for(var feature in featureConfig.entries)
+                        for (var feature in featureConfig.entries)
                           buildInputWidget(this, this, feature, userInputs),
                       ],
                     ),
                   ),
                   PredictModeButton(this),
                   Expanded(
-                    child: SimpleBarChart(
-                        mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode))),
+                    child: SimpleBarChart(mapChartData(
+                        getIllnessProbs(userInputs, modelConfig, predictMode))),
                   ),
                 ],
               ),

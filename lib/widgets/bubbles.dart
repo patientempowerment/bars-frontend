@@ -36,7 +36,7 @@ class DragBubble extends StatefulWidget {
 class DragBubbleState extends State<DragBubble>
     with SingleTickerProviderStateMixin {
   Offset offset;
-  int colorIndex = 0;
+  Color color = Colors.black;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
   final Map<String, dynamic> modelConfig;
@@ -62,19 +62,19 @@ class DragBubbleState extends State<DragBubble>
     super.initState();
   }
 
-  // TODO: also use computeColorByFactor method?
   computeNewColor() {
-    int newColorIndex = 0;
+    double colorFactor = 0;
     for (String label in modelConfig.keys) {
       if (modelConfig[label]['features'][feature.key] != null) {
         double factor = modelConfig[label]['features'][feature.key]['coef'] *
             homePageState.userInputs[feature.key];
-        factor = factor < 0 ? 0 : factor;
-        newColorIndex += factor.round().toInt();
+        colorFactor += factor < 0 ? 0 : factor;
       }
     }
+    // normalize colorFactor
+    colorFactor = colorFactor / modelConfig.keys.length;
     setState(() {
-      colorIndex = newColorIndex;
+      color = computeColorByFactor(colorFactor);
     });
   }
 
@@ -98,8 +98,8 @@ class DragBubbleState extends State<DragBubble>
                   PARTICLE_SIZE / 2);
           Offset center =
               Offset(offset.dx + bubbleWidth / 2, offset.dy + bubbleWidth / 2);
-          particles.add(
-              Particle(center, labelBubbleCenter, timerDuration, colorIndex));
+          particles
+              .add(Particle(center, labelBubbleCenter, timerDuration, color));
         }
       }
     }
@@ -130,15 +130,8 @@ class DragBubbleState extends State<DragBubble>
                 });
               },
               onPanEnd: invokeDialog(context, homePageState, feature, this),
-              child: Bubble(
-                  homePageState,
-                  this,
-                  feature.value["title"],
-                  feature,
-                  colorIndex,
-                  animationController,
-                  bubbleWidth,
-                  isSmall)),
+              child: Bubble(homePageState, this, feature.value["title"],
+                  feature, color, animationController, bubbleWidth, isSmall)),
         ),
       ],
     );
@@ -150,20 +143,13 @@ class Bubble extends StatelessWidget {
   final DragBubbleState dragState;
   final String title;
   final MapEntry<String, dynamic> feature;
-  final int colorIndex;
+  final Color color;
   final animationController;
   final double bubbleWidth;
   final bool isSmall;
 
-  Bubble(
-      this.homePageState,
-      this.dragState,
-      this.title,
-      this.feature,
-      this.colorIndex,
-      this.animationController,
-      this.bubbleWidth,
-      this.isSmall);
+  Bubble(this.homePageState, this.dragState, this.title, this.feature,
+      this.color, this.animationController, this.bubbleWidth, this.isSmall);
 
   composeBubble(context) {
     List<Widget> bubbleWidgets = List();
@@ -174,7 +160,7 @@ class Bubble extends StatelessWidget {
       height: bubbleWidth,
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
-        color: computeColor(colorIndex),
+        color: color,
       ),
       child: new FlatButton(
         onPressed: invokeDialog(context, homePageState, feature, dragState),
@@ -288,14 +274,14 @@ class Particle extends StatefulWidget {
   Offset offset;
   Offset targetOffset;
   final timerDuration;
-  int colorIndex;
+  Color color;
   State state;
 
-  Particle(this.offset, this.targetOffset, this.timerDuration, this.colorIndex);
+  Particle(this.offset, this.targetOffset, this.timerDuration, this.color);
 
   @override
   State<StatefulWidget> createState() {
-    state = ParticleState(offset, targetOffset, timerDuration, colorIndex);
+    state = ParticleState(offset, targetOffset, timerDuration, color);
     return state;
   }
 }
@@ -306,7 +292,7 @@ class ParticleState extends State<Particle> {
   final int timerDuration;
   dynamic timeout;
   Timer timer;
-  int colorIndex;
+  Color color;
 
   startTimeout() {
     timer = new Timer(Duration(milliseconds: timerDuration), handleTimeout);
@@ -326,8 +312,7 @@ class ParticleState extends State<Particle> {
     timer = null;
   }
 
-  ParticleState(
-      this.offset, this.targetOffset, this.timerDuration, this.colorIndex);
+  ParticleState(this.offset, this.targetOffset, this.timerDuration, this.color);
 
   @override
   Widget build(BuildContext context) {
@@ -341,7 +326,7 @@ class ParticleState extends State<Particle> {
         height: PARTICLE_SIZE,
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
-          color: computeColor(colorIndex.round()),
+          color: color,
         ),
       ),
     );

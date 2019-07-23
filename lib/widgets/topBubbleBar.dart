@@ -76,8 +76,8 @@ class BubblePrototypeState extends State<BubblePrototype> {
     });
 
     double featureBubbleOffset = 0.0;
-    double featureBubbleWidth =
-        (globalWidth - STANDARD_PADDING * 4) / homePageState.featureConfig.entries.length;
+    double featureBubbleWidth = (globalWidth - STANDARD_PADDING * 4) /
+        homePageState.featureConfig.entries.length;
     for (MapEntry<String, dynamic> feature
         in homePageState.featureConfig.entries) {
       widgets.add(DragBubble(
