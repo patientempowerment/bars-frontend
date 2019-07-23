@@ -8,6 +8,13 @@ import 'widgets/topBubbleBar.dart';
 
 void main() => runApp(MyApp());
 
+const double PARTICLE_SIZE = 5.0;
+const double STANDARD_PADDING = 5.0;
+const double STANDARD_FEATURE_BUBBLE_SIZE = 60;
+const double LABEL_BUBBLE_BORDER_SIZE = 2.0;
+const int STANDARD_ANIMATION_DURATION = 3;
+const int MAX_PARTICLES = 5;
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -65,7 +72,7 @@ class MyHomePageState extends State<MyHomePage> {
           Scaffold(
             appBar: AppBar(
               title: Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(STANDARD_PADDING),
                 child:
                     new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
               ),
@@ -95,13 +102,13 @@ class MyHomePageState extends State<MyHomePage> {
           Scaffold(
             appBar: AppBar(
               title: Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(STANDARD_PADDING),
                 child:
                     new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
               ),
             ),
             body: Container(
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(STANDARD_PADDING * 2),
               child: Column(
                 children: <Widget>[
                   BubblePrototype(this, modelConfig, globalWidth, globalHeight),
