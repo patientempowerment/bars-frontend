@@ -14,7 +14,6 @@ class Pair {
 
 readJSON(String path) async {
   String JSON = await rootBundle.loadString(path);
-  print("loading " + path);
   return jsonDecode(JSON);
 }
 
