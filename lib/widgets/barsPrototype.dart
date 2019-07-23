@@ -32,8 +32,7 @@ class BarsPrototypeState extends State<BarsPrototype> {
           child: ListView(
             children: [
               for (var feature in homePageState.featureConfig.entries)
-                buildInputWidget(
-                    homePageState, this, feature, homePageState.userInputs),
+                buildInputWidget(homePageState, this, feature),
             ],
           ),
         ),

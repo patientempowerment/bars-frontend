@@ -6,24 +6,21 @@ import 'package:bars_frontend/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class Pair {
-  dynamic first;
-  dynamic second;
-
-  Pair(this.first, this.second);
-}
-
 readJSON(String path) async {
-  String JSON = await rootBundle.loadString(path);
-  return jsonDecode(JSON);
+  String json = await rootBundle.loadString(path);
+  return jsonDecode(json);
 }
 
+/// Reads models, features and labels configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await readJSON('assets/server.conf'); // TODO (far out): gather all this info not from file but thru GUI input
+  Map<String, dynamic> serverConfig = await readJSON(
+      'assets/server.conf'); // TODO (far out): gather all this info not from file but thru GUI input
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
 
-  /*// use this once we have good feature-config generation server side (or GUI to handle the mediocre server side generation)
+  // load features
+  // use this once we have good feature-config generation server side (or GUI to handle the mediocre server side generation)
+  /*
   String databaseJSON = jsonEncode(serverConfig["database"]);
   Map<String, dynamic> features;
   try {
@@ -34,27 +31,31 @@ readData() async {
     features = loadJSON(localFallbacks['feature-config']);
   }
   */
-  Map<String, dynamic> features = await readJSON(localFallbacks["feature-config"]);
+  Map<String, dynamic> features =
+      await readJSON(localFallbacks["feature-config"]);
 
-  Map<String, dynamic> labelsConfig = await readJSON('assets/labels.conf'); // TODO (far out): gather this info not from file but thru GUI input
+  // load labels
+  Map<String, dynamic> labelsConfig = await readJSON(
+      'assets/labels.conf'); // TODO (far out): gather this info not from file but thru GUI input
   Map<String, dynamic> labels = labelsConfig["label_titles"];
   String labelsJSON = jsonEncode({"labels": labelsConfig["labels"]});
 
   // load model coefficients and means
   Map<String, dynamic> models;
   try {
-    http.Response modelsResponse = await http.post(serverAddress + '/models',
-        headers: {"Content-Type": "application/json"},
-        body: labelsJSON)
+    http.Response modelsResponse = await http
+        .post(serverAddress + '/models',
+            headers: {"Content-Type": "application/json"}, body: labelsJSON)
         .timeout(const Duration(seconds: 1));
     models = jsonDecode(modelsResponse.body);
-  }
-  catch (e) { // something with the web request went wrong, use local file fallback
+  } catch (e) {
+    // something with the web request went wrong, use local file fallback
     models = await readJSON(localFallbacks["models"]);
   }
   return [models, features, labels];
 }
 
+/// Sets first radio button or slider to min for all features in [featureConfig].
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
   featureConfig.forEach((k, v) {
@@ -67,21 +68,20 @@ generateDefaultInputValues(featureConfig) {
   return defaultInputs;
 }
 
+/// Creates either a radio button or a slider for [feature].
+/// [context] is the widget that the input widget is on, so the widget that has to reload.
 buildInputWidget(MyHomePageState homePageState, State context,
-    MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
+    MapEntry<String, dynamic> feature) {
   if (feature.value["choices"] != null) {
-    var buttons =
-        getRadioButtonInputRow(homePageState, context, feature, userInputs);
-    return buttons;
+    return getRadioButtonInputRow(homePageState, context, feature);
   } else if (feature.value["slider_min"] != null) {
-    var slider = getSliderInputRow(
-        homePageState, context, feature, userInputs[feature.key]);
-    return slider;
+    return getSliderInputRow(homePageState, context, feature);
   } else {
     throw new Exception("Input Widget not supported: " + feature.key);
   }
 }
 
+/// Returns the color for a [factor] greater 0.
 Color computeColorByFactor(double factor) {
   final List<Color> colorGradient = [
     Colors.lightGreen,

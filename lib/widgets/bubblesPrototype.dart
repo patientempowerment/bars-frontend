@@ -47,10 +47,19 @@ class BubblePrototypeState extends State<BubblePrototype> {
     double labelBubbleDimensions = homePageState.globalHeight / 8;
     List<Widget> widgets = List();
 
-    // 1. Add center image.
     widgets.add(getCenterImage(imageDimensions, imagePosition));
+    _addLabelBubbles(widgets, labelBubbleDimensions);
+    _addFeatureBubbles(widgets, labelBubbleDimensions);
 
-    // 2. Add label bubbles around center of center image.
+    for (Particle particle in particles) {
+      widgets.add(particle);
+    }
+
+    return widgets;
+  }
+
+  /// Adds label bubbles around center image.
+  _addLabelBubbles(List<Widget> widgets, double labelBubbleDimensions) {
     var boundingRadius =
         sqrt(pow((imageDimensions / 2), 2) * 2) + labelBubbleDimensions / 2;
     var angle = 0.0;
@@ -74,14 +83,16 @@ class BubblePrototypeState extends State<BubblePrototype> {
       labelBubbleOffsets[k] = Offset(imageCenter.dx + x, imageCenter.dy + y);
       angle += step;
     });
+  }
 
-    // 3. Add feature bubbles at top of screen.
+  /// Adds Feature bubbles on top.
+  _addFeatureBubbles(List<Widget> widgets, double labelBubbleDimensions) {
     double featureBubbleOffset = 0.0;
     double featureBubbleWidth =
         (homePageState.globalWidth - STANDARD_PADDING * 4) /
             homePageState.featureConfig.entries.length;
     for (MapEntry<String, dynamic> feature
-        in homePageState.featureConfig.entries) {
+    in homePageState.featureConfig.entries) {
       widgets.add(DragBubble(
           Offset(featureBubbleOffset, 0.0),
           featureBubbleWidth - STANDARD_PADDING,
@@ -92,13 +103,6 @@ class BubblePrototypeState extends State<BubblePrototype> {
           feature));
       featureBubbleOffset += featureBubbleWidth;
     }
-
-    // 4. Add particles.
-    for (Particle particle in particles) {
-      widgets.add(particle);
-    }
-
-    return widgets;
   }
 
   @override

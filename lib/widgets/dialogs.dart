@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 
-Future<dynamic> asyncInputDialog(
-    BuildContext context,
-    MyHomePageState homePageState,
-    MapEntry<String, dynamic> feature) async {
+Future<dynamic> asyncInputDialog(BuildContext context,
+    MyHomePageState homePageState, MapEntry<String, dynamic> feature) async {
   return showDialog<dynamic>(
     context: context,
     barrierDismissible: true,
@@ -61,9 +59,6 @@ class MyDialogContentState extends State<MyDialogContent> {
         width: 500,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildInputWidget(
-                  homePageState, this, feature, homePageState.userInputs)
-            ]));
+            children: [buildInputWidget(homePageState, this, feature)]));
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'package:bars_frontend/utils.dart';
-import 'dialogs.dart';
 
-
-getRadioButtonInputRow(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature, userInputs) {
+/// [context] is the widget that the input widget is on, so the widget that has to reload.
+getRadioButtonInputRow(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature) {
   return (
     Padding(
       padding: EdgeInsets.only(bottom: 5.0),
