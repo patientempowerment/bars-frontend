@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 class Pair {
   dynamic first;
   dynamic second;
+
   Pair(this.first, this.second);
 }
 
@@ -55,44 +56,39 @@ readData() async {
 
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
-  featureConfig.forEach((k,v) {
+  featureConfig.forEach((k, v) {
     if (v["choices"] != null) {
       defaultInputs["$k"] = 0;
-    }
-    else {
+    } else {
       defaultInputs["$k"] = v["slider_min"].toDouble();
     }
   });
   return defaultInputs;
 }
 
-buildInputWidget(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
+buildInputWidget(MyHomePageState homePageState, State context,
+    MapEntry<String, dynamic> feature, Map<String, dynamic> userInputs) {
   if (feature.value["choices"] != null) {
-    var buttons = getRadioButtonInputRow(homePageState, context, feature, userInputs);
+    var buttons =
+        getRadioButtonInputRow(homePageState, context, feature, userInputs);
     return buttons;
-  }
-  else if (feature.value["slider_min"] != null) {
-    var slider = getSliderInputRow(homePageState, context, feature, userInputs[feature.key]);
+  } else if (feature.value["slider_min"] != null) {
+    var slider = getSliderInputRow(
+        homePageState, context, feature, userInputs[feature.key]);
     return slider;
-  }
-  else {
+  } else {
     throw new Exception("Input Widget not supported: " + feature.key);
   }
 }
-final List<Color> colorGradient = [
-  Colors.lightGreen,
-  Colors.amber,
-  Colors.orange,
-  Colors.red
-];
-
-Color computeColor(int index) {
-  index = index >= colorGradient.length
-      ? colorGradient.length - 1
-      : index;
-  return colorGradient[index];
-}
 
 Color computeColorByFactor(double factor) {
+  final List<Color> colorGradient = [
+    Colors.lightGreen,
+    Colors.amber,
+    Colors.orange,
+    Colors.red
+  ];
+
+  factor = factor > 1 ? 1 : factor;
   return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];
 }
