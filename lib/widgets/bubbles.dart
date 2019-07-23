@@ -11,18 +11,25 @@ import 'dialogs.dart';
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final double bubbleWidth;
+  final double labelBubbleWidth;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
   final Map<String, dynamic> modelConfig;
 
-  DragBubble(this.initialOffset, this.bubbleWidth, this.homePageState,
-      this.bubblePrototypeState, this.modelConfig, this.feature);
+  DragBubble(
+      this.initialOffset,
+      this.bubbleWidth,
+      this.labelBubbleWidth,
+      this.homePageState,
+      this.bubblePrototypeState,
+      this.modelConfig,
+      this.feature);
 
   @override
   State<StatefulWidget> createState() {
-    return DragBubbleState(initialOffset, bubbleWidth, homePageState,
-        bubblePrototypeState, modelConfig, feature);
+    return DragBubbleState(initialOffset, bubbleWidth, labelBubbleWidth,
+        homePageState, bubblePrototypeState, modelConfig, feature);
   }
 }
 
@@ -37,10 +44,17 @@ class DragBubbleState extends State<DragBubble>
   AnimationController animationController;
   Animation animation;
   double bubbleWidth;
+  double labelBubbleWidth;
   bool isSmall;
 
-  DragBubbleState(this.offset, this.bubbleWidth, this.homePageState,
-      this.bubblePrototypeState, this.modelConfig, this.feature);
+  DragBubbleState(
+      this.offset,
+      this.bubbleWidth,
+      this.labelBubbleWidth,
+      this.homePageState,
+      this.bubblePrototypeState,
+      this.modelConfig,
+      this.feature);
 
   @override
   initState() {
@@ -72,10 +86,20 @@ class DragBubbleState extends State<DragBubble>
         double factor = modelConfig[label]['features'][feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
-        for (int i = 0; i < factor * 5; i++) {
+        for (int i = 0; i < factor * MAX_PARTICLES; i++) {
+          // choose random duration around one second
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
-          particles.add(Particle(offset,
-              bubblePrototypeState.labelBubbleOffsets[label], timerDuration, colorIndex));
+          Offset labelBubbleCenter = Offset(
+              bubblePrototypeState.labelBubbleOffsets[label].dx +
+                  labelBubbleWidth / 2 -
+                  PARTICLE_SIZE / 2,
+              bubblePrototypeState.labelBubbleOffsets[label].dy +
+                  labelBubbleWidth / 2 -
+                  PARTICLE_SIZE / 2);
+          Offset center =
+              Offset(offset.dx + bubbleWidth / 2, offset.dy + bubbleWidth / 2);
+          particles.add(
+              Particle(center, labelBubbleCenter, timerDuration, colorIndex));
         }
       }
     }
@@ -95,7 +119,7 @@ class DragBubbleState extends State<DragBubble>
           child: GestureDetector(
               onPanStart: (details) {
                 setState(() {
-                  bubbleWidth = 90;
+                  bubbleWidth = STANDARD_FEATURE_BUBBLE_SIZE;
                   isSmall = false;
                 });
               },
@@ -147,6 +171,7 @@ class Bubble extends StatelessWidget {
     bubbleWidgets.add(AnimatedContainer(
       duration: Duration(seconds: 1),
       width: bubbleWidth,
+      height: bubbleWidth,
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
         color: computeColor(colorIndex),
@@ -158,7 +183,7 @@ class Bubble extends StatelessWidget {
     ));
     if (!isSmall) {
       bubbleWidgets.add(Padding(
-        padding: EdgeInsets.only(top: 5.0),
+        padding: EdgeInsets.only(top: STANDARD_PADDING),
         child: Container(
           width: bubbleWidth,
           child: Text(
@@ -184,17 +209,21 @@ class Bubble extends StatelessWidget {
 class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
+  final double dimensions;
   final MyHomePageState homePageState;
 
-  LabelBubble(this.title, this.position, this.homePageState);
+  LabelBubble(this.title, this.position, this.dimensions, this.homePageState);
 
-  double computeDimensions() {
+  double computeInnerBubbleSize() {
     double value = 0.0;
     Map<String, dynamic> probabilities = getIllnessProbs(
         homePageState.userInputs, homePageState.modelConfig, true);
     probabilities.forEach(
         (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
-    return value;
+    double innerBubbleSize = value * dimensions;
+    return innerBubbleSize > dimensions - LABEL_BUBBLE_BORDER_SIZE * 2
+        ? dimensions - LABEL_BUBBLE_BORDER_SIZE * 2
+        : innerBubbleSize;
   }
 
   Color computeColor() {
@@ -210,32 +239,31 @@ class LabelBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double dim = computeDimensions();
+    double innerBubbleSize = computeInnerBubbleSize();
     return Positioned(
         top: position.dy,
         left: position.dx,
         child: Container(
-          width: 105,
-          height: 105,
           child: Column(
             children: <Widget>[
               Container(
-                width: 84,
-                height: 84,
+                width: dimensions,
+                height: dimensions,
                 decoration: new BoxDecoration(
                   shape: BoxShape.circle,
                   border: new Border.all(
                       color: computeColor(),
-                      width: 2.0,
+                      width: LABEL_BUBBLE_BORDER_SIZE,
                       style: BorderStyle.solid),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     AnimatedContainer(
-                      width: dim * 80,
-                      height: dim * 80,
-                      duration: Duration(seconds: 3),
+                      width: innerBubbleSize,
+                      height: innerBubbleSize,
+                      duration: Duration(seconds: STANDARD_ANIMATION_DURATION),
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         color: computeColor(),
@@ -245,7 +273,7 @@ class LabelBubble extends StatelessWidget {
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.only(top: 5.0),
+                  padding: EdgeInsets.only(top: STANDARD_PADDING),
                   child: Text(
                     title,
                     textAlign: TextAlign.center,
@@ -263,10 +291,7 @@ class Particle extends StatefulWidget {
   int colorIndex;
   State state;
 
-  Particle(this.offset, this.targetOffset, this.timerDuration, this.colorIndex){
-    offset = Offset(offset.dx+45, offset.dy+20);
-    targetOffset = Offset(targetOffset.dx+50, targetOffset.dy+40);
-  }
+  Particle(this.offset, this.targetOffset, this.timerDuration, this.colorIndex);
 
   @override
   State<StatefulWidget> createState() {
@@ -280,14 +305,11 @@ class ParticleState extends State<Particle> {
   final Offset targetOffset;
   final int timerDuration;
   dynamic timeout;
-  final ms = const Duration(milliseconds: 1);
   Timer timer;
   int colorIndex;
 
-  startTimeout([int milliseconds]) {
-    timeout = Duration(milliseconds: timerDuration);
-    var duration = milliseconds == null ? timeout : ms * milliseconds;
-    timer = new Timer(duration, handleTimeout);
+  startTimeout() {
+    timer = new Timer(Duration(milliseconds: timerDuration), handleTimeout);
   }
 
   void handleTimeout() {
@@ -304,7 +326,8 @@ class ParticleState extends State<Particle> {
     timer = null;
   }
 
-  ParticleState(this.offset, this.targetOffset, this.timerDuration, this.colorIndex);
+  ParticleState(
+      this.offset, this.targetOffset, this.timerDuration, this.colorIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -312,12 +335,10 @@ class ParticleState extends State<Particle> {
     return AnimatedPositioned(
       top: offset.dy,
       left: offset.dx,
-      duration: Duration(seconds: 2),
-      width: 5,
-      height: 5,
+      duration: Duration(seconds: STANDARD_ANIMATION_DURATION - 1),
       child: Container(
-        width: 5,
-        height: 5,
+        width: PARTICLE_SIZE,
+        height: PARTICLE_SIZE,
         decoration: new BoxDecoration(
           shape: BoxShape.circle,
           color: computeColor(colorIndex.round()),
