@@ -38,10 +38,10 @@ class BarsPrototypeState extends State<BarsPrototype> {
         ),
         PredictModeButton(this),
         Expanded(
-          child: SimpleBarChart(mapChartData(getLabelProbabilities(
-              homePageState.userInputs,
-              homePageState.modelConfig,
-              predictMode))),
+          child: SimpleBarChart(mapChartData(
+              getLabelProbabilities(homePageState.userInputs,
+                  homePageState.modelConfig, predictMode),
+              homePageState.labelConfig)),
         ),
       ],
     );
