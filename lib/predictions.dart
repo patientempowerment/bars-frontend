@@ -1,6 +1,6 @@
 import 'dart:math';
 
-//get probabilities of al labels in modelConfig, only if predict mode is on
+/// Computes probabilities of al labels in modelConfig, only if predict mode is on.
 Map<String, dynamic> getLabelProbabilities(Map<String, dynamic> inputs,
     Map<String, dynamic> modelConfig, bool predictMode) {
   Map<String, dynamic> probabilities = {};
@@ -12,7 +12,7 @@ Map<String, dynamic> getLabelProbabilities(Map<String, dynamic> inputs,
   return probabilities;
 }
 
-// compute probability for one label
+/// Computes probability for one label.
 double computeProbability(
     Map<String, dynamic> modelValues, Map<String, dynamic> inputs) {
   double dotProduct = 0.0;
@@ -25,7 +25,7 @@ double computeProbability(
   return result;
 }
 
-// take mean when no input value given
+/// Takes mean when no input value is given.
 double multiplyInputAndCoefficient(
     Map<String, dynamic> featureValues, var featureInput) {
   featureInput ??= featureValues["mean"];

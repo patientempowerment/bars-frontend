@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// main widget in app, consisting of two pages: bars and bubble prototype
+/// Represents main widget in app, consisting of two pages: bars and bubble prototype.
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -37,6 +37,10 @@ class MyHomePage extends StatefulWidget {
   MyHomePageState createState() => MyHomePageState();
 }
 
+/// [userInputs] Map of feature names to their input values
+/// [modelConfig] Map of label names to their features, including coefficients and means
+/// [featureConfig] Map of feature names to their titles and (min/max values or choices)
+/// [labelConfig] Map of label names to their titles
 class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;
@@ -97,7 +101,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// header bar content including the logo
+/// Represents header bar content including the logo.
 class MyAppBarContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
