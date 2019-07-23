@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import '../utils.dart';
+import 'barsPrototype.dart';
 
 class ResetButton extends StatelessWidget {
   final MyHomePageState homePageState;
@@ -21,18 +22,18 @@ class ResetButton extends StatelessWidget {
 }
 
 class PredictModeButton extends StatelessWidget {
-  final MyHomePageState homePageState;
+  final BarsPrototypeState barsPrototypeState;
 
-  PredictModeButton(this.homePageState);
+  PredictModeButton(this.barsPrototypeState);
 
   @override
   Widget build(BuildContext context) {
-    if (homePageState.predictMode) {
+    if (barsPrototypeState.predictMode) {
       return FloatingActionButton(
         child: Icon(Icons.arrow_back_ios),
         onPressed: () {
-          homePageState.setState(() {
-            homePageState.predictMode = false;
+          barsPrototypeState.setState(() {
+            barsPrototypeState.predictMode = false;
           });
         },
       );
@@ -40,8 +41,8 @@ class PredictModeButton extends StatelessWidget {
     return FloatingActionButton(
       child: Icon(Icons.arrow_forward_ios),
       onPressed: () {
-        homePageState.setState(() {
-          homePageState.predictMode = true;
+        barsPrototypeState.setState(() {
+          barsPrototypeState.predictMode = true;
         });
       },
     );

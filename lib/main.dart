@@ -1,10 +1,8 @@
+import 'package:bars_frontend/widgets/barsPrototype.dart';
+import 'package:bars_frontend/widgets/bubblesPrototype.dart';
 import 'package:bars_frontend/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'charts/simple_bar_chart.dart';
-import 'predictions.dart';
 import 'package:bars_frontend/utils.dart';
-
-import 'widgets/topBubbleBar.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +27,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// main widget in app, consisting of two pages: bars and bubble prototype
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -39,8 +38,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  bool predictMode = false;
-  bool successfulDrop = false;
   double globalWidth;
   double globalHeight;
   Map<String, dynamic> userInputs;
@@ -58,12 +55,14 @@ class MyHomePageState extends State<MyHomePage> {
         userInputs = generateDefaultInputValues(featureConfig);
       });
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
+    // make sure that configs are loaded before displaying input and output
     if ((modelConfig == null) || (featureConfig == null)) {
       return new Container();
     }
@@ -73,54 +72,38 @@ class MyHomePageState extends State<MyHomePage> {
         PageView(children: [
           Scaffold(
             appBar: AppBar(
-              title: Padding(
-                padding: const EdgeInsets.all(STANDARD_PADDING),
-                child:
-                    new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
-              ),
+              title: MyAppBarContent(),
             ),
             body: Container(
               padding: EdgeInsets.all(40.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        for (var feature in featureConfig.entries)
-                          buildInputWidget(this, this, feature, userInputs),
-                      ],
-                    ),
-                  ),
-                  PredictModeButton(this),
-                  Expanded(
-                    child: SimpleBarChart(
-                        mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode), labelConfig)),
-                  ),
-                ],
-              ),
+              child: BarsPrototype(this),
             ),
             floatingActionButton: ResetButton(this),
           ),
           Scaffold(
             appBar: AppBar(
-              title: Padding(
-                padding: const EdgeInsets.all(STANDARD_PADDING),
-                child:
-                    new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
-              ),
+              title: MyAppBarContent(),
             ),
             body: Container(
               padding: EdgeInsets.all(STANDARD_PADDING * 2),
-              child: Column(
-                children: <Widget>[
+              child:
                   BubblePrototype(this, modelConfig, globalWidth, globalHeight),
-                ],
-              ),
             ),
             floatingActionButton: ResetButton(this),
           ),
         ]),
       ],
+    );
+  }
+}
+
+// header bar content including the logo
+class MyAppBarContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(STANDARD_PADDING),
+      child: new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
     );
   }
 }

@@ -101,14 +101,12 @@ class BubblePrototypeState extends State<BubblePrototype> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Stack(children: getWidgets()),
-          ),
-        ],
-      ),
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Stack(children: getWidgets()),
+        ),
+      ],
     );
   }
 }

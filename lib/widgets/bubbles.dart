@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:bars_frontend/predictions.dart';
-import 'topBubbleBar.dart';
+import 'bubblesPrototype.dart';
 import 'dialogs.dart';
 
 class DragBubble extends StatefulWidget {
@@ -202,7 +202,7 @@ class LabelBubble extends StatelessWidget {
 
   double computeInnerBubbleSize() {
     double value = 0.0;
-    Map<String, dynamic> probabilities = getIllnessProbs(
+    Map<String, dynamic> probabilities = getLabelProbabilities(
         homePageState.userInputs, homePageState.modelConfig, true);
     probabilities.forEach(
         (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
@@ -213,7 +213,7 @@ class LabelBubble extends StatelessWidget {
   }
 
   Color computeColor() {
-    Map<String, dynamic> probs = getIllnessProbs(
+    Map<String, dynamic> probs = getLabelProbabilities(
         homePageState.userInputs, homePageState.modelConfig, true);
     for (var prob in probs.entries) {
       if (prob.key.toLowerCase() == title.toLowerCase()) {
