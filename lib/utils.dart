@@ -45,7 +45,8 @@ readData() async {
   try {
     http.Response modelsResponse = await http.post(serverAddress + '/models',
         headers: {"Content-Type": "application/json"},
-        body: labelsJSON);
+        body: labelsJSON)
+        .timeout(const Duration(seconds: 1));
     models = jsonDecode(modelsResponse.body);
   }
   catch (e) { // something with the web request went wrong, use local file fallback
