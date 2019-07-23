@@ -98,8 +98,8 @@ class DragBubbleState extends State<DragBubble>
                   PARTICLE_SIZE / 2);
           Offset center =
               Offset(offset.dx + bubbleWidth / 2, offset.dy + bubbleWidth / 2);
-          particles.add(
-              Particle(center, labelBubbleCenter, timerDuration, color));
+          particles
+              .add(Particle(center, labelBubbleCenter, timerDuration, color));
         }
       }
     }
@@ -130,15 +130,8 @@ class DragBubbleState extends State<DragBubble>
                 });
               },
               onPanEnd: invokeDialog(context, homePageState, feature, this),
-              child: Bubble(
-                  homePageState,
-                  this,
-                  feature.value["title"],
-                  feature,
-                  color,
-                  animationController,
-                  bubbleWidth,
-                  isSmall)),
+              child: Bubble(homePageState, this, feature.value["title"],
+                  feature, color, animationController, bubbleWidth, isSmall)),
         ),
       ],
     );
@@ -155,15 +148,8 @@ class Bubble extends StatelessWidget {
   final double bubbleWidth;
   final bool isSmall;
 
-  Bubble(
-      this.homePageState,
-      this.dragState,
-      this.title,
-      this.feature,
-      this.color,
-      this.animationController,
-      this.bubbleWidth,
-      this.isSmall);
+  Bubble(this.homePageState, this.dragState, this.title, this.feature,
+      this.color, this.animationController, this.bubbleWidth, this.isSmall);
 
   composeBubble(context) {
     List<Widget> bubbleWidgets = List();

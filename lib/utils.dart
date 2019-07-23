@@ -78,8 +78,6 @@ buildInputWidget(MyHomePageState homePageState, State context,
   }
 }
 
-
-
 Color computeColorByFactor(double factor) {
   final List<Color> colorGradient = [
     Colors.lightGreen,
