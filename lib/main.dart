@@ -90,8 +90,7 @@ class MyHomePageState extends State<MyHomePage> {
             ),
             body: Container(
               padding: EdgeInsets.all(STANDARD_PADDING * 2),
-              child:
-                  BubblePrototype(this, modelConfig, globalWidth, globalHeight),
+              child: BubblePrototype(this),
             ),
             floatingActionButton: ResetButton(this),
           ),

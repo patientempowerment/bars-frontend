@@ -3,7 +3,8 @@ import 'package:bars_frontend/main.dart';
 import 'dart:math';
 import 'bubbles.dart';
 
-Widget getPatientImage(double width, Offset position) {
+/// Returns the image at the given position with given size.
+Widget getCenterImage(double width, Offset position) {
   return Positioned(
     child: Image(image: AssetImage('assets/man-user.png'), width: width),
     left: position.dx,
@@ -11,74 +12,74 @@ Widget getPatientImage(double width, Offset position) {
   );
 }
 
+/// Represents the second prototype with bubbles as input and output representation.
 class BubblePrototype extends StatefulWidget {
   final MyHomePageState homePageState;
-  final Map<String, dynamic> modelConfig;
-  final double globalWidth;
-  final double globalHeight;
 
-  BubblePrototype(this.homePageState, this.modelConfig, this.globalWidth,
-      this.globalHeight);
+  BubblePrototype(this.homePageState);
 
   @override
   State<StatefulWidget> createState() {
-    return BubblePrototypeState(
-        homePageState, modelConfig, globalWidth, globalHeight);
+    return BubblePrototypeState(homePageState);
   }
 }
 
+/// [labelBubbleOffsets] Map of label names and their position to let particles flow there.
 class BubblePrototypeState extends State<BubblePrototype> {
-  MyHomePageState homePageState;
-  Map<String, dynamic> modelConfig;
-  double globalWidth;
-  double globalHeight;
+  final MyHomePageState homePageState;
   double imageDimensions;
-  double xOffset;
-  double yOffset;
   Offset imagePosition;
   Map<String, Offset> labelBubbleOffsets = Map();
   List<Particle> particles = List();
 
-  BubblePrototypeState(this.homePageState, this.modelConfig, this.globalWidth,
-      this.globalHeight);
+  BubblePrototypeState(this.homePageState);
 
   @override
   initState() {
-    imageDimensions = globalHeight / 4;
-    xOffset = globalWidth / 2 - imageDimensions / 2;
-    yOffset = globalHeight / 3;
-    imagePosition = Offset(xOffset, yOffset);
+    imageDimensions = homePageState.globalHeight / 4;
+    imagePosition = Offset(homePageState.globalWidth / 2 - imageDimensions / 2,
+        homePageState.globalHeight / 3);
     super.initState();
   }
 
-  List<Widget> getWidgets() {
-    double labelBubbleDimensions = globalHeight / 8;
+  /// Returns all widgets of bubble prototype as a list.
+  List<Widget> _getWidgets() {
+    double labelBubbleDimensions = homePageState.globalHeight / 8;
     List<Widget> widgets = List();
+
+    // 1. Add center image.
+    widgets.add(getCenterImage(imageDimensions, imagePosition));
+
+    // 2. Add label bubbles around center of center image.
     var boundingRadius =
         sqrt(pow((imageDimensions / 2), 2) * 2) + labelBubbleDimensions / 2;
     var angle = 0.0;
-    var step = (2 * pi) / modelConfig.length;
+    var step = (2 * pi) / homePageState.modelConfig.length;
     Offset imageCenter = Offset(imagePosition.dx + imageDimensions / 2,
         imagePosition.dy + imageDimensions / 2);
 
-    modelConfig.forEach((k, v) {
+    homePageState.modelConfig.forEach((k, v) {
       //45 comes from bubble container height(90) and width(90) divided by 2
       var x = (boundingRadius * cos(angle) - 45).round();
       var y = (boundingRadius * sin(angle) - 45).round();
-      String labelTitle = homePageState.labelConfig[k];
+
+      // Actually add label bubble.
       LabelBubble labelBubble = LabelBubble(
-          labelTitle,
+          homePageState.labelConfig[k],
           Offset(imageCenter.dx + x, imageCenter.dy + y),
           labelBubbleDimensions,
           homePageState);
+      widgets.add(labelBubble);
+
       labelBubbleOffsets[k] = Offset(imageCenter.dx + x, imageCenter.dy + y);
       angle += step;
-      widgets.add(labelBubble);
     });
 
+    // 3. Add feature bubbles at top of screen.
     double featureBubbleOffset = 0.0;
-    double featureBubbleWidth = (globalWidth - STANDARD_PADDING * 4) /
-        homePageState.featureConfig.entries.length;
+    double featureBubbleWidth =
+        (homePageState.globalWidth - STANDARD_PADDING * 4) /
+            homePageState.featureConfig.entries.length;
     for (MapEntry<String, dynamic> feature
         in homePageState.featureConfig.entries) {
       widgets.add(DragBubble(
@@ -87,15 +88,16 @@ class BubblePrototypeState extends State<BubblePrototype> {
           labelBubbleDimensions,
           homePageState,
           this,
-          modelConfig,
+          homePageState.modelConfig,
           feature));
       featureBubbleOffset += featureBubbleWidth;
     }
 
-    widgets.add(getPatientImage(imageDimensions, imagePosition));
+    // 4. Add particles.
     for (Particle particle in particles) {
       widgets.add(particle);
     }
+
     return widgets;
   }
 
@@ -104,7 +106,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: Stack(children: getWidgets()),
+          child: Stack(children: _getWidgets()),
         ),
       ],
     );
