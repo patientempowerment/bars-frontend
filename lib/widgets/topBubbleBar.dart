@@ -65,8 +65,9 @@ class BubblePrototypeState extends State<BubblePrototype> {
       //45 comes from bubble container height(90) and width(90) divided by 2
       var x = (boundingRadius * cos(angle) - 45).round();
       var y = (boundingRadius * sin(angle) - 45).round();
+      String labelTitle = homePageState.labelConfig[k];
       LabelBubble labelBubble = LabelBubble(
-          k,
+          labelTitle,
           Offset(imageCenter.dx + x, imageCenter.dy + y),
           labelBubbleDimensions,
           homePageState);
