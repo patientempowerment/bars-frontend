@@ -39,13 +39,15 @@ class MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> userInputs;
   Map<String, dynamic> modelConfig;
   Map<String, dynamic> featureConfig;
+  Map<String, dynamic> labelConfig;
 
   @override
   void initState() {
     readData().then((result) {
       setState(() {
-        modelConfig = result.first;
-        featureConfig = result.second;
+        modelConfig = result[0];
+        featureConfig = result[1];
+        labelConfig = result[2];
         userInputs = generateDefaultInputValues(featureConfig);
       });
     });
@@ -85,7 +87,7 @@ class MyHomePageState extends State<MyHomePage> {
                   PredictModeButton(this),
                   Expanded(
                     child: SimpleBarChart(
-                        mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode))),
+                        mapChartData(getIllnessProbs(userInputs, modelConfig, predictMode), labelConfig)),
                   ),
                 ],
               ),
