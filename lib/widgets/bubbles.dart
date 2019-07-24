@@ -8,6 +8,11 @@ import 'package:bars_frontend/predictions.dart';
 import 'bubblesPrototype.dart';
 import 'dialogs.dart';
 
+/// Represents a draggable widget that includes a widget of type [FeatureBubble].
+/// [initialOffset] is the position the bubble is originally at.
+/// [bubbleWidth] is the width of the child [FeatureBubble].
+/// [labelBubbleWidth] is the width of [LabelBubble]s.
+/// [feature] is the MapEntry of the feature to be represented.
 class DragBubble extends StatefulWidget {
   final Offset initialOffset;
   final double bubbleWidth;
@@ -15,75 +20,63 @@ class DragBubble extends StatefulWidget {
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
-  final Map<String, dynamic> modelConfig;
 
-  DragBubble(
-      this.initialOffset,
-      this.bubbleWidth,
-      this.labelBubbleWidth,
-      this.homePageState,
-      this.bubblePrototypeState,
-      this.modelConfig,
-      this.feature);
+  DragBubble(this.initialOffset, this.bubbleWidth, this.labelBubbleWidth,
+      this.homePageState, this.bubblePrototypeState, this.feature);
 
   @override
   State<StatefulWidget> createState() {
     return DragBubbleState(initialOffset, bubbleWidth, labelBubbleWidth,
-        homePageState, bubblePrototypeState, modelConfig, feature);
+        homePageState, bubblePrototypeState, feature);
   }
 }
 
+/// [offset] is the current position of the [DragBubble]. It is changed when the [DragBubble] is dragged.
+/// [color] is the current color of the [DragBubble]. It is changed when the input value of the associated [feature] changes.
+/// [isSmall] changes to false when the [DragBubble] is dragged the first time.
+/// [bubbleWidth] changes when the [DragBubble] is dragged the first time.
 class DragBubbleState extends State<DragBubble>
     with SingleTickerProviderStateMixin {
-  Offset offset;
-  Color color = Colors.black;
   final MyHomePageState homePageState;
   final BubblePrototypeState bubblePrototypeState;
-  final Map<String, dynamic> modelConfig;
   final MapEntry<String, dynamic> feature;
-  AnimationController animationController;
-  Animation animation;
+  final double labelBubbleWidth;
   double bubbleWidth;
-  double labelBubbleWidth;
-  bool isSmall;
+  Offset offset;
+  Color color = Colors.black;
+  bool isSmall = true;
 
-  DragBubbleState(
-      this.offset,
-      this.bubbleWidth,
-      this.labelBubbleWidth,
-      this.homePageState,
-      this.bubblePrototypeState,
-      this.modelConfig,
-      this.feature);
+  DragBubbleState(this.offset, this.bubbleWidth, this.labelBubbleWidth,
+      this.homePageState, this.bubblePrototypeState, this.feature);
 
-  @override
-  initState() {
-    isSmall = true;
-    super.initState();
-  }
-
-  computeNewColor() {
+  /// Sets [color] to a new value according to the impact the feature has on all labels.
+  /// And reloads the state.
+  _computeNewColor() {
     double colorFactor = 0;
-    for (String label in modelConfig.keys) {
-      if (modelConfig[label]['features'][feature.key] != null) {
-        double factor = modelConfig[label]['features'][feature.key]['coef'] *
+    for (String label in homePageState.modelConfig.keys) {
+      if (homePageState.modelConfig[label]['features'][feature.key] != null) {
+        double factor = homePageState.modelConfig[label]['features']
+                [feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         colorFactor += factor < 0 ? 0 : factor;
       }
     }
-    // normalize colorFactor
-    colorFactor = colorFactor / modelConfig.keys.length;
+    // normalize colorFactor over amount of labels
+    colorFactor = colorFactor / homePageState.modelConfig.keys.length;
     setState(() {
       color = computeColorByFactor(colorFactor);
     });
   }
 
-  getParticles() {
+  /// Adds [Particle]s to [bubblePrototypeState.particles] and reloads its state.
+  /// Add more [Particle]s the more the [feature] influences a certain label.
+  _getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
-    for (String label in modelConfig.keys) {
-      if (modelConfig[label]['features'][feature.key] != null) {
-        double factor = modelConfig[label]['features'][feature.key]['coef'] *
+    for (String label in homePageState.modelConfig.keys) {
+      if (homePageState.modelConfig[label]['features'][feature.key] != null) {
+        double factor = homePageState.modelConfig[label]['features']
+                [feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
         for (int i = 0; i < factor * MAX_PARTICLES; i++) {
@@ -96,10 +89,10 @@ class DragBubbleState extends State<DragBubble>
               bubblePrototypeState.labelBubbleOffsets[label].dy +
                   labelBubbleWidth / 2 -
                   PARTICLE_SIZE / 2);
-          Offset center =
+          Offset ownCenter =
               Offset(offset.dx + bubbleWidth / 2, offset.dy + bubbleWidth / 2);
-          particles
-              .add(Particle(center, labelBubbleCenter, timerDuration, color));
+          particles.add(
+              Particle(ownCenter, labelBubbleCenter, timerDuration, color));
         }
       }
     }
@@ -108,9 +101,11 @@ class DragBubbleState extends State<DragBubble>
     });
   }
 
+  /// Uses [GestureDetector] to update [offset] and [color] on drag.
+  /// Calls a [Dialog] when dragging stopped to get input of [feature].
   @override
   Widget build(BuildContext context) {
-    computeNewColor();
+    _computeNewColor();
     return Stack(
       children: <Widget>[
         Positioned(
@@ -118,10 +113,12 @@ class DragBubbleState extends State<DragBubble>
           top: offset.dy,
           child: GestureDetector(
               onPanStart: (details) {
-                setState(() {
-                  bubbleWidth = STANDARD_FEATURE_BUBBLE_SIZE;
-                  isSmall = false;
-                });
+                if (isSmall) {
+                  setState(() {
+                    bubbleWidth = STANDARD_FEATURE_BUBBLE_SIZE;
+                    isSmall = false;
+                  });
+                }
               },
               onPanUpdate: (details) {
                 setState(() {
@@ -130,28 +127,29 @@ class DragBubbleState extends State<DragBubble>
                 });
               },
               onPanEnd: invokeDialog(context, homePageState, feature, this),
-              child: Bubble(homePageState, this, feature.value["title"],
-                  feature, color, animationController, bubbleWidth, isSmall)),
+              child: FeatureBubble(
+                  homePageState, this, feature, color, bubbleWidth, isSmall)),
         ),
       ],
     );
   }
 }
 
-class Bubble extends StatelessWidget {
+/// Represents the actual bubble without any logic. Gets it's color and width from parent widget.
+/// [isSmall] decides whether the title of the represented [feature] should be displayed or not.
+/// Has press behavior that opens the dialog just as if it's [DragBubble] was pressed.
+class FeatureBubble extends StatelessWidget {
   final MyHomePageState homePageState;
   final DragBubbleState dragState;
-  final String title;
   final MapEntry<String, dynamic> feature;
   final Color color;
-  final animationController;
   final double bubbleWidth;
   final bool isSmall;
 
-  Bubble(this.homePageState, this.dragState, this.title, this.feature,
-      this.color, this.animationController, this.bubbleWidth, this.isSmall);
+  FeatureBubble(this.homePageState, this.dragState, this.feature, this.color,
+      this.bubbleWidth, this.isSmall);
 
-  composeBubble(context) {
+  List<Widget> _composeBubble(context) {
     List<Widget> bubbleWidgets = List();
 
     bubbleWidgets.add(AnimatedContainer(
@@ -167,13 +165,14 @@ class Bubble extends StatelessWidget {
         child: Container(),
       ),
     ));
+
     if (!isSmall) {
       bubbleWidgets.add(Padding(
         padding: EdgeInsets.only(top: STANDARD_PADDING),
         child: Container(
           width: bubbleWidth,
           child: Text(
-            title,
+            feature.value["title"],
             textAlign: TextAlign.center,
           ),
         ),
@@ -186,12 +185,14 @@ class Bubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        children: composeBubble(context),
+        children: _composeBubble(context),
       ),
     );
   }
 }
 
+/// Represents the output bubbles around the center image.
+/// It computes it's own inner dimensions. [dimensions] is only the outer border size.
 class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
@@ -200,24 +201,29 @@ class LabelBubble extends StatelessWidget {
 
   LabelBubble(this.title, this.position, this.dimensions, this.homePageState);
 
-  double computeInnerBubbleSize() {
+  /// Returns the size of the inner bubble according to the probability returned by [getLabelProbabilities]
+  /// TODO currently assumes that the label title is the same as the label name, just camel case.
+  double _computeInnerBubbleSize() {
     double value = 0.0;
     Map<String, dynamic> probabilities = getLabelProbabilities(
         homePageState.userInputs, homePageState.modelConfig, true);
     probabilities.forEach(
         (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
     double innerBubbleSize = value * dimensions;
+    // make sure that inner bubble isn't bigger than border
     return innerBubbleSize > dimensions - LABEL_BUBBLE_BORDER_SIZE * 2
         ? dimensions - LABEL_BUBBLE_BORDER_SIZE * 2
         : innerBubbleSize;
   }
 
-  Color computeColor() {
-    Map<String, dynamic> probs = getLabelProbabilities(
+  /// Returns the new color according to the probability returned by [getLabelProbabilities]
+  /// TODO currently assumes that the label title is the same as the label name, just camel case.
+  Color _computeColor() {
+    Map<String, dynamic> probabilities = getLabelProbabilities(
         homePageState.userInputs, homePageState.modelConfig, true);
-    for (var prob in probs.entries) {
-      if (prob.key.toLowerCase() == title.toLowerCase()) {
-        return computeColorByFactor(prob.value);
+    for (var probability in probabilities.entries) {
+      if (probability.key.toLowerCase() == title.toLowerCase()) {
+        return computeColorByFactor(probability.value);
       }
     }
     return Colors.black; // this should never happen
@@ -225,7 +231,7 @@ class LabelBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double innerBubbleSize = computeInnerBubbleSize();
+    double innerBubbleSize = _computeInnerBubbleSize();
     return Positioned(
         top: position.dy,
         left: position.dx,
@@ -238,7 +244,7 @@ class LabelBubble extends StatelessWidget {
                 decoration: new BoxDecoration(
                   shape: BoxShape.circle,
                   border: new Border.all(
-                      color: computeColor(),
+                      color: _computeColor(),
                       width: LABEL_BUBBLE_BORDER_SIZE,
                       style: BorderStyle.solid),
                 ),
@@ -252,7 +258,7 @@ class LabelBubble extends StatelessWidget {
                       duration: Duration(seconds: STANDARD_ANIMATION_DURATION),
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        color: computeColor(),
+                        color: _computeColor(),
                       ),
                     ),
                   ],
@@ -270,19 +276,23 @@ class LabelBubble extends StatelessWidget {
   }
 }
 
+/// Represents an animated small bubble that flies from a [FeatureBubble] to a [LabelBubble].
+/// Therefore it gets the position of it's start ([offset]) and it's end point ([targetOffset]).
+/// [timerDuration] is a random time around one second that the [Particle} waits until it starts moving to you can
+///   (1) see it flying when dialog is closed and
+///   (2) see individual [Particle]s and not only one.
+/// [color] is the color of the [FeatureBubble] is starts from.
 class Particle extends StatefulWidget {
   Offset offset;
   Offset targetOffset;
   final timerDuration;
   Color color;
-  State state;
 
   Particle(this.offset, this.targetOffset, this.timerDuration, this.color);
 
   @override
   State<StatefulWidget> createState() {
-    state = ParticleState(offset, targetOffset, timerDuration, color);
-    return state;
+    return ParticleState(offset, targetOffset, timerDuration, color);
   }
 }
 
@@ -290,14 +300,15 @@ class ParticleState extends State<Particle> {
   Offset offset;
   final Offset targetOffset;
   final int timerDuration;
-  dynamic timeout;
   Timer timer;
   Color color;
 
+  /// Starts the timeout of [timerDuration].
   startTimeout() {
     timer = new Timer(Duration(milliseconds: timerDuration), handleTimeout);
   }
 
+  /// Gets called when [timeout] is reached. Sets the new position.
   void handleTimeout() {
     if (timer != null && offset != targetOffset) {
       setState(() {
@@ -306,6 +317,7 @@ class ParticleState extends State<Particle> {
     }
   }
 
+  /// Makes sure the circular timer isn't called again after [Particle] is disposed.
   @override
   dispose() {
     super.dispose();
@@ -320,6 +332,7 @@ class ParticleState extends State<Particle> {
     return AnimatedPositioned(
       top: offset.dy,
       left: offset.dx,
+      // -1 for the average timer time of one second
       duration: Duration(seconds: STANDARD_ANIMATION_DURATION - 1),
       child: Container(
         width: PARTICLE_SIZE,
@@ -333,13 +346,14 @@ class ParticleState extends State<Particle> {
   }
 }
 
+/// Opens a dialog and changes color and particle amount after dialog is closed.
 invokeDialog(context, homePageState, feature, dragState) {
   return ([_]) async {
     var dialogInput = await asyncInputDialog(context, homePageState, feature);
 
     if (dialogInput != null) {
-      dragState.computeNewColor();
-      dragState.getParticles();
+      dragState._computeNewColor();
+      dragState._getParticles();
     }
   };
 }

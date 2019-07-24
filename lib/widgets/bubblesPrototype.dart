@@ -99,7 +99,6 @@ class BubblePrototypeState extends State<BubblePrototype> {
           labelBubbleDimensions,
           homePageState,
           this,
-          homePageState.modelConfig,
           feature));
       featureBubbleOffset += featureBubbleWidth;
     }
