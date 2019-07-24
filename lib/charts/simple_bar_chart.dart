@@ -17,7 +17,7 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-/// Takes a Map and turns it into a list of [Tuple2].
+/// Maps keys and values of a Map to key-value tuples.
 List<Tuple2<String, dynamic>> mapToTupleList(Map<String, dynamic> map){
   List<Tuple2<String, dynamic>> list = [];
   map.forEach((k,v) => list.add(Tuple2<String, dynamic>(k, v)));
