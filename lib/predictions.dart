@@ -1,6 +1,6 @@
 import 'dart:math';
 
-/// Computes probabilities of al labels in modelConfig, only if predict mode is on.
+/// Computes probabilities for all labels, if app is in predict mode.
 Map<String, dynamic> getLabelProbabilities(Map<String, dynamic> inputs,
     Map<String, dynamic> modelConfig, bool predictMode) {
   Map<String, dynamic> probabilities = {};

@@ -37,10 +37,10 @@ class MyHomePage extends StatefulWidget {
   MyHomePageState createState() => MyHomePageState();
 }
 
-/// [userInputs] Map of feature names to their input values
-/// [modelConfig] Map of label names to their features, including coefficients and means
-/// [featureConfig] Map of feature names to their titles and (min/max values or choices)
-/// [labelConfig] Map of label names to their titles
+/// [userInputs] Maps features and their current input (filled with averages for dataset at beginning).
+/// [modelConfig] Models are represented as mappings from labels to their intercept and features, whereby features each contain their coefficients and mean value for given data set (see assets/models.json for example)
+/// [featureConfig] Map of features to their user-facing names and their selecteable min/max values or choices)
+/// [labelConfig] Map of labels to their user-facing names.
 class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;

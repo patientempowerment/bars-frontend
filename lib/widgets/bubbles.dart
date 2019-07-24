@@ -69,7 +69,7 @@ class DragBubbleState extends State<DragBubble>
   }
 
   /// Adds [Particle]s to [bubblePrototypeState.particles] and reloads its state.
-  /// Add more [Particle]s the more the [feature] influences a certain label.
+  /// Add [Particle]s proportionally to [feature] influence on each label
   _getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
@@ -135,9 +135,9 @@ class DragBubbleState extends State<DragBubble>
   }
 }
 
-/// Represents the actual bubble without any logic. Gets it's color and width from parent widget.
+/// Represents the actual bubble without any logic. Gets its color and width from parent widget.
 /// [isSmall] decides whether the title of the represented [feature] should be displayed or not.
-/// Has press behavior that opens the dialog just as if it's [DragBubble] was pressed.
+/// Has press behavior that opens the dialog just as if its [DragBubble] was pressed.
 class FeatureBubble extends StatelessWidget {
   final MyHomePageState homePageState;
   final DragBubbleState dragState;
@@ -191,8 +191,8 @@ class FeatureBubble extends StatelessWidget {
   }
 }
 
-/// Represents the output bubbles around the center image.
-/// It computes it's own inner dimensions. [dimensions] is only the outer border size.
+/// Represents the label bubbles around the center image.
+/// Computes its own inner dimensions. [dimensions] is the outer border size only.
 class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
@@ -277,8 +277,8 @@ class LabelBubble extends StatelessWidget {
 }
 
 /// Represents an animated small bubble that flies from a [FeatureBubble] to a [LabelBubble].
-/// Therefore it gets the position of it's start ([offset]) and it's end point ([targetOffset]).
-/// [timerDuration] is a random time around one second that the [Particle} waits until it starts moving to you can
+/// It gets the position of its start ([offset]) and its end point ([targetOffset]).
+/// [timerDuration] is a semi-random delay of ~1 second that the [Particle] waits until it starts moving. So you can
 ///   (1) see it flying when dialog is closed and
 ///   (2) see individual [Particle]s and not only one.
 /// [color] is the color of the [FeatureBubble] is starts from.
@@ -303,7 +303,7 @@ class ParticleState extends State<Particle> {
   Timer timer;
   Color color;
 
-  /// Starts the timeout of [timerDuration].
+  /// Starts the timer for [timerDuration].
   startTimeout() {
     timer = new Timer(Duration(milliseconds: timerDuration), handleTimeout);
   }
@@ -346,7 +346,7 @@ class ParticleState extends State<Particle> {
   }
 }
 
-/// Opens a dialog and changes color and particle amount after dialog is closed.
+/// Opens a dialog and prompts color and particle amount changes on close.
 invokeDialog(context, homePageState, feature, dragState) {
   return ([_]) async {
     var dialogInput = await asyncInputDialog(context, homePageState, feature);

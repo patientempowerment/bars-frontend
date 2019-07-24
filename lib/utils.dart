@@ -11,7 +11,7 @@ readJSON(String path) async {
   return jsonDecode(json);
 }
 
-/// Reads models, features and labels configs.
+/// Reads model, feature and label configs.
 readData() async {
   Map<String, dynamic> serverConfig = await readJSON(
       'assets/server.conf'); // TODO (far out): gather all this info not from file but thru GUI input
@@ -69,7 +69,7 @@ generateDefaultInputValues(featureConfig) {
 }
 
 /// Creates either a radio button or a slider for [feature].
-/// [context] is the widget that the input widget is on, so the widget that has to reload.
+/// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
 buildInputWidget(MyHomePageState homePageState, State context,
     MapEntry<String, dynamic> feature) {
   if (feature.value["choices"] != null) {

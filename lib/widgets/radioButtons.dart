@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 
-/// [context] is the widget that the input widget is on, so the widget that has to reload.
+/// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
 getRadioButtonInputRow(MyHomePageState homePageState, State context,
     MapEntry<String, dynamic> feature) {
   return (Padding(
@@ -32,7 +32,7 @@ getRadioButtonInputRow(MyHomePageState homePageState, State context,
       )));
 }
 
-/// Returns one radio button with given [title] with associated [value] and [featureKey].
+/// Returns one radio button and its [title] with current [value] and corresponding [featureKey].
 Widget getRadioButton(homePageState, context, title, value, featureKey) {
   return Container(
     width: 100,

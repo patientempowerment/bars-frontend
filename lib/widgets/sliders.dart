@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 
 
-/// [context] is the widget that the input widget is on, so the widget that has to reload.
+/// [context] is the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
 Widget getSliderInputRow(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature) {
   return (Padding(
     padding: EdgeInsets.only(bottom: 5.0),

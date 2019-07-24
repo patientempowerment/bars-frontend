@@ -2,7 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
-/// Bar Chart that takes [labelValues] as input to display the label probabilities as bars in a chart.
+/// Bar Chart that generates a bar for each <[label] - [labelValues]> pair.
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series<Tuple2<String, dynamic>, String>> labelValues;
   final bool animate;

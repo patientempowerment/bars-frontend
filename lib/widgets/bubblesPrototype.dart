@@ -3,7 +3,7 @@ import 'package:bars_frontend/main.dart';
 import 'dart:math';
 import 'bubbles.dart';
 
-/// Returns the image at the given position with given size.
+/// Returns the center image at the given position with given size.
 Widget getCenterImage(double width, Offset position) {
   return Positioned(
     child: Image(image: AssetImage('assets/man-user.png'), width: width),
@@ -12,7 +12,7 @@ Widget getCenterImage(double width, Offset position) {
   );
 }
 
-/// Represents the second prototype with bubbles as input and output representation.
+/// Second prototype with bubbles as input and output representation.
 class BubblePrototype extends StatefulWidget {
   final MyHomePageState homePageState;
 
@@ -24,7 +24,7 @@ class BubblePrototype extends StatefulWidget {
   }
 }
 
-/// [labelBubbleOffsets] Map of label names and their position to let particles flow there.
+/// [labelBubbleOffsets] Map of labels and their bubble position to let particles flow there.
 class BubblePrototypeState extends State<BubblePrototype> {
   final MyHomePageState homePageState;
   double imageDimensions;
@@ -42,7 +42,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
     super.initState();
   }
 
-  /// Returns all widgets of bubble prototype as a list.
+  /// Returns all widgets of bubble prototype in a list.
   List<Widget> _getWidgets() {
     double labelBubbleDimensions = homePageState.globalHeight / 8;
     List<Widget> widgets = List();
@@ -58,7 +58,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
     return widgets;
   }
 
-  /// Adds label bubbles around center image.
+  /// Arranges and adds label bubbles around center image. Does not check for overlapping bubbles in case of a high number.
   _addLabelBubbles(List<Widget> widgets, double labelBubbleDimensions) {
     var boundingRadius =
         sqrt(pow((imageDimensions / 2), 2) * 2) + labelBubbleDimensions / 2;
@@ -85,7 +85,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
     });
   }
 
-  /// Adds Feature bubbles on top.
+  /// Adds Feature bubbles and places them at the top bar.
   _addFeatureBubbles(List<Widget> widgets, double labelBubbleDimensions) {
     double featureBubbleOffset = 0.0;
     double featureBubbleWidth =
