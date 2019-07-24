@@ -1,8 +1,8 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:bars_frontend/utils.dart';
 import 'package:tuple/tuple.dart';
 
+/// Bar Chart that takes [labelValues] as input to display the label probabilities as bars in a chart.
 class SimpleBarChart extends StatelessWidget {
   final List<charts.Series<Tuple2<String, dynamic>, String>> labelValues;
   final bool animate;
@@ -17,12 +17,15 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
+/// Takes a Map and turns it into a list of [Tuple2].
 List<Tuple2<String, dynamic>> mapToTupleList(Map<String, dynamic> map){
   List<Tuple2<String, dynamic>> list = [];
   map.forEach((k,v) => list.add(Tuple2<String, dynamic>(k, v)));
   return list;
 }
 
+/// Takes the [labelValues] and [labelTitles] and creates a list of [charts.Series] from it.
+/// [labelTitles] will be on x-Axis, [labelValues] on y axis.
 mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles){
   var data = mapToTupleList(labelValues);
 
@@ -42,6 +45,7 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
   ];
 }
 
+/// Returns a color matching a [factor] between 0 and 1.
 getChartColorByFactor(double factor){
   final List<dynamic> colorGradient = [
     charts.Color.fromHex(code: "#8BC24A"),
