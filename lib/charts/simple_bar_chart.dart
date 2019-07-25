@@ -45,7 +45,7 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
   ];
 }
 
-/// Returns a color matching a [factor] between 0 and 1.
+/// Returns a color matching a [factor] between 0 and 1. 0 being green and 1 red.
 getChartColorByFactor(double factor){
   final List<dynamic> colorGradient = [
     charts.Color.fromHex(code: "#8BC24A"),
