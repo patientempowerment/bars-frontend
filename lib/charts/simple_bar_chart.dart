@@ -25,7 +25,7 @@ List<Tuple2<String, dynamic>> mapToTupleList(Map<String, dynamic> map){
 }
 
 /// Takes the [labelValues] and [labelTitles] and creates a list of [charts.Series] from it.
-/// [labelTitles] will be on x-Axis, [labelValues] on y axis.
+/// [labelTitles] contain names of each bar, [labelValues] contain their sizes.
 mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles){
   var data = mapToTupleList(labelValues);
 
