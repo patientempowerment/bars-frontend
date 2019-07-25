@@ -53,7 +53,7 @@ readData() async {
   return [models, features, labels];
 }
 
-/// Sets first radio button or slider to min for all features in [featureConfig].
+/// For all features in [featureConfig]: Select first radio button or set slider to min.
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
   featureConfig.forEach((k, v) {
