@@ -61,7 +61,7 @@ class DragBubbleState extends State<DragBubble>
         colorFactor += factor < 0 ? 0 : factor;
       }
     }
-    // normalize colorFactor over amount of labels
+    // average colorFactor over amount of labels
     colorFactor = colorFactor / homePageState.modelConfig.keys.length;
     setState(() {
       color = computeColorByFactor(colorFactor);
