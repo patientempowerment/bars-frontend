@@ -281,7 +281,7 @@ class LabelBubble extends StatelessWidget {
 /// [timerDuration] is a semi-random delay of ~1 second that the [Particle] waits until it starts moving. So you can
 ///   (1) see it flying when dialog is closed and
 ///   (2) see individual [Particle]s and not only one.
-/// [color] is the color of the [FeatureBubble] is starts from.
+/// [color] is the color of the [FeatureBubble] it starts from.
 class Particle extends StatefulWidget {
   Offset offset;
   Offset targetOffset;
