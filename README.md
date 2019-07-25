@@ -9,8 +9,8 @@ It can be used for any kind of clean data. For the example configuration, we use
     * Connect to a running server of [patientEmpowerment](https://github.com/KBorchar/patientEmpowerment) via editing `assets/server.conf`, then load `assets/feature-config.json` and `assets/models.json` from there. 
     * OR:
     * To configure the input and output manually, set the "fallbacks" field in `assets/server.conf` to appropriate config files as described further down.
-The example files were created with the [backend](https://github.com/KBorchar/patientEmpowerment).
-3. To configure the displayed titles of the output, edit `assets/labels.conf`.
+The example files were created by the [backend](https://github.com/KBorchar/patientEmpowerment).
+3. To configure the user-facing names of the output labels, edit `assets/labels.conf`.
 4. Run the app in an IDE of your choice (e.g. [Android Studio with Flutter Plugin](https://androiddvlpr.com/flutter-android-studio/)).
 
 ### Configuration
@@ -50,10 +50,10 @@ The content of the feature config should look similar to this:
 }
 ```
 It represents the possible input fields.
-As key, you use the feature name, give it a title and decide whether it should be represented as a slider or radio choice buttons. For radio buttons, specify a list of available choices with their correlated number representation in your ML algorithm. For a slider, specify the minimal and maximal value that the user should be able to input.
+As key, you use the feature name. Give it a user-facing title and decide whether it should be represented as a slider or choice. For choices, specify a list of available choices with their correlating value in the original data set. For a slider, specify the minimal and maximal value that the user should be able to input.
 
 #### models.json
-In `models.json` you specify, per label, the ML determined coefficients for each feature as well as their means. It should look similar to this:
+In `models.json` you specify, per label, the coefficients for each feature as well as their means in the original data set. It should look similar to this:
 ```
 {
   "asthma": {
@@ -89,12 +89,12 @@ With the key "label_titles", you need to set the corresponding title to a label 
 
 
 ## How to use
-There are two visual representations of the same concept: Bars on startup and Bubbles once you swipe one page to the right.
-Should you have left out some input parameters, the app will assume the means given in `assets/models.json`.
+There are two visual representations of the same concept: A bar chart (default), and a more interactive prototype. Swipe right on the bar chart screen to access it.
+Should any inputs be empty, the app will assume the corresponding feature's mean (from `assets/models.json`).
 
 ### Bars
 ![Alt text](/assets/bars_prototype.png "Bars Prototype")
-On the left side, you can put in your data and press the button in the middle to get the output. You can also change the input while the output is displayed or hide the output bars again by pressing the same button in the middle. To reset to means, press the floating button on the bottom right.
+On the left side, users can input their data and press the button in the middle to get the output. The output reacts in real time to any changes on the input. You can hide it again by pressing the same button in the middle. To reset all inputs to their means, press the floating button on the bottom right.
 
 ### Bubbles
 ![Alt text](/assets/bubbles_prototype.png "Bubbles Prototype")
