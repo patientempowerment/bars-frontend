@@ -183,7 +183,6 @@ class LabelBubble extends StatelessWidget {
   LabelBubble(this.title, this.position, this.dimensions, this.homePageState);
 
   /// Returns the size of the inner bubble according to the probability returned by [getLabelProbabilities]
-  /// TODO currently assumes that the label title is the same as the label name, just camel case.
   double _computeInnerBubbleSize() {
     double value = 0.0;
     Map<String, dynamic> probabilities = getLabelProbabilities(
