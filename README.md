@@ -1,7 +1,7 @@
 # EMPOWER
 
 An app that visualizes the effects of changing inputs on the results of given logistic regression outputs.
-It can be used for any kind of data. For the example configs, we used a health use case to predict tuberculosis, diabetes, asthma and COPD on certain parameters like age, weight, height and smoking behavior.
+It can be used for any kind of clean data. For the example configuration, we use a health use case to predict tuberculosis, diabetes, asthma and COPD on life style choices and patient parameters like age, weight, etc.
 
 ## Steps to run
 1. Clone the project
