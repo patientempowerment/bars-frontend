@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 
-Future<dynamic> asyncInputDialog(
-    BuildContext context,
-    MyHomePageState homePageState,
-    MapEntry<String, dynamic> feature) async {
+/// Returns a [SimpleDialog] with the corresponding input option of [feature].
+/// [context] is the BuildContext of the calling widget to which the result of the input is passed.
+Future<dynamic> asyncInputDialog(BuildContext context,
+    MyHomePageState homePageState, MapEntry<String, dynamic> feature) async {
   return showDialog<dynamic>(
     context: context,
     barrierDismissible: true,
@@ -36,6 +36,7 @@ Future<dynamic> asyncInputDialog(
   );
 }
 
+/// Represents the content of the dialog, including an input option for [feature].
 class MyDialogContent extends StatefulWidget {
   final MyHomePageState homePageState;
   final MapEntry<String, dynamic> feature;
@@ -61,9 +62,6 @@ class MyDialogContentState extends State<MyDialogContent> {
         width: 500,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildInputWidget(
-                  homePageState, this, feature, homePageState.userInputs)
-            ]));
+            children: [buildInputWidget(homePageState, this, feature)]));
   }
 }

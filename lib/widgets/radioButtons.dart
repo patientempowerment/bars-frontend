@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'package:bars_frontend/utils.dart';
-import 'dialogs.dart';
 
-
-getRadioButtonInputRow(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature, userInputs) {
-  return (
-    Padding(
+/// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
+getRadioButtonInputRow(MyHomePageState homePageState, State context,
+    MapEntry<String, dynamic> feature) {
+  return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
@@ -20,23 +18,22 @@ getRadioButtonInputRow(MyHomePageState homePageState, State context, MapEntry<St
               height: 100,
               child: Scrollbar(
                 child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var choice in feature.value["choices"].entries)
-                      getRadioButton(homePageState, context, choice.key, choice.value, feature.key)
-                  ]
-                ),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (var choice in feature.value["choices"].entries)
+                        getRadioButton(homePageState, context, choice.key,
+                            choice.value, feature.key)
+                    ]),
               ),
             ),
           )
         ],
-      )
-    )
-  );
+      )));
 }
 
-getRadioButton(homePageState, context, title, value, featureKey) {
+/// Returns one radio button and its [title] with current [value] and corresponding [featureKey].
+Widget getRadioButton(homePageState, context, title, value, featureKey) {
   return Container(
     width: 100,
     child: Column(
