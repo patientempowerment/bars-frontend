@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 
-
 /// Returns a [SimpleDialog] with the corresponding input option of [feature].
 /// [context] is the BuildContext of the calling widget to which the result of the input is passed.
 Future<dynamic> asyncInputDialog(BuildContext context,
