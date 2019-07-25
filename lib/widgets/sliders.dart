@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 
-Widget getSliderInputRow(MyHomePageState homepageState, State context, MapEntry<String, dynamic> feature, double inputValue) {
+
+/// [context] is the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
+Widget getSliderInputRow(MyHomePageState homePageState, State context, MapEntry<String, dynamic> feature) {
   return (Padding(
     padding: EdgeInsets.only(bottom: 5.0),
     child: Row(children: [
@@ -12,14 +14,14 @@ Widget getSliderInputRow(MyHomePageState homepageState, State context, MapEntry<
       Expanded(
         flex: 2,
         child: Slider(
-          value: inputValue,
+          value: homePageState.userInputs[feature.key],
           min: feature.value["slider_min"].toDouble(),
           max: feature.value["slider_max"].toDouble(),
           divisions: feature.value["slider_max"] - feature.value["slider_min"],
-          label: '${inputValue.round()}',
+          label: '${homePageState.userInputs[feature.key].round()}',
           onChanged: (double newValue) {
             context.setState(() {
-              homepageState.userInputs[feature.key] = newValue;
+              homePageState.userInputs[feature.key] = newValue;
             });
           },
         ),
