@@ -8,12 +8,28 @@ It can be used for any kind of data. For the example configs, we used a health u
 2. Configure
     * Connect to a running server of [patientEmpowerment](https://github.com/KBorchar/patientEmpowerment) via editing `assets/server.conf` and load `assets/feature-config.json` and `assets/models.json` from there. 
     * OR:
-    * To configure the input and output manually, edit `assets/feature-config.json` and `assets/models.json` as described further down.
+    * To configure the input and output manually, set the "fallbacks" field in `assets/server.conf` to appropriate config files as described further down.
 The example files were created with the [backend](https://github.com/KBorchar/patientEmpowerment).
 3. To configure the displayed titles of the output, edit `assets/labels.conf`.
 4. Run the app in an IDE of your choice (e.g. [Android Studio with Flutter Plugin](https://androiddvlpr.com/flutter-android-studio/)).
 
 ### Configuration
+#### server.conf
+In `/assets/server.conf` you can configure the server address, the database that should be used and the mongo collection. In case the server is not reachable, you need to specify fallbacks for local files where similar information can be found.
+```
+{
+  "address": "http://172.20.24.28:5050",
+  "database": {
+    "db": "ukbb",
+    "collection": "ahri"
+  },
+  "fallbacks": {
+    "feature-config": "assets/feature-config.json",
+    "models": "assets/models.json"
+  }
+}
+```
+
 #### feature-config.json
 The content of the feature config should look similar to this:
 ```
@@ -52,17 +68,22 @@ In `models.json` you specify, per label, the ML determined coefficients for each
   ...
 }
 ```
-First key is the label name, in this case "COPD". inside the "feature" argument you then can specify a list of features that influence this label with the respective coefficients (at key "coeff") and means (at key "mean"). Repeat this for all features and labels.
+First key is the label name, in this case "COPD". Inside the "feature" argument you then can specify a list of features that influence this label with the respective coefficients (at key "coeff") and means (at key "mean"). Repeat this for all features and labels.
 
 #### labels.conf
-In `assets/labels.conf` you specify all labels that your want to predict for, that also have a representation in `assets/models.json` (!) as a simple list with the key "labels".
+In `assets/labels.conf` you specify all labels that you want to predict for, that also have a representation in `assets/models.json` (!) as a simple list with the key "labels". That is used to query the models.json from the server.
+With the key "label_titles", you need to set the corresponding title to a label name.
 
 ```
 {
   "labels": [
   	"asthma",
    ...
-   ]
+   ],
+  "label_titles": {
+    "asthma": "Asthma",
+    ...
+  }
 }
 ```
 
