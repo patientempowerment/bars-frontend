@@ -10,10 +10,13 @@ void main() => runApp(MyApp());
 
 const double PARTICLE_SIZE = 5.0;
 const double STANDARD_PADDING = 5.0;
+const double DIALOG_PADDING = 40.0;
 const double STANDARD_FEATURE_BUBBLE_SIZE = 60;
 const double LABEL_BUBBLE_BORDER_SIZE = 2.0;
 const int STANDARD_ANIMATION_DURATION = 3;
 const int MAX_PARTICLES = 5;
+const double STANDARD_DIALOG_WIDTH = 600.0;
+const double STANDARD_DIALOG_HEIGHT = 150.0;
 
 class MyApp extends StatelessWidget {
   @override

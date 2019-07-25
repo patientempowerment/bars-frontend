@@ -10,14 +10,17 @@ Future<dynamic> asyncInputDialog(BuildContext context,
     builder: (BuildContext context) {
       return Container(
         child: SimpleDialog(
-          titlePadding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+          titlePadding: EdgeInsets.only(top: DIALOG_PADDING),
           title: Text(
             "Please enter your information",
             textAlign: TextAlign.center,
           ),
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(40, 0, 40, 20),
+              padding: EdgeInsets.only(
+                  left: DIALOG_PADDING,
+                  right: DIALOG_PADDING,
+                  bottom: DIALOG_PADDING / 2),
               child: Column(children: <Widget>[
                 MyDialogContent(homePageState, feature),
                 Container(
@@ -26,7 +29,7 @@ Future<dynamic> asyncInputDialog(BuildContext context,
                   child: RaisedButton(
                     color: Colors.blue,
                     textColor: Colors.white,
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(STANDARD_PADDING),
                     onPressed: () {
                       Navigator.of(context)
                           .pop(homePageState.userInputs[feature.key]);
@@ -64,8 +67,8 @@ class MyDialogContentState extends State<MyDialogContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 150,
-        width: 600,
+        height: STANDARD_DIALOG_HEIGHT,
+        width: STANDARD_DIALOG_WIDTH,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           buildInputWidget(
               homePageState, this, feature, homePageState.userInputs)
