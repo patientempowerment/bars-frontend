@@ -6,7 +6,7 @@ It can be used for any kind of clean data. For the example configuration, we use
 ## Steps to run
 1. Clone the project
 2. Configure
-    * Connect to a running server of [patientEmpowerment](https://github.com/KBorchar/patientEmpowerment) via editing `assets/server.conf`, then load `assets/feature-config.json` and `assets/models.json` from there. 
+    * Connect to a running server of [patientEmpowerment](https://github.com/patientempowerment/patientEmpowerment) via editing `assets/server.conf`, then load `assets/feature-config.json` and `assets/models.json` from there. 
     * OR:
     * To configure the input and output manually, set the "fallbacks" field in `assets/server.conf` to appropriate config files (see Configuration).
 The example files were created by the [backend](https://github.com/KBorchar/patientEmpowerment).
@@ -94,11 +94,11 @@ Should any inputs be empty, the app will assume the corresponding feature's mean
 
 ### Bars
 ![Alt text](/assets/bars_prototype.png "Bars Prototype")
-On the left side, users can input their data and press the button in the middle to get the output. The output reacts in real time to any changes on the input. You can hide it again by pressing the same button in the middle. To reset all inputs to their means, press the floating button on the bottom right.
+On the left side, users can input their data and press the button in the middle to get the output. The output reacts in real time to any changes on the input. You can hide it again by pressing the same button in the middle. To reset all inputs to their means, press the floating action button on the bottom right.
 
 ### Bubbles
 ![Alt text](/assets/bubbles_prototype.png "Bubbles Prototype")
-In the 'Bubbles' prototype the input fields have a bubble representation. They are initially located at the top of the screen. The output is represented by fixed bubbles, arranged around the center image. Each output bubble represents one label to predict on. Users can input their data by dragging or tapping an input bubble, upon which an input dialog opens. By pressing "ok" the change is propagated to the output bubbles and their size changes according to the new probabilities. Additionally, there are particles, small bubbles, flying from the input to the influenced output bubble(s) to indicate their correlation.
+In the 'Bubbles' prototype the input fields have a bubble representation. They are initially located at the top of the screen. The output is represented by fixed label bubbles, arranged around the center image. Each label bubble represents one label to predict on. Users can input their data by dragging or tapping an input bubble, upon which an input dialog opens. By pressing "ok" the change is propagated to the label bubbles and their size changes according to the new probabilities. Additionally, there are particles, small bubbles, flying from the input to the influenced label bubble(s) to indicate their correlation.
 
 
 ## Contributing
