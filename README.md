@@ -6,7 +6,7 @@ It can be used for any kind of clean data. For the example configuration, we use
 ## Steps to run
 1. Clone the project
 2. Configure
-    * Connect to a running server of [patientEmpowerment](https://github.com/KBorchar/patientEmpowerment) via editing `assets/server.conf` and load `assets/feature-config.json` and `assets/models.json` from there. 
+    * Connect to a running server of [patientEmpowerment](https://github.com/KBorchar/patientEmpowerment) via editing `assets/server.conf`, then load `assets/feature-config.json` and `assets/models.json` from there. 
     * OR:
     * To configure the input and output manually, set the "fallbacks" field in `assets/server.conf` to appropriate config files as described further down.
 The example files were created with the [backend](https://github.com/KBorchar/patientEmpowerment).
