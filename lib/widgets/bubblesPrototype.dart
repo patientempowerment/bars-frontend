@@ -93,7 +93,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
             homePageState.featureConfig.entries.length;
     for (MapEntry<String, dynamic> feature
     in homePageState.featureConfig.entries) {
-      widgets.add(DragBubble(
+      widgets.add(FeatureBubble(
           Offset(featureBubbleOffset, 0.0),
           featureBubbleWidth - STANDARD_PADDING,
           labelBubbleDimensions,
