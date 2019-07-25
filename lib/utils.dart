@@ -19,7 +19,6 @@ readData() async {
   String serverAddress = serverConfig["address"];
 
   // load features
-  // use this once we have good feature-config generation server side (or GUI to handle the mediocre server side generation)
   /*
   String databaseJSON = jsonEncode(serverConfig["database"]);
   Map<String, dynamic> features;
