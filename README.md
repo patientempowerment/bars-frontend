@@ -8,7 +8,7 @@ It can be used for any kind of clean data. For the example configuration, we use
 2. Configure
     * Connect to a running server of [patientEmpowerment](https://github.com/KBorchar/patientEmpowerment) via editing `assets/server.conf`, then load `assets/feature-config.json` and `assets/models.json` from there. 
     * OR:
-    * To configure the input and output manually, set the "fallbacks" field in `assets/server.conf` to appropriate config files as described further down.
+    * To configure the input and output manually, set the "fallbacks" field in `assets/server.conf` to appropriate config files (see Configuration).
 The example files were created by the [backend](https://github.com/KBorchar/patientEmpowerment).
 3. To configure the user-facing names of the output labels, edit `assets/labels.conf`.
 4. Run the app in an IDE of your choice (e.g. [Android Studio with Flutter Plugin](https://androiddvlpr.com/flutter-android-studio/)).
@@ -68,10 +68,10 @@ In `models.json` you specify, per label, the coefficients for each feature as we
   ...
 }
 ```
-First key is the label name, in this case "COPD". Inside the "feature" argument you then can specify a list of features that influence this label with the respective coefficients (at key "coeff") and means (at key "mean"). Repeat this for all features and labels.
+First key is the label, in this case "asthma". "features" contains a list of all respective features, their coefficients, and their means.  This file is auto-generated, whenever the backend fits the corresponding model.
 
 #### labels.conf
-In `assets/labels.conf` you specify all labels that you want to predict for, that also have a representation in `assets/models.json` (!) as a simple list with the key "labels". That is used to query the models.json from the server.
+`assets/labels.conf` specifies all labels to predict for, and their user-facing names. It is used to query the models.json from the server.
 With the key "label_titles", you need to set the corresponding title to a label name.
 
 ```
@@ -98,14 +98,11 @@ On the left side, users can input their data and press the button in the middle 
 
 ### Bubbles
 ![Alt text](/assets/bubbles_prototype.png "Bubbles Prototype")
-In Bubbles Prototype the input fields have a bubble representation. They are located at the top of the screen. The output is also in a circular form in the screen center around a center image. Each output bubble representing one ML prediction label. You can input your data by dragging or clicking an input bubble. A dialog opens and asks you to input your data. By pressing "ok" the change is propagated to the output bubbles and their size changes according to the new probabilities. Additionally there are particles, small bubbles, flying from the input to the influenced output bubble(s) to indicate their correlation.
+In the 'Bubbles' prototype the input fields have a bubble representation. They are initially located at the top of the screen. The output is represented by fixed bubbles, arranged around the center image. Each output bubble represents one label to predict on. Users can input their data by dragging or tapping an input bubble, upon which an input dialog opens. By pressing "ok" the change is propagated to the output bubbles and their size changes according to the new probabilities. Additionally, there are particles, small bubbles, flying from the input to the influenced output bubble(s) to indicate their correlation.
 
 
 ## Contributing
 We are happy if you'd want to contribute to the project. To get into the development, you might want to take some things into account.
-### Naming
-We have a schema of naming the inputs "features" because they are the features of the machine learning algorithm and naming the outputs "labels", which is again the ML term.
-The two pages, Bars and Bubbles are called "prototype" because they are just two of many possible visualization possibilities and not final.
 
 ### Where can you find what?
 Generally, the code is in the `/lib` folder. `/lib/main.dart` is where the main application is defined. From there `/lib/barPrototype.dart` and `/lib/bubblePrototype.dart` are called with their respective widgets.
