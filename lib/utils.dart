@@ -79,7 +79,7 @@ buildInputWidget(MyHomePageState homePageState, State context,
   }
 }
 
-/// Returns the color for a [factor] greater 0.
+/// Returns the color for a [factor]. [factor] should be > 0.
 Color computeColorByFactor(double factor) {
   final List<Color> colorGradient = [
     Colors.lightGreen,
