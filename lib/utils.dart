@@ -35,7 +35,6 @@ readData() async {
 
   // load labels
   Map<String, dynamic> labelsConfig = await readJSON(
-      'assets/labels.conf'); // TODO (far out): gather this info not from file but thru GUI input
   Map<String, dynamic> labels = labelsConfig["label_titles"];
   String labelsJSON = jsonEncode({"labels": labelsConfig["labels"]});
 
