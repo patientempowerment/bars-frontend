@@ -33,7 +33,7 @@ class DragBubble extends StatefulWidget {
 
 /// [offset] is the current position of the [DragBubble]. It is changed when the [DragBubble] is dragged.
 /// [color] is the current color of the [DragBubble]. It is changed when the input value of the associated [feature] changes.
-/// [isSmall] changes to false when the [DragBubble] is dragged the first time.
+/// [isSmall] changes to false once the [DragBubble] is dragged away from the top.
 /// [bubbleWidth] changes when the [DragBubble] is dragged the first time.
 class DragBubbleState extends State<DragBubble>
     with SingleTickerProviderStateMixin {
