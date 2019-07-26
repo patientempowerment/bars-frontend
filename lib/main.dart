@@ -49,6 +49,7 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;
+  Map<String, dynamic> serverConfig;
   Map<String, dynamic> userInputs;
   Map<String, dynamic> modelConfig;
   Map<String, dynamic> featureConfig;
@@ -61,6 +62,7 @@ class MyHomePageState extends State<MyHomePage> {
         modelConfig = result[0];
         featureConfig = result[1];
         labelConfig = result[2];
+        serverConfig = result[3];
         userInputs = generateDefaultInputValues(featureConfig);
       });
     });
