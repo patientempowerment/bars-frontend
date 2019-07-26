@@ -1,6 +1,8 @@
 import 'package:bars_frontend/widgets/barsPrototype.dart';
 import 'package:bars_frontend/widgets/bubblesPrototype.dart';
 import 'package:bars_frontend/widgets/buttons.dart';
+import 'package:bars_frontend/widgets/adminSettings.dart';
+
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
 
@@ -81,6 +83,7 @@ class MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
               title: MyAppBarContent(),
             ),
+            drawer: AdminSettings(this),
             body: Container(
               padding: EdgeInsets.all(40.0),
               child: BarsPrototype(this),
