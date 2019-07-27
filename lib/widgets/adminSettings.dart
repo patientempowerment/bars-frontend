@@ -22,15 +22,16 @@ class AdminSettingsState extends State<AdminSettings> {
   final serverConfig;
   Map<String, dynamic> features;
   static Key formKey = new UniqueKey();
-  List<FeatureTileContent> featureTiles;
+  //List<FeatureTileContent> featureTiles;
 
   _setFeatureTile(title) {
     for (var f in features.entries) {
       if (f.key == title) {
-        f.value["selected"]? f.value["selected"] = false : f.value["selected"] = true;
+        (f.value["selected"]??= false) ? f.value["selected"] = false : f.value["selected"] = true;
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -40,7 +41,6 @@ class AdminSettingsState extends State<AdminSettings> {
                 children: <Widget>[
                     Row(
                         children: <Widget>[
-                          AppBar(),
                           Flexible(
                             child:TextField(
                                 key: formKey,
@@ -67,13 +67,28 @@ class AdminSettingsState extends State<AdminSettings> {
                           )
                         ]
                     ),
-                  Expanded(
+                  Flexible(
                     child: ListView(
                       shrinkWrap: true,
                       children: <Widget> [
-                        for (var feature in features.entries) ListTile(key: Key(feature.key), title: Text('${feature.key}'), onTap: _setFeatureTile(feature.key), selected: feature.value["selected"])
+                        for (var feature in features.entries) ListTile(
+                            key: Key(feature.key),
+                            title: Text('${feature.key}'),
+                            onTap: () => setState(() {
+                              _setFeatureTile(feature.key);
+                            }),
+                            selected: feature.value["selected"] ?? false
+                        )
                       ]
                     ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      NextStepButton(this)
+                    ],
                   )
         ]))
         /*child: ReorderableListView(
@@ -104,100 +119,20 @@ class AdminSettingsState extends State<AdminSettings> {
         );
   }
 }
-class FeatureTileContent {
-  bool selected;
-  String title;
 
-  FeatureTileContent({this.selected, this.title});
+class NextStepButton extends StatelessWidget {
+  final AdminSettingsState adminSettingsState;
 
-  _set(){
-    selected? selected = false : selected = true;
-  }
-}
-
-
-class Entry extends StatelessWidget {
-  final MyTile myTile;
-  Entry(this.myTile);
+  NextStepButton(this.adminSettingsState);
 
   @override
   Widget build(BuildContext context) {
-    return _buildTiles(myTile);
-  }
-
-  Widget _buildTiles(MyTile t) {
-    if (t.children.isEmpty)
-      return new ListTile(
-          dense: true,
-          enabled: true,
-          isThreeLine: false,
-          onLongPress: () => print("long press"),
-          onTap: () => print("tap"),
-          subtitle: new Text("Subtitle"),
-          leading: new Text("Leading"),
-          selected: true,
-          trailing: new Text("trailing"),
-          title: new Text(t.title));
-
-    return new ExpansionTile(
-      key: new PageStorageKey<int>(3),
-      title: new Text(t.title),
-      children: t.children.map(_buildTiles).toList(),
-    );
+    return FloatingActionButton(
+      child: Icon(Icons.arrow_forward_ios),
+      onPressed: () {
+        adminSettingsState.setState((){
+          var x = 1;
+        });
+      });
   }
 }
-
-class MyTile {
-  String title;
-  List<MyTile> children;
-  MyTile(this.title, [this.children = const <MyTile>[]]);
-}
-
-List<MyTile> listOfTiles = <MyTile>[
-  new MyTile(
-    'Animals',
-    <MyTile>[
-      new MyTile(
-        'Dogs',
-        <MyTile>[
-          new MyTile('Coton de Tulear'),
-          new MyTile('German Shepherd'),
-          new MyTile('Poodle'),
-        ],
-      ),
-      new MyTile('Cats'),
-      new MyTile('Birds'),
-    ],
-  ),
-  new MyTile(
-    'Cars',
-    <MyTile>[
-      new MyTile('Tesla'),
-      new MyTile('Toyota'),
-    ],
-  ),
-  new MyTile(
-    'Phones',
-    <MyTile>[
-      new MyTile('Google'),
-      new MyTile('Samsung'),
-      new MyTile(
-        'OnePlus',
-        <MyTile>[
-          new MyTile('1'),
-          new MyTile('2'),
-          new MyTile('3'),
-          new MyTile('4'),
-          new MyTile('5'),
-          new MyTile('6'),
-          new MyTile('7'),
-          new MyTile('8'),
-          new MyTile('9'),
-          new MyTile('10'),
-          new MyTile('11'),
-          new MyTile('12'),
-        ],
-      ),
-    ],
-  ),
-];
