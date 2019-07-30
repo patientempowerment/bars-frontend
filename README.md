@@ -1,6 +1,6 @@
 # EMPOWER
 
-An app that visualizes the effects of changing inputs on the results of given logistic regression outputs.
+Empower is an app that shows the relations between changes in feature vectors and the resulting effects on predictions made by pre-trained logistic regressors. It does this by providing users with an input interface to make changes to feature values and on the fly presenting the resulting effects on the model's prediction results.
 It can be used for any kind of clean data. For the example configuration, we use a health use case to predict tuberculosis, diabetes, asthma and COPD on life style choices and patient parameters like age, weight, etc.
 
 ## Steps to run
