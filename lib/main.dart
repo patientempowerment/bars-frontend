@@ -112,7 +112,7 @@ class MyAppBarContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(STANDARD_PADDING),
-      child: new Image.asset('assets/logo.png', fit: BoxFit.scaleDown),
+      child: new Image.asset('assets/images/logo.png', fit: BoxFit.scaleDown),
     );
   }
 }
