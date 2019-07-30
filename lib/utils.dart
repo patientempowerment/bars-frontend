@@ -11,8 +11,8 @@ readJSON(String path) async {
   return jsonDecode(json);
 }
 
+/// Requests featureConfig from [serverAddress] with [databaseJSON] if available, else takes featureConfig from [fallbackFilename].
 getFeatureConfig(String serverAddress, String databaseJSON, String fallbackFilename) async {
-  //String databaseJSON = jsonEncode(serverConfig["database"]);
   Map<String, dynamic> features;
   try {
     http.Response featureConfigResponse = await http.post(serverAddress + '/feature-config', headers: {"Content-Type": "application/json"}, body: databaseJSON);
@@ -58,7 +58,7 @@ readData() async {
   return [models, features, labels, serverConfig];
 }
 
-/// For all features in [featureConfig]: Select first radio button or set slider to min.
+/// For all features in [featureConfig]: Sets radio button or slider to mean.
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
   featureConfig.forEach((k, v) {
