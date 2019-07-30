@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-
 import '../utils.dart';
 
 /// [context] is the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
