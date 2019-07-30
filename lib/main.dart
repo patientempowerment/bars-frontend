@@ -1,7 +1,7 @@
 import 'package:bars_frontend/widgets/barsPrototype.dart';
 import 'package:bars_frontend/widgets/bubblesPrototype.dart';
 import 'package:bars_frontend/widgets/buttons.dart';
-
+import 'package:bars_frontend/widgets/adminSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
 
@@ -88,6 +88,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(40.0),
               child: BarsPrototype(this),
             ),
+            drawer: AdminSettings(this),
             floatingActionButton: ResetButton(this),
           ),
           Scaffold(

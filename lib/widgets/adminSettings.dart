@@ -26,6 +26,7 @@ class AdminSettingsState extends State<AdminSettings> {
   final serverConfig;
   Map<String, dynamic> features;
   static Key formKey = new UniqueKey();
+  var state = "ChooseCollection";
 
   //List<FeatureTileContent> featureTiles;
 
@@ -132,4 +133,10 @@ class NextStepButton extends StatelessWidget {
           });
         });
   }
+}
+
+enum settingsState {
+  chooseCollection,
+  chooseLabels,
+  configureFeatures
 }
