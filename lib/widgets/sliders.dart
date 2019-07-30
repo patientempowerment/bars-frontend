@@ -9,23 +9,12 @@ Widget getSliderInputRow(MyHomePageState homePageState, State context,
   return SliderInputRow(homePageState, context, feature);
 }
 
-class SliderInputRow extends StatefulWidget {
+/// Defines a slider that changes its color when dragged and is correlated to [feature].
+class SliderInputRow extends StatelessWidget {
   final MyHomePageState homePageState;
-  final State context;
+  final State sliderContext;
   final MapEntry<String, dynamic> feature;
-  SliderInputRow(this.homePageState, this.context, this.feature);
-
-  @override
-  State<StatefulWidget> createState() {
-    return SliderInputRowState(homePageState, context, feature);
-  }
-}
-
-class SliderInputRowState extends State<SliderInputRow> {
-  MyHomePageState homePageState;
-  State sliderContext;
-  MapEntry<String, dynamic> feature;
-  SliderInputRowState(this.homePageState, this.sliderContext, this.feature);
+  SliderInputRow(this.homePageState, this.sliderContext, this.feature);
 
   @override
   Widget build(BuildContext context) {
