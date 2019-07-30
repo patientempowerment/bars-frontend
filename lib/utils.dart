@@ -62,10 +62,13 @@ readData() async {
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
   featureConfig.forEach((k, v) {
+    int mean = v["mean"].round();
+
+///Button selection needs int, slider needs double.
     if (v["choices"] != null) {
-      defaultInputs["$k"] = 0;
+      defaultInputs[k] = mean;
     } else {
-      defaultInputs["$k"] = v["slider_min"].toDouble();
+      defaultInputs[k] = mean.toDouble();
     }
   });
   return defaultInputs;

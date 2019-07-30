@@ -24,7 +24,7 @@ class AdminSettingsState extends State<AdminSettings> {
   static Key formKey = new UniqueKey();
   //List<FeatureTileContent> featureTiles;
 
-  _setFeatureTile(title) {
+  _setFeatureListTile(title) {
     for (var f in features.entries) {
       if (f.key == title) {
         (f.value["selected"]??= false) ? f.value["selected"] = false : f.value["selected"] = true;
@@ -75,7 +75,7 @@ class AdminSettingsState extends State<AdminSettings> {
                             key: Key(feature.key),
                             title: Text('${feature.key}'),
                             onTap: () => setState(() {
-                              _setFeatureTile(feature.key);
+                              _setFeatureListTile(feature.key);
                             }),
                             selected: feature.value["selected"] ?? false
                         )
