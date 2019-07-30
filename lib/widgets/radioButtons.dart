@@ -42,9 +42,11 @@ Widget getRadioButton(homePageState, context, title, value, featureKey) {
       children: [
         Container(
           child: Radio(
-            activeColor: getActivityColor (homePageState, featureKey),
+            activeColor: getActivityColor(homePageState, featureKey),
             value: value,
-            groupValue: homePageState.userInputs[featureKey],
+            groupValue: homePageState.activeInputFields[featureKey]
+                ? homePageState.userInputs[featureKey]
+                : null,
             onChanged: (dynamic newValue) {
               context.setState(() {
                 homePageState.activeInputFields[featureKey] = true;
