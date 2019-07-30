@@ -50,6 +50,7 @@ class MyHomePageState extends State<MyHomePage> {
   double globalHeight;
   Map<String, dynamic> serverConfig;
   Map<String, dynamic> userInputs;
+  Map<String, bool> activeInputFields;
   Map<String, dynamic> modelConfig;
   Map<String, dynamic> featureConfig;
   Map<String, dynamic> labelConfig;
@@ -63,6 +64,7 @@ class MyHomePageState extends State<MyHomePage> {
         labelConfig = result[2];
         serverConfig = result[3];
         userInputs = generateDefaultInputValues(featureConfig);
+        activeInputFields = deactivateInputFields(featureConfig);
       });
     });
     super.initState();
