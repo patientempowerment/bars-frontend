@@ -1,11 +1,11 @@
 {
   "sex": {
-  "title": "Sex",
-  "choices": {
-    "Male": 1,
-    "Female": 0
-  },
-  "mean": 0.44406857303944886
+    "title": "Sex",
+    "choices": {
+      "Male": 1,
+      "Female": 0
+    },
+    "mean": 0.44406857303944886
   },
   "age": {
     "title": "Age",
