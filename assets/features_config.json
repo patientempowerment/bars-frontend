@@ -1,0 +1,136 @@
+{
+  "sex": {
+  "title": "Sex",
+  "choices": {
+    "Male": 1,
+    "Female": 0
+  },
+  "mean": 0.44406857303944886
+  },
+  "age": {
+    "title": "Age",
+    "slider_min": 10,
+    "slider_max": 70,
+    "mean": 56.107616681642796
+  },
+  "height": {
+    "title": "Height",
+    "slider_min": 122,
+    "slider_max": 204,
+    "mean": 169.3661715735504
+  },
+  "weight": {
+    "title": "Weight",
+    "slider_min": 32,
+    "slider_max": 197,
+    "mean": 76.98686946103564
+  },
+  "alcoholFrequency": {
+    "title": "Alcohol Frequency",
+    "choices": {
+      "never": 6,
+      "special occasions": 5,
+      "one to three times a month": 4,
+      "once or twice a week": 3,
+      "three of four times a week": 2,
+      "daily": 1
+    },
+    "mean": 2.7105907641348206
+  },
+  "currentlySmoking": {
+    "title": "Currently Smoking",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.06581567031379389
+  },
+  "noOfCigarettesPerDay": {
+    "slider_max": 50,
+    "slider_min": 0,
+    "title": "Number of Cigarettes per Day",
+    "mean": 0.5655425762461018
+  },
+  "previouslySmoked": {
+    "title": "Previously Smoked",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.3486530295822542
+  },
+  "noOfCigarettesPreviouslyPerDay": {
+    "title": "Number of Cigarettes Previously per Day",
+    "slider_min": 0,
+    "slider_max": 50,
+    "mean": 4.193535599133146
+  },
+  "diastolicBloodPressure": {
+    "title": "Diastolic Blood Pressure",
+    "slider_min": 37,
+    "slider_max": 142,
+    "mean": 81.84501030709869
+  },
+  "systolicBloodPressure": {
+    "title": "Systolic Blood Pressure",
+    "slider_min": 79,
+    "slider_max": 249,
+    "mean": 136.703679722325
+  },
+  "wheezeInChestInLastYear": {
+    "title": "Wheeze In Chest In Last Year",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.1665521433479571
+  },
+  "coughOnMostDays": {
+    "title": "Cough On Most Days",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.13563965678242332
+  },
+  "sputumOnMostDays": {
+    "title": "Sputum On Most Days",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.08605105978117236
+  },
+  "asthma": {
+    "title": "Asthma",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.12832778335711895
+  },
+  "diabetes": {
+    "title": "Diabetes",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.03290343041386966
+  },
+  "COPD": {
+    "title": "COPD",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.014438747643462481
+  },
+  "tuberculosis": {
+    "title": "Tuberculosis",
+    "choices": {
+      "Yes": 1,
+      "No": 0
+    },
+    "mean": 0.005391405465405149
+  }
+}
