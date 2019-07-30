@@ -11,6 +11,19 @@ readJSON(String path) async {
   return jsonDecode(json);
 }
 
+/// Requests featureConfig from [serverAddress] with [databaseJSON] if available, else takes featureConfig from [fallbackFilename].
+getFeatureConfig(String serverAddress, String databaseJSON, String fallbackFilename) async {
+  Map<String, dynamic> features;
+  try {
+    http.Response featureConfigResponse = await http.post(serverAddress + '/feature-config', headers: {"Content-Type": "application/json"}, body: databaseJSON);
+    features = jsonDecode(featureConfigResponse.body);
+  }
+  catch (e) { // something with the web request went wrong, use local file fallback
+    features = await readJSON(fallbackFilename);
+  }
+  return features;
+}
+
 /// Reads model, feature and label configs.
 readData() async {
   Map<String, dynamic> serverConfig = await readJSON(
@@ -20,15 +33,7 @@ readData() async {
 
   // load features
   /*
-  String databaseJSON = jsonEncode(serverConfig["database"]);
-  Map<String, dynamic> features;
-  try {
-    http.Response featureConfigResponse = await http.post(serverAddress + '/feature-config', headers: {"Content-Type": "application/json"}, body: databaseJSON);
-    features = jsonDecode(featureConfigResponse.body);
-  }
-  catch (e) { // something with the web request went wrong, use local file fallback
-    features = loadJSON(localFallbacks['feature-config']);
-  }
+  getFeatureConfig(serverAddress, jsonEncode(serverConfig["database"], localFallbacks["feature-config"])
   */
   Map<String, dynamic> features =
       await readJSON(localFallbacks["feature-config"]);
@@ -50,17 +55,20 @@ readData() async {
     // something with the web request went wrong, use local file fallback
     models = await readJSON(localFallbacks["models"]);
   }
-  return [models, features, labels];
+  return [models, features, labels, serverConfig];
 }
 
-/// For all features in [featureConfig]: Select first radio button or set slider to min.
+/// For all features in [featureConfig]: Sets radio button or slider to mean.
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};
   featureConfig.forEach((k, v) {
+    int mean = v["mean"].round();
+
+///Button selection needs int, slider needs double.
     if (v["choices"] != null) {
-      defaultInputs["$k"] = 0;
+      defaultInputs[k] = mean;
     } else {
-      defaultInputs["$k"] = v["slider_min"].toDouble();
+      defaultInputs[k] = mean.toDouble();
     }
   });
   return defaultInputs;

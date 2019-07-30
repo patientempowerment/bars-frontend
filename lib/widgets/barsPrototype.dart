@@ -10,7 +10,6 @@ class BarsPrototype extends StatefulWidget {
   final MyHomePageState homePageState;
 
   BarsPrototype(this.homePageState);
-
   @override
   State<StatefulWidget> createState() {
     return BarsPrototypeState(homePageState);
