@@ -54,8 +54,8 @@ class SliderInputRowState extends State<SliderInputRow> {
                   feature.value["slider_max"] - feature.value["slider_min"],
               label: '${homePageState.userInputs[feature.key].round()}',
               onChanged: (double newValue) {
-                homePageState.activeInputFields[feature.key] = true;
                 sliderContext.setState(() {
+                  homePageState.activeInputFields[feature.key] = true;
                   homePageState.userInputs[feature.key] = newValue;
                 });
               },

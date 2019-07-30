@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 
+import '../utils.dart';
+
 /// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
 getRadioButtonInputRow(MyHomePageState homePageState, State context,
     MapEntry<String, dynamic> feature) {
@@ -40,10 +42,12 @@ Widget getRadioButton(homePageState, context, title, value, featureKey) {
       children: [
         Container(
           child: Radio(
+            activeColor: getActivityColor (homePageState, featureKey),
             value: value,
             groupValue: homePageState.userInputs[featureKey],
             onChanged: (dynamic newValue) {
               context.setState(() {
+                homePageState.activeInputFields[featureKey] = true;
                 homePageState.userInputs[featureKey] = newValue;
               });
             },
