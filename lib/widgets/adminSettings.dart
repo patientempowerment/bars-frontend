@@ -23,10 +23,10 @@ class AdminSettingsState extends State<AdminSettings> {
 
   AdminSettingsState(this.homePageState, this.serverConfig, this.features);
 
-  final serverConfig;
+  Map<String, dynamic> serverConfig;
   Map<String, dynamic> features;
   static Key formKey = new UniqueKey();
-  var state = "ChooseCollection";
+  var currentState = settingsState.chooseCollection;
 
   //List<FeatureTileContent> featureTiles;
 
@@ -54,20 +54,7 @@ class AdminSettingsState extends State<AdminSettings> {
                         border: InputBorder.none,
                         hintText: 'Enter collection to use'),
                     onSubmitted: (String newCollection) {
-                      getFeatureConfig(
-                              homePageState.serverConfig['address'],
-                              jsonEncode(
-                                  homePageState.serverConfig['database']),
-                              homePageState.serverConfig['fallbacks']
-                                  ['feature-config'])
-                          .then((result) {
-                        setState(() {
-                          features = result;
-                          for (var feature in features.entries) {
-                            feature.value["selected"] = false;
-                          }
-                        });
-                      });
+                      serverConfig['database']['collection'] = newCollection;
                     }))
           ]),
           Flexible(
@@ -128,15 +115,45 @@ class NextStepButton extends StatelessWidget {
     return FloatingActionButton(
         child: Icon(Icons.arrow_forward_ios),
         onPressed: () {
-          adminSettingsState.setState(() {
-            var x = 1;
-          });
+          switch (adminSettingsState.currentState) {
+            case settingsState.chooseCollection:
+              getFeatureConfig(adminSettingsState.serverConfig).then((result) {
+                adminSettingsState.setState(() {
+                  adminSettingsState.features = result;
+                  for (var feature in adminSettingsState.features.entries) {
+                    feature.value["selected"] = false;
+                  }
+                  adminSettingsState.currentState = settingsState.chooseLabels;
+                });
+              });
+              break;
+            case settingsState.chooseLabels:
+              List<String> labels = [];
+              adminSettingsState.features.forEach((k, v) {
+                if (v['selected']) {
+                  labels.add(k);
+                }
+              });
+              getModels(labels, adminSettingsState.serverConfig).then((result) {
+                adminSettingsState.homePageState.setState(() {
+                  adminSettingsState.homePageState.modelConfig = result;
+                  Map<String, dynamic> label_titles = {};
+                  for (var label in labels) {
+                    label_titles[label] = label;
+                  }
+                  adminSettingsState.homePageState.labelConfig = label_titles;
+                  var x=1;
+                });
+              });
+              break;
+            case settingsState.configureFeatures:
+              // switch back to real view; "submit" button
+              break;
+          }
+
+          var x = 1;
         });
   }
 }
 
-enum settingsState {
-  chooseCollection,
-  chooseLabels,
-  configureFeatures
-}
+enum settingsState { chooseCollection, chooseLabels, configureFeatures }
