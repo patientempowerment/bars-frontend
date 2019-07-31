@@ -6,7 +6,7 @@ It can be used for any kind of clean data. For the example configuration, we use
 ## Steps to run
 1. Clone the project
 2. Configure
-    * Connect to a running server of [empower-backend](https://github.com/patientempowerment/empower-backend) via editing `assets/configs/server.conf`. Use the Admin View in the menu on the top left to configure the labels to train on. Additionally you should edit assets/configs/features.json to configure what input fields should be displayed. 
+    * Connect to a running server of [empower-backend](https://github.com/patientempowerment/empower-backend) via editing `assets/configs/server.conf`. Use the Admin View in the side menu on the top left to configure the labels to train on. Additionally you should edit assets/configs/features.json to configure what input fields should be displayed. 
     * OR:
     * To configure the input and output manually, set the "fallbacks" field in `assets/configs/server.conf` to appropriate config files (see Configuration).
 The example files were created by the [empower-backend](https://github.com/patientempowerment/empower-backend).
