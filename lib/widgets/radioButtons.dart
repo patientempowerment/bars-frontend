@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
+import '../utils.dart';
 
-/// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
-getRadioButtonInputRow(MyHomePageState homePageState, State context,
+/// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
+getRadioButtonInputRow(MyHomePageState homePageState, State parentState,
     MapEntry<String, dynamic> feature) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
@@ -22,7 +23,7 @@ getRadioButtonInputRow(MyHomePageState homePageState, State context,
                     scrollDirection: Axis.horizontal,
                     children: [
                       for (var choice in feature.value["choices"].entries)
-                        getRadioButton(homePageState, context, choice.key,
+                        getRadioButton(homePageState, parentState, choice.key,
                             choice.value, feature.key)
                     ]),
               ),
@@ -33,17 +34,21 @@ getRadioButtonInputRow(MyHomePageState homePageState, State context,
 }
 
 /// Returns one radio button and its [title] with current [value] and corresponding [featureKey].
-Widget getRadioButton(homePageState, context, title, value, featureKey) {
+Widget getRadioButton(homePageState, parentState, title, value, featureKey) {
   return Container(
     width: 100,
     child: Column(
       children: [
         Container(
           child: Radio(
+            activeColor: getActivityColor(homePageState, featureKey),
             value: value,
-            groupValue: homePageState.userInputs[featureKey],
+            groupValue: homePageState.activeInputFields[featureKey]
+                ? homePageState.userInputs[featureKey]
+                : null,
             onChanged: (dynamic newValue) {
-              context.setState(() {
+              parentState.setState(() {
+                homePageState.activeInputFields[featureKey] = true;
                 homePageState.userInputs[featureKey] = newValue;
               });
             },

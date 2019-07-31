@@ -49,8 +49,7 @@ getFeatureConfig(Map<String, dynamic> serverConfig) async {
 
 /// Reads model, feature and label configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await readJSON(
-      'assets/server.conf');
+  Map<String, dynamic> serverConfig = await readJSON('assets/server.conf');
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
 
@@ -87,7 +86,7 @@ generateDefaultInputValues(featureConfig) {
   featureConfig.forEach((k, v) {
     int mean = v["mean"].round();
 
-///Button selection needs int, slider needs double.
+    //Button selection needs int, slider needs double.
     if (v["choices"] != null) {
       defaultInputs[k] = mean;
     } else {
@@ -95,6 +94,15 @@ generateDefaultInputValues(featureConfig) {
     }
   });
   return defaultInputs;
+}
+
+/// Deactivates all sliders and radio buttons in [featureConfig].
+deactivateInputFields(featureConfig) {
+  Map<String, bool> activeInputFields = {};
+  featureConfig.forEach((k, v) {
+    activeInputFields[k] = false;
+  });
+  return activeInputFields;
 }
 
 /// Creates either a radio button or a slider for [feature].
@@ -121,4 +129,11 @@ Color computeColorByFactor(double factor) {
 
   factor = factor > 1 ? 1 : factor;
   return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];
+}
+
+/// Returns color for active and inactive input field.
+getActivityColor (MyHomePageState homePageState, String featureKey){
+  return homePageState.activeInputFields[featureKey]
+      ? Colors.blue
+      : Colors.grey;
 }
