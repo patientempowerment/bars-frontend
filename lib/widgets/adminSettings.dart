@@ -42,66 +42,42 @@ class AdminSettingsState extends State<AdminSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: homePageState.globalWidth,
-        child: Drawer(
-            child: Column(children: <Widget>[
-          Row(children: <Widget>[
-            Flexible(
-                child: TextField(
-                    key: formKey,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter collection to use'),
-                    onSubmitted: (String newCollection) {
-                      serverConfig['database']['collection'] = newCollection;
-                    }))
-          ]),
-          Flexible(
-            child: ListView(shrinkWrap: true, children: <Widget>[
-              for (var feature in features.entries)
-                ListTile(
-                    key: Key(feature.key),
-                    title: Text('${feature.key}'),
-                    onTap: () => setState(() {
-                          _setFeatureTile(feature.key);
-                        }),
-                    selected: feature.value["selected"] ?? false)
-            ]),
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: DIALOG_PADDING),
+            child: TextField(
+              key: formKey,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Enter collection to use'),
+              onSubmitted: (String newCollection) {
+                serverConfig['database']['collection'] = newCollection;
+              },
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[NextStepButton(this)],
-          )
-        ]))
-        /*child: ReorderableListView(
-              padding: EdgeInsets.zero,
-              header: Row(
-                key: UniqueKey(),
-                children: <Widget>[
-                  DrawerHeader(
-                    key: UniqueKey(),
-                    child: Text('Admin View'),
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                    ),
-                  ),
-                ],
-              ),
+          Flexible(
+            child: ListView(
+              shrinkWrap: true,
               children: <Widget>[
-                TextField(
-                  key: UniqueKey(),
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter collection to use'
-                  ),
-                ),
-                //for (var feature in homePageState.featureConfig.entries) ListTile(key: Key(feature.key), title: Text('${feature.key}: ${feature.value}'))
+                for (var feature in features.entries)
+                  ListTile(
+                      key: Key(feature.key),
+                      title: Text('${feature.key}'),
+                      onTap: () => setState(
+                            () {
+                              _setFeatureTile(feature.key);
+                            },
+                          ),
+                      selected: feature.value["selected"] ?? false)
               ],
-              onReorder: (oldIndex, newIndex) {})),*/
-        );
+            ),
+          ),
+          SizedBox(width: double.infinity, child: NextStepButton(this)),
+        ],
+      ),
+    );
   }
 }
 
@@ -112,8 +88,12 @@ class NextStepButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-        child: Icon(Icons.arrow_forward_ios),
+    return RaisedButton(
+        child: Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.white,
+        ),
+        color: Colors.blue,
         onPressed: () {
           switch (adminSettingsState.currentState) {
             case settingsState.chooseCollection:
@@ -142,16 +122,14 @@ class NextStepButton extends StatelessWidget {
                     label_titles[label] = label;
                   }
                   adminSettingsState.homePageState.labelConfig = label_titles;
-                  var x=1;
                 });
               });
               break;
             case settingsState.configureFeatures:
+              Navigator.pop(context);
               // switch back to real view; "submit" button
               break;
           }
-
-          var x = 1;
         });
   }
 }
