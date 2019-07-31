@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
-import 'buttons.dart';
-import 'package:bars_frontend/charts/simple_bar_chart.dart';
-import 'package:bars_frontend/predictions.dart';
-import 'dart:convert';
 
 class AdminSettings extends StatefulWidget {
   final MyHomePageState homePageState;
@@ -26,9 +22,6 @@ class AdminSettingsState extends State<AdminSettings> {
   Map<String, dynamic> serverConfig;
   Map<String, dynamic> features;
   static Key formKey = new UniqueKey();
-  var currentState = settingsState.chooseCollection;
-
-  //List<FeatureTileContent> featureTiles;
 
   _setFeatureTile(title) {
     for (var f in features.entries) {
@@ -74,64 +67,73 @@ class AdminSettingsState extends State<AdminSettings> {
               ],
             ),
           ),
-          SizedBox(width: double.infinity, child: NextStepButton(this)),
+          Row(
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: STANDARD_PADDING),
+                  child: RaisedButton(
+                    child: Text(
+                      "Request possible Labels",
+                      textAlign: TextAlign.center,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      getFeatureConfig(serverConfig).then(
+                        (result) {
+                          setState(
+                            () {
+                              features = result;
+                              for (var feature in features.entries) {
+                                feature.value["selected"] = false;
+                              }
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: STANDARD_PADDING),
+                  child: RaisedButton(
+                      child: Text(
+                        "Predict for selected Labels",
+                        textAlign: TextAlign.center,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        List<String> labels = [];
+                        features.forEach((k, v) {
+                          if (v['selected']) {
+                            labels.add(k);
+                          }
+                        });
+                        getModels(labels, serverConfig).then((result) {
+                          homePageState.setState(() {
+                            homePageState.modelConfig = result;
+                            Map<String, dynamic> label_titles = {};
+                            for (var label in labels) {
+                              label_titles[label] = label;
+                            }
+                            homePageState.labelConfig = label_titles;
+                          });
+                        });
+                      }),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );
   }
 }
-
-class NextStepButton extends StatelessWidget {
-  final AdminSettingsState adminSettingsState;
-
-  NextStepButton(this.adminSettingsState);
-
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-        child: Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.white,
-        ),
-        color: Colors.blue,
-        onPressed: () {
-          switch (adminSettingsState.currentState) {
-            case settingsState.chooseCollection:
-              getFeatureConfig(adminSettingsState.serverConfig).then((result) {
-                adminSettingsState.setState(() {
-                  adminSettingsState.features = result;
-                  for (var feature in adminSettingsState.features.entries) {
-                    feature.value["selected"] = false;
-                  }
-                  adminSettingsState.currentState = settingsState.chooseLabels;
-                });
-              });
-              break;
-            case settingsState.chooseLabels:
-              List<String> labels = [];
-              adminSettingsState.features.forEach((k, v) {
-                if (v['selected']) {
-                  labels.add(k);
-                }
-              });
-              getModels(labels, adminSettingsState.serverConfig).then((result) {
-                adminSettingsState.homePageState.setState(() {
-                  adminSettingsState.homePageState.modelConfig = result;
-                  Map<String, dynamic> label_titles = {};
-                  for (var label in labels) {
-                    label_titles[label] = label;
-                  }
-                  adminSettingsState.homePageState.labelConfig = label_titles;
-                });
-              });
-              break;
-            case settingsState.configureFeatures:
-              Navigator.pop(context);
-              // switch back to real view; "submit" button
-              break;
-          }
-        });
-  }
-}
-
-enum settingsState { chooseCollection, chooseLabels, configureFeatures }
