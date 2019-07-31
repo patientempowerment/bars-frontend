@@ -102,32 +102,35 @@ class AdminSettingsState extends State<AdminSettings> {
                 flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.only(top: STANDARD_PADDING),
-                  child: RaisedButton(
-                      child: Text(
-                        "Train Models",
-                        textAlign: TextAlign.center,
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        List<String> labels = [];
-                        features.forEach((k, v) {
-                          if (v['selected']) {
-                            labels.add(k);
-                          }
-                        });
-                        getModels(labels, serverConfig).then((result) {
-                          homePageState.setState(() {
-                            homePageState.modelConfig = result;
-                            Map<String, dynamic> label_titles = {};
-                            for (var label in labels) {
-                              label_titles[label] = label;
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: RaisedButton(
+                        child: Text(
+                          "Train Models",
+                          textAlign: TextAlign.center,
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          List<String> labels = [];
+                          features.forEach((k, v) {
+                            if (v['selected']) {
+                              labels.add(k);
                             }
-                            homePageState.labelConfig = label_titles;
                           });
-                        });
-                      }),
+                          getModels(labels, serverConfig).then((result) {
+                            homePageState.setState(() {
+                              homePageState.modelConfig = result;
+                              Map<String, dynamic> label_titles = {};
+                              for (var label in labels) {
+                                label_titles[label] = label;
+                              }
+                              homePageState.labelConfig = label_titles;
+                            });
+                          });
+                        }),
+                  ),
                 ),
               )
             ],
