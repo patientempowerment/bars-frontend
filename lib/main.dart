@@ -1,7 +1,7 @@
 import 'package:bars_frontend/widgets/barsPrototype.dart';
 import 'package:bars_frontend/widgets/bubblesPrototype.dart';
 import 'package:bars_frontend/widgets/buttons.dart';
-
+import 'package:bars_frontend/widgets/adminSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
 
@@ -50,6 +50,7 @@ class MyHomePageState extends State<MyHomePage> {
   double globalHeight;
   Map<String, dynamic> serverConfig;
   Map<String, dynamic> userInputs;
+  Map<String, bool> activeInputFields;
   Map<String, dynamic> modelConfig;
   Map<String, dynamic> featureConfig;
   Map<String, dynamic> labelConfig;
@@ -63,6 +64,7 @@ class MyHomePageState extends State<MyHomePage> {
         labelConfig = result[2];
         serverConfig = result[3];
         userInputs = generateDefaultInputValues(featureConfig);
+        activeInputFields = deactivateInputFields(featureConfig);
       });
     });
     super.initState();
@@ -88,6 +90,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(40.0),
               child: BarsPrototype(this),
             ),
+            drawer: AdminSettings(this),
             floatingActionButton: ResetButton(this),
           ),
           Scaffold(
