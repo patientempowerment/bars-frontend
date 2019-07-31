@@ -11,19 +11,38 @@ readJSON(String path) async {
   return jsonDecode(json);
 }
 
+getModels(List<String> labels, Map<String, dynamic> serverConfig) async {
+  Map<String, dynamic> requestBody = {
+    'db' : serverConfig['database']['db'],
+    'collection' : serverConfig['database']['collection'],
+    'labels' : labels
+  };
+  Map<String, dynamic> models;
+  try {
+    http.Response modelsResponse = await http.post(serverConfig['address'] + '/retrain', headers: {"Content-Type": "application/json"}, body: jsonEncode(requestBody));
+    models = jsonDecode(modelsResponse.body);
+  }
+  catch (e) { // something with the web request went wrong, use local file fallback
+    models = await readJSON(serverConfig['fallbacks']['models']);
+  }
+  return models;
+}
+
+
 /// Requests featureConfig from [serverAddress] with [databaseJSON] if available, else takes featureConfig from [fallbackFilename].
-getFeatureConfig(
-    String serverAddress, String databaseJSON, String fallbackFilename) async {
+getFeatureConfig(Map<String, dynamic> serverConfig) async {
+  Map<String, dynamic> requestBody = {
+    'db' : serverConfig['database']['db'],
+    'collection' : serverConfig['database']['collection'],
+  };
+
   Map<String, dynamic> features;
   try {
-    http.Response featureConfigResponse = await http.post(
-        serverAddress + '/feature-config',
-        headers: {"Content-Type": "application/json"},
-        body: databaseJSON);
+    http.Response featureConfigResponse = await http.post(serverConfig['address'] + '/feature-config', headers: {"Content-Type": "application/json"}, body: jsonEncode(requestBody));
     features = jsonDecode(featureConfigResponse.body);
-  } catch (e) {
-    // something with the web request went wrong, use local file fallback
-    features = await readJSON(fallbackFilename);
+  }
+  catch (e) { // something with the web request went wrong, use local file fallback
+    features = await readJSON(serverConfig['fallbacks']['feature-config']);
   }
   return features;
 }
