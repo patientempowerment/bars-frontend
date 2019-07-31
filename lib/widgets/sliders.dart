@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import '../utils.dart';
 
-/// [context] is the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
-Widget getSliderInputRow(MyHomePageState homePageState, State context,
+/// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
+Widget getSliderInputRow(MyHomePageState homePageState, State parentState,
     MapEntry<String, dynamic> feature) {
-  return SliderInputRow(homePageState, context, feature);
+  return SliderInputRow(homePageState, parentState, feature);
 }
 
 /// Defines a slider that changes its color when dragged and is correlated to [feature].
 class SliderInputRow extends StatelessWidget {
   final MyHomePageState homePageState;
-  final State sliderContext;
+  final State parentState;
   final MapEntry<String, dynamic> feature;
-  SliderInputRow(this.homePageState, this.sliderContext, this.feature);
+  SliderInputRow(this.homePageState, this.parentState, this.feature);
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,13 @@ class SliderInputRow extends StatelessWidget {
               label: '${homePageState.userInputs[feature.key].round()}',
               onChangeStart: (double newValue) {
                 if (!homePageState.activeInputFields[feature.key]) {
-                  sliderContext.setState(() {
+                  parentState.setState(() {
                     homePageState.activeInputFields[feature.key] = true;
                   });
                 }
               },
               onChanged: (double newValue) {
-                sliderContext.setState(() {
+                parentState.setState(() {
                   homePageState.userInputs[feature.key] = newValue;
                 });
               },
