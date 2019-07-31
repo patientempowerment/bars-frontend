@@ -75,7 +75,7 @@ class AdminSettingsState extends State<AdminSettings> {
                   padding: const EdgeInsets.only(top: STANDARD_PADDING),
                   child: RaisedButton(
                     child: Text(
-                      "Request possible Labels",
+                      "Fetch Label Candidates",
                       textAlign: TextAlign.center,
                     ),
                     clipBehavior: Clip.antiAlias,
@@ -104,7 +104,7 @@ class AdminSettingsState extends State<AdminSettings> {
                   padding: const EdgeInsets.only(top: STANDARD_PADDING),
                   child: RaisedButton(
                       child: Text(
-                        "Predict for selected Labels",
+                        "Train Models",
                         textAlign: TextAlign.center,
                       ),
                       clipBehavior: Clip.antiAlias,
