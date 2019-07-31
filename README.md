@@ -18,33 +18,35 @@ The example files were created by the [empower-backend](https://github.com/patie
 In `/assets/configs/server.conf` you can configure the server address, the database that should be used and the mongo collection. In case the server is not reachable, you need to specify fallbacks for local files where similar information can be found.
 ```
 {
-  "address": "http://172.20.24.28:5050",
+  "address": <IPAdress:port>,
   "database": {
-    "db": "ukbb",
-    "collection": "ahri"
+    "db": <DBName>,
+    "collection": <collectionName>
   },
   "fallbacks": {
-    "feature-config": "assets/configs/feature-config.json",
+    "feature-config": "assets/configs/features.json",
     "models": "assets/configs/models.json"
   }
 }
 ```
 
-#### feature-config.json
+#### features.json
 The content of the feature config should look similar to this:
 ```
 {
-  "copd": {
-    "title": "COPD",
+  <feature1>: {
+    "title": <featureTitle1>,
     "choices": {
       "Yes": 1,
       "No": 0
-    }
+    },
+    "mean": 0.014438747643462481
   },
-  "age": {
-    "title": "Age",
+  <feature2>: {
+    "title": <featureTitle2>,
     "slider_min": 40,
-    "slider_max": 70
+    "slider_max": 70,
+    "mean": 56.90638617580766
   },
   ...
 }
@@ -56,9 +58,9 @@ As key, you use the feature name. Give it a user-facing title and decide whether
 In `models.json` you specify, per label, the coefficients for each feature as well as their means in the original data set. It should look similar to this:
 ```
 {
-  "asthma": {
+  <label1>: {
     "features": {
-      "age": {
+      <feature1>: {
         "coef": 0.08657563511716311, 
         "mean": 56.90638617580766
       },
@@ -68,7 +70,7 @@ In `models.json` you specify, per label, the coefficients for each feature as we
   ...
 }
 ```
-First key is the label, in this case "asthma". "features" contains a list of all respective features, their coefficients, and their means.  This file is auto-generated, whenever the backend fits the corresponding model.
+First key is the label, in this case <label1>. "features" contains a list of all respective features, their coefficients, and their means.  This file is auto-generated, whenever the backend fits the corresponding model.
 
 #### labels.conf
 `assets/configs/labels.conf` specifies all labels to predict for, and their user-facing names. It is used to query the models.json from the server.
@@ -77,11 +79,11 @@ With the key "label_titles", you need to set the corresponding title to a label 
 ```
 {
   "labels": [
-  	"asthma",
+  	<label1>,
    ...
    ],
   "label_titles": {
-    "asthma": "Asthma",
+    <label1>: <labelTitle1>,
     ...
   }
 }
