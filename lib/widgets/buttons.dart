@@ -16,6 +16,8 @@ class ResetButton extends StatelessWidget {
       onPressed: () {
         homePageState.userInputs =
             generateDefaultInputValues(homePageState.featureConfig);
+        homePageState.activeInputFields =
+            deactivateInputFields(homePageState.featureConfig);
         homePageState.setState(() {});
       },
     );

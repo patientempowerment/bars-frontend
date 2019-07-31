@@ -12,13 +12,17 @@ readJSON(String path) async {
 }
 
 /// Requests featureConfig from [serverAddress] with [databaseJSON] if available, else takes featureConfig from [fallbackFilename].
-getFeatureConfig(String serverAddress, String databaseJSON, String fallbackFilename) async {
+getFeatureConfig(
+    String serverAddress, String databaseJSON, String fallbackFilename) async {
   Map<String, dynamic> features;
   try {
-    http.Response featureConfigResponse = await http.post(serverAddress + '/feature-config', headers: {"Content-Type": "application/json"}, body: databaseJSON);
+    http.Response featureConfigResponse = await http.post(
+        serverAddress + '/feature-config',
+        headers: {"Content-Type": "application/json"},
+        body: databaseJSON);
     features = jsonDecode(featureConfigResponse.body);
-  }
-  catch (e) { // something with the web request went wrong, use local file fallback
+  } catch (e) {
+    // something with the web request went wrong, use local file fallback
     features = await readJSON(fallbackFilename);
   }
   return features;
@@ -26,8 +30,7 @@ getFeatureConfig(String serverAddress, String databaseJSON, String fallbackFilen
 
 /// Reads model, feature and label configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await readJSON(
-      'assets/server.conf');
+  Map<String, dynamic> serverConfig = await readJSON('assets/server.conf');
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
 
@@ -64,7 +67,7 @@ generateDefaultInputValues(featureConfig) {
   featureConfig.forEach((k, v) {
     int mean = v["mean"].round();
 
-///Button selection needs int, slider needs double.
+    //Button selection needs int, slider needs double.
     if (v["choices"] != null) {
       defaultInputs[k] = mean;
     } else {
@@ -72,6 +75,15 @@ generateDefaultInputValues(featureConfig) {
     }
   });
   return defaultInputs;
+}
+
+/// Deactivates all sliders and radio buttons in [featureConfig].
+deactivateInputFields(featureConfig) {
+  Map<String, bool> activeInputFields = {};
+  featureConfig.forEach((k, v) {
+    activeInputFields[k] = false;
+  });
+  return activeInputFields;
 }
 
 /// Creates either a radio button or a slider for [feature].
@@ -98,4 +110,11 @@ Color computeColorByFactor(double factor) {
 
   factor = factor > 1 ? 1 : factor;
   return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];
+}
+
+/// Returns color for active and inactive input field.
+getActivityColor (MyHomePageState homePageState, String featureKey){
+  return homePageState.activeInputFields[featureKey]
+      ? Colors.blue
+      : Colors.grey;
 }
