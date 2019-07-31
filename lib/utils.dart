@@ -49,7 +49,7 @@ getFeatureConfig(Map<String, dynamic> serverConfig) async {
 
 /// Reads model, feature and label configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await readJSON('assets/server.conf');
+  Map<String, dynamic> serverConfig = await readJSON('assets/configs/server.conf');
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
 
@@ -61,7 +61,8 @@ readData() async {
       await readJSON(localFallbacks["feature-config"]);
 
   // load labels
-  Map<String, dynamic> labelsConfig = await readJSON('assets/labels.conf');
+  Map<String, dynamic> labelsConfig = await readJSON(
+      'assets/configs/labels.conf');
   Map<String, dynamic> labels = labelsConfig["label_titles"];
   String labelsJSON = jsonEncode({"labels": labelsConfig["labels"]});
 

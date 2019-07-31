@@ -6,7 +6,7 @@ import 'bubbles.dart';
 /// Returns the center image at the given position with given size.
 Widget getCenterImage(double width, Offset position) {
   return Positioned(
-    child: Image(image: AssetImage('assets/man-user.png'), width: width),
+    child: Image(image: AssetImage('assets/images/man-user.png'), width: width),
     left: position.dx,
     top: position.dy,
   );
