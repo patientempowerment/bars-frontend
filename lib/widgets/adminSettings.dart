@@ -7,20 +7,28 @@ class AdminSettings extends StatefulWidget {
 
   AdminSettings(this.homePageState);
 
-  @override
+  @override //TODO: always have features represent actual features - > just invis until requested
   State<StatefulWidget> createState() {
-    return AdminSettingsState(
-        homePageState, homePageState.serverConfig, homePageState.featureConfig);
+    return AdminSettingsState(homePageState, homePageState.serverConfig);
   }
 }
+
 
 class AdminSettingsState extends State<AdminSettings> {
   MyHomePageState homePageState;
 
-  AdminSettingsState(this.homePageState, this.serverConfig, this.features);
+  AdminSettingsState(this.homePageState, this.serverConfig);
 
   Map<String, dynamic> serverConfig;
-  Map<String, dynamic> features;
+  Map<String, dynamic> features = {
+    " ": {"title": " "}
+  };
+  Map<String, dynamic> fetchButton = {"enabled": true, "hasBeenPressed": false};
+  Map<String, dynamic> trainButton = {
+    "enabled": false,
+    "hasBeenPressed": false
+  };
+
   static Key formKey = new UniqueKey();
 
   _setFeatureTile(title) {
@@ -31,6 +39,43 @@ class AdminSettingsState extends State<AdminSettings> {
             : f.value["selected"] = true;
       }
     }
+  }
+
+  _fetchLabels() {
+    getFeatureConfig(serverConfig).then(
+      (result) {
+        setState(
+          () {
+            features = result;
+            for (var feature in features.entries) {
+              feature.value["selected"] = false;
+            }
+          },
+        );
+      },
+    );
+      fetchButton["enabled"] = false;
+      trainButton["enabled"] = true;
+  }
+
+  _trainModels() {
+    List<String> labels = [];
+    features.forEach((k, v) {
+      if (v['selected']) {
+        labels.add(k);
+      }
+    });
+    getModels(labels, serverConfig).then((result) {
+      homePageState.setState(() {
+        homePageState.modelConfig = result;
+        Map<String, dynamic> label_titles = {};
+        for (var label in labels) {
+          label_titles[label] = label;
+        }
+        homePageState.labelConfig = label_titles;
+      });
+    });
+    trainButton["enabled"] = false;
   }
 
   @override
@@ -51,6 +96,22 @@ class AdminSettingsState extends State<AdminSettings> {
             ),
           ),
           Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: STANDARD_PADDING),
+              child: RaisedButton(
+                  child: Text(
+                    "Fetch Label Candidates",
+                    textAlign: TextAlign.center,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  onPressed:
+                      fetchButton["enabled"] ? () => _fetchLabels() : null),
+            ),
+          ),
+          Flexible(
             child: ListView(
               shrinkWrap: true,
               children: <Widget>[
@@ -67,73 +128,21 @@ class AdminSettingsState extends State<AdminSettings> {
               ],
             ),
           ),
-          Row(
-            children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: STANDARD_PADDING),
-                  child: RaisedButton(
-                    child: Text(
-                      "Fetch Label Candidates",
-                      textAlign: TextAlign.center,
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      getFeatureConfig(serverConfig).then(
-                        (result) {
-                          setState(
-                            () {
-                              features = result;
-                              for (var feature in features.entries) {
-                                feature.value["selected"] = false;
-                              }
-                            },
-                          );
-                        },
-                      );
-                    },
+          Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: STANDARD_PADDING),
+              child: RaisedButton(
+                  child: Text(
+                    "Train Models",
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: STANDARD_PADDING),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                        child: Text(
-                          "Train Models",
-                          textAlign: TextAlign.center,
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          List<String> labels = [];
-                          features.forEach((k, v) {
-                            if (v['selected']) {
-                              labels.add(k);
-                            }
-                          });
-                          getModels(labels, serverConfig).then((result) {
-                            homePageState.setState(() {
-                              homePageState.modelConfig = result;
-                              Map<String, dynamic> label_titles = {};
-                              for (var label in labels) {
-                                label_titles[label] = label;
-                              }
-                              homePageState.labelConfig = label_titles;
-                            });
-                          });
-                        }),
-                  ),
-                ),
-              )
-            ],
+                  clipBehavior: Clip.antiAlias,
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  onPressed:
+                      trainButton["enabled"] ? () => _trainModels() : null),
+            ),
           ),
         ],
       ),
