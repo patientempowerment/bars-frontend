@@ -42,31 +42,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 /// [userInputs] Maps features and their current input (filled with averages for dataset at beginning).
-/// [modelConfig] Models are represented as mappings from labels to their intercept and features, whereby features each contain their coefficients and mean value for given data set (see assets/models.json for example)
-/// [featureConfig] Map of features to their user-facing names and their selecteable min/max values or choices)
-/// [labelConfig] Map of labels to their user-facing names.
+/// [modelsConfig] Models are represented as mappings from labels to their intercept and features, whereby features each contain their coefficients and mean value for given data set (see assets/models_config_fallback.json for example)
+/// [featuresConfig] Map of features to their user-facing names and their selectable min/max values or choices)
+/// [labelsConfig] Map of labels to their user-facing names.
 class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;
   Map<String, dynamic> serverConfig;
   Map<String, dynamic> userInputs;
   Map<String, bool> activeInputFields;
-  Map<String, dynamic> modelConfig;
-  Map<String, dynamic> featureConfig;
-  Map<String, dynamic> labelConfig;
+  Map<String, dynamic> modelsConfig;
+  Map<String, dynamic> featuresConfig;
+  Map<String, dynamic> labelsConfig;
+  Map<String, dynamic> subsetConfig;
 
   @override
   void initState() {
-    readData().then((result) {
+    initializeData().then((result) {
       setState(() {
-        modelConfig = result[0];
-        featureConfig = result[1];
-        labelConfig = result[2];
-        serverConfig = result[3];
-        userInputs = generateDefaultInputValues(featureConfig);
-        activeInputFields = deactivateInputFields(featureConfig);
+        modelsConfig = result["subset"]["models_config"];
+        featuresConfig = result["subset"]["features_config"];
+        labelsConfig = generateLabelsConfig(result["subset"]["columns"]);
+        userInputs = generateDefaultInputValues(featuresConfig);
+        activeInputFields = deactivateInputFields(featuresConfig);
+        serverConfig = result["server_config"];
       });
     });
+/* OLD SHIT
+    readData().then((result) {
+      setState(() {
+        modelsConfig = result[0];
+        featuresConfig = result[1];
+        labelsConfig = result[2];
+        serverConfig = result[3];
+        userInputs = generateDefaultInputValues(featuresConfig);
+        activeInputFields = deactivateInputFields(featuresConfig);
+      });
+    });*/
     super.initState();
   }
 
@@ -75,7 +87,7 @@ class MyHomePageState extends State<MyHomePage> {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
     // make sure that configs are loaded before displaying input and output
-    if ((modelConfig == null) || (featureConfig == null)) {
+    if ((modelsConfig == null) || (featuresConfig == null)) {
       return new Container();
     }
 

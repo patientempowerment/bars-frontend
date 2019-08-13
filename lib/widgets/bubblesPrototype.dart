@@ -63,18 +63,18 @@ class BubblePrototypeState extends State<BubblePrototype> {
     var boundingRadius =
         sqrt(pow((imageDimensions / 2), 2) * 2) + labelBubbleDimensions / 2;
     var angle = 0.0;
-    var step = (2 * pi) / homePageState.modelConfig.length;
+    var step = (2 * pi) / homePageState.modelsConfig.length;
     Offset imageCenter = Offset(imagePosition.dx + imageDimensions / 2,
         imagePosition.dy + imageDimensions / 2);
 
-    homePageState.modelConfig.forEach((k, v) {
+    homePageState.modelsConfig.forEach((k, v) {
       //45 comes from bubble container height(90) and width(90) divided by 2
       var x = (boundingRadius * cos(angle) - 45).round();
       var y = (boundingRadius * sin(angle) - 45).round();
 
       // Actually add label bubble.
       LabelBubble labelBubble = LabelBubble(
-          homePageState.labelConfig[k],
+          homePageState.labelsConfig[k]["title"],
           Offset(imageCenter.dx + x, imageCenter.dy + y),
           labelBubbleDimensions,
           homePageState);
@@ -90,9 +90,9 @@ class BubblePrototypeState extends State<BubblePrototype> {
     double featureBubbleOffset = 0.0;
     double featureBubbleWidth =
         (homePageState.globalWidth - STANDARD_PADDING * 4) /
-            homePageState.featureConfig.entries.length;
+            homePageState.featuresConfig.entries.length;
     for (MapEntry<String, dynamic> feature
-    in homePageState.featureConfig.entries) {
+    in homePageState.featuresConfig.entries) {
       widgets.add(FeatureBubble(
           Offset(featureBubbleOffset, 0.0),
           featureBubbleWidth - STANDARD_PADDING,

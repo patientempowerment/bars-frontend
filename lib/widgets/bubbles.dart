@@ -53,16 +53,16 @@ class FeatureBubbleState extends State<FeatureBubble>
   /// And reloads the state.
   _computeNewColor() {
     double colorFactor = 0;
-    for (String label in homePageState.modelConfig.keys) {
-      if (homePageState.modelConfig[label]['features'][feature.key] != null) {
-        double factor = homePageState.modelConfig[label]['features']
+    for (String label in homePageState.modelsConfig.keys) {
+      if (homePageState.modelsConfig[label]['features'][feature.key] != null) {
+        double factor = homePageState.modelsConfig[label]['features']
         [feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         colorFactor += factor < 0 ? 0 : factor;
       }
     }
     // average colorFactor over amount of labels
-    colorFactor = colorFactor / homePageState.modelConfig.keys.length;
+    colorFactor = colorFactor / homePageState.modelsConfig.keys.length;
     setState(() {
       color = computeColorByFactor(colorFactor);
     });
@@ -73,9 +73,9 @@ class FeatureBubbleState extends State<FeatureBubble>
   _getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
-    for (String label in homePageState.modelConfig.keys) {
-      if (homePageState.modelConfig[label]['features'][feature.key] != null) {
-        double factor = homePageState.modelConfig[label]['features']
+    for (String label in homePageState.modelsConfig.keys) {
+      if (homePageState.modelsConfig[label]['features'][feature.key] != null) {
+        double factor = homePageState.modelsConfig[label]['features']
         [feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
@@ -186,7 +186,7 @@ class LabelBubble extends StatelessWidget {
   double _computeInnerBubbleSize() {
     double value = 0.0;
     Map<String, dynamic> probabilities = getLabelProbabilities(
-        homePageState.userInputs, homePageState.modelConfig, true);
+        homePageState.userInputs, homePageState.modelsConfig, true);
     probabilities.forEach(
             (k, v) =>
         (k.toLowerCase() == title.toLowerCase())
@@ -203,7 +203,7 @@ class LabelBubble extends StatelessWidget {
   /// TODO currently assumes that the label title is the same as the label name, just camel case.
   Color _computeColor() {
     Map<String, dynamic> probabilities = getLabelProbabilities(
-        homePageState.userInputs, homePageState.modelConfig, true);
+        homePageState.userInputs, homePageState.modelsConfig, true);
     for (var probability in probabilities.entries) {
       if (probability.key.toLowerCase() == title.toLowerCase()) {
         return computeColorByFactor(probability.value);

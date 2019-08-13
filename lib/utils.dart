@@ -11,23 +11,40 @@ readJSON(String path) async {
   return jsonDecode(json);
 }
 
-getModels(List<String> labels, Map<String, dynamic> serverConfig) async {
-  Map<String, dynamic> requestBody = {
-    'db' : serverConfig['database']['db'],
-    'collection' : serverConfig['database']['collection'],
-    'labels' : labels
-  };
+trainModels(List<String> labels, Map<String, dynamic> serverConfig) async {
+  String db = serverConfig['database']['db'];
+  String subset = serverConfig['database']['collection'];
+  String url = '/databases/' + db + '/subsets/' + subset + '/';
+
   Map<String, dynamic> models;
   try {
-    http.Response modelsResponse = await http.post(serverConfig['address'] + '/retrain', headers: {"Content-Type": "application/json"}, body: jsonEncode(requestBody));
+    http.Response modelsResponse = await http.post(
+        serverConfig['address'] + url + '/train',
+        headers: {"Content-Type": "application/json"});
+
     models = jsonDecode(modelsResponse.body);
   }
   catch (e) { // something with the web request went wrong, use local file fallback
-    models = await readJSON(serverConfig['fallbacks']['models']);
+    subset = await readJSON(serverConfig['fallbacks']['models']);
   }
   return models;
 }
 
+getSubset(Map<String, dynamic> serverConfig) async {
+  String db = serverConfig['database']['db'];
+  String subsetName = serverConfig['database']['collection'];
+  String url = '/database/' + db + '/subset/' + subsetName;
+
+  Map<String, dynamic> subset;
+  try {
+    http.Response subsetResponse = await http.get(serverConfig['address'] + url);
+    subset = jsonDecode(subsetResponse.body);
+  }
+  catch (e) {
+    print(e);
+  }
+  return subset;
+}
 
 /// Requests featureConfig from [serverAddress] with [databaseJSON] if available, else takes featureConfig from [fallbackFilename].
 getFeatureConfig(Map<String, dynamic> serverConfig) async {
@@ -42,27 +59,59 @@ getFeatureConfig(Map<String, dynamic> serverConfig) async {
     features = jsonDecode(featureConfigResponse.body);
   }
   catch (e) { // something with the web request went wrong, use local file fallback
-    features = await readJSON(serverConfig['fallbacks']['feature-config']);
+    features = await readJSON(serverConfig['fallbacks']['features_config']);
   }
   return features;
 }
 
+initializeData() async {
+  Map<String, dynamic> serverConfig = await readJSON('assets/server_config.json');
+  Map<String, dynamic> subset;
+  Map<String, dynamic> response = {};
+  if (serverConfig["last_used_subset"] == null) {
+    response["subset"] = {
+    "columns": [],
+    "models_config": Map<String, dynamic>(),
+    "features_config": Map<String, dynamic>()
+    };
+    response["server_config"] = serverConfig;
+  }
+  else {
+    subset = await readJSON('assets/subsets/' + serverConfig["last_used_subset"] + '.json');
+    response["subset"] = subset;
+    response["server_config"] = serverConfig;
+  }
+  return response;
+}
+
+generateLabelsConfig(columns) {
+  Map<String, dynamic> labels_config = {};
+
+  for (var label in columns) {
+    Map<String, dynamic> label_config = {};
+    label_config["title"] = label;
+    label_config["active"] = false;
+    labels_config[label] = label_config;
+  }
+
+  return labels_config;
+}
 /// Reads model, feature and label configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await readJSON('assets/configs/server.conf');
+  Map<String, dynamic> serverConfig = await readJSON('assets/server_config.json');
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
 
   // load features
   /*
   getFeatureConfig(serverAddress, jsonEncode(serverConfig["database"], localFallbacks["feature-config"])
-  */
+  *//// WARN: Currently always using feature fallback.
   Map<String, dynamic> features =
-      await readJSON(localFallbacks["feature-config"]);
+      await readJSON(localFallbacks["features_config"]);
 
   // load labels
   Map<String, dynamic> labelsConfig = await readJSON(
-      'assets/configs/labels.conf');
+      'assets/configs/labels_config.json');
   Map<String, dynamic> labels = labelsConfig["label_titles"];
   String labelsJSON = jsonEncode({"labels": labelsConfig["labels"]});
 

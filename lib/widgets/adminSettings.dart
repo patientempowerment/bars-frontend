@@ -22,7 +22,7 @@ class AdminSettingsState extends State<AdminSettings> {
   Map<String, dynamic> serverConfig;
   Map<String, dynamic> features = {
     " ": {"title": " "}
-  };
+  }; //TODO: this breaks as it has no active
   Map<String, dynamic> fetchButton = {"enabled": true, "hasBeenPressed": false};
   Map<String, dynamic> trainButton = {
     "enabled": false,
@@ -41,12 +41,12 @@ class AdminSettingsState extends State<AdminSettings> {
     }
   }
 
-  _fetchLabels() {
-    getFeatureConfig(serverConfig).then(
+  _fetchColumns() {
+    getSubset(serverConfig).then(
       (result) {
         setState(
           () {
-            features = result;
+            features = result["columns"];
             for (var feature in features.entries) {
               feature.value["selected"] = false;
             }
@@ -65,14 +65,14 @@ class AdminSettingsState extends State<AdminSettings> {
         labels.add(k);
       }
     });
-    getModels(labels, serverConfig).then((result) {
+    trainModels(labels, serverConfig).then((result) {
       homePageState.setState(() {
-        homePageState.modelConfig = result;
+        homePageState.modelsConfig = result;
         Map<String, dynamic> label_titles = {};
         for (var label in labels) {
           label_titles[label] = label;
         }
-        homePageState.labelConfig = label_titles;
+        homePageState.labelsConfig = label_titles;
       });
     });
     trainButton["enabled"] = false;
@@ -108,7 +108,7 @@ class AdminSettingsState extends State<AdminSettings> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed:
-                      fetchButton["enabled"] ? () => _fetchLabels() : null),
+                      fetchButton["enabled"] ? () => _fetchColumns() : null),
             ),
           ),
           Flexible(

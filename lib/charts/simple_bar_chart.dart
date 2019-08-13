@@ -31,7 +31,7 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
 
   // replace labels with labelTitles
   data.asMap().forEach((i, tuple) {
-    data[i] = tuple.withItem1(labelTitles[tuple.item1]);
+    data[i] = tuple.withItem1(labelTitles[tuple.item1]["title"]);
   });
 
   return [ //TODO: make a utils func that creates charts.series from maps

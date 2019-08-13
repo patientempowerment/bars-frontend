@@ -30,7 +30,7 @@ class BarsPrototypeState extends State<BarsPrototype> {
         Expanded(
           child: ListView(
             children: [
-              for (var feature in homePageState.featureConfig.entries)
+              for (var feature in homePageState.featuresConfig.entries)
                 buildInputWidget(homePageState, this, feature),
             ],
           ),
@@ -39,8 +39,8 @@ class BarsPrototypeState extends State<BarsPrototype> {
         Flexible(
           child: SimpleBarChart(mapChartData(
               getLabelProbabilities(homePageState.userInputs,
-                  homePageState.modelConfig, predictMode),
-              homePageState.labelConfig)),
+                  homePageState.modelsConfig, predictMode),
+              homePageState.labelsConfig)),
         ),
       ],
     );

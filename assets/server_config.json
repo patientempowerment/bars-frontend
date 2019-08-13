@@ -1,0 +1,12 @@
+{
+  "address": "http://172.20.24.28:5050",
+  "database": {
+    "db": "ukbb",
+    "collection": "ahriTest"
+  },
+  "fallbacks": {
+    "features_config": "assets/configs/features_config_fallback.json",
+    "models": "assets/configs/models_config_fallback.json"
+  },
+  "last_used_subset": null
+}
