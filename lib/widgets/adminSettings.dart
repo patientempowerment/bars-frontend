@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 
-class AdminSettings extends StatefulWidget {
+class AdminDrawer extends StatefulWidget {
   final MyHomePageState homePageState;
 
-  AdminSettings(this.homePageState);
+  AdminDrawer(this.homePageState);
 
   @override //TODO: always have features represent actual features - > just invis until requested
   State<StatefulWidget> createState() {
-    return AdminSettingsState(homePageState, homePageState.serverConfig);
+    return AdminDrawerState(homePageState, homePageState.serverConfig);
   }
 }
 
-
-class AdminSettingsState extends State<AdminSettings> {
+class AdminDrawerState extends State<AdminDrawer> {
   MyHomePageState homePageState;
 
-  AdminSettingsState(this.homePageState, this.serverConfig);
+  AdminDrawerState(this.homePageState, this.serverConfig);
 
+  SubsetFetchState syncState = SubsetFetchState.Fetching;
   Map<String, dynamic> serverConfig;
+  Map<String, dynamic> subsets;
   Map<String, dynamic> features = {
     " ": {"title": " "}
   }; //TODO: this breaks as it has no active
@@ -31,14 +32,32 @@ class AdminSettingsState extends State<AdminSettings> {
 
   static Key formKey = new UniqueKey();
 
-  _setFeatureTile(title) {
-    for (var f in features.entries) {
-      if (f.key == title) {
-        (f.value["selected"] ??= false)
-            ? f.value["selected"] = false
-            : f.value["selected"] = true;
+  @override
+  void initState() {
+    super.initState();
+    subsets = _fetchSubsets();
+  }
+
+  _setSubsetTile(title) {
+    for (var s in subsets.entries) {
+      if (s.key == title) {
+        (s.value["selected"] ??= false)
+            ? s.value["selected"] = false
+            : s.value["selected"] = true;
       }
     }
+  }
+
+  _fetchSubsets() {
+    getDatabase(serverConfig).then((result) {
+      setState(() {
+        subsets = result;
+        for (var subset in subsets.entries) {
+          subset.value["syncButtonState"] = SyncButtonState.Ready;
+        }
+        syncState = SubsetFetchState.Fetched;
+      });
+    });
   }
 
   _fetchColumns() {
@@ -47,37 +66,80 @@ class AdminSettingsState extends State<AdminSettings> {
         setState(
           () {
             features = result["columns"];
-            for (var feature in features.entries) {
-              feature.value["selected"] = false;
-            }
           },
         );
       },
     );
-      fetchButton["enabled"] = false;
-      trainButton["enabled"] = true;
+    fetchButton["enabled"] = false;
+    trainButton["enabled"] = true;
   }
 
-  _trainModels() {
-    List<String> labels = [];
-    features.forEach((k, v) {
-      if (v['selected']) {
-        labels.add(k);
-      }
+  _trainModels(String name, Map<String, dynamic> subset) {
+    serverConfig['database']['collection'] = name;
+
+    setState(() {
+      subsets[name]["syncButtonState"] = SyncButtonState.Syncing;
     });
-    trainModels(labels, serverConfig).then((result) {
-      homePageState.setState(() {
-        homePageState.modelsConfig = result;
-        Map<String, dynamic> label_titles = {};
-        for (var label in labels) {
-          label_titles[label] = label;
-        }
-        homePageState.labelsConfig = label_titles;
-      });
+    trainModels(serverConfig).then((result) async {
+      await writeJSON('subsets/', name, result);
+      subsets[name]["syncButtonState"] = SyncButtonState.Synced;
     });
-    trainButton["enabled"] = false;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          Flexible(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: (subsets ??= {}).length,
+                itemBuilder: (context, position) {
+                  String name = subsets.keys.toList()[position];
+                  return Card(
+                      child: Row(
+                    children: <Widget>[
+                      Flexible(
+                          child: ListTile(
+                              key: Key(name),
+                              title: Text(name),
+                              onTap: () => setState(() {
+                                    _setSubsetTile(name);
+                                  }))),
+                      loadingButton(name)
+                    ],
+                  ));
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget loadingButton(String subsetName) {
+    SyncButtonState buttonState = subsets[subsetName]["syncButtonState"];
+
+    Widget child;
+    Color buttonColor = Colors.blue;
+
+    if (buttonState == SyncButtonState.Ready) {
+      child = Icon(Icons.autorenew, color: Colors.white);
+    } else if (buttonState == SyncButtonState.Syncing) {
+    } else if (buttonState == SyncButtonState.Synced) {
+    } else if (buttonState == SyncButtonState.Error) {
+      buttonColor = Colors.red;
+    }
+
+    return RaisedButton(
+        onPressed: (buttonState == SyncButtonState.Ready)
+            ? () => _trainModels(subsetName, subsets[subsetName])
+            : null,
+        child: child,
+    color: buttonColor,
+    disabledColor: buttonColor,);
+  }
+/*
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -147,5 +209,9 @@ class AdminSettingsState extends State<AdminSettings> {
         ],
       ),
     );
-  }
+  }*/
 }
+
+enum SubsetFetchState { Fetching, Fetched, Error }
+
+enum SyncButtonState { Ready, Syncing, Synced, Error }

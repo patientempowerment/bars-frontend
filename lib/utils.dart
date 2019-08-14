@@ -5,29 +5,49 @@ import 'widgets/sliders.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 
 readJSON(String path) async {
   String json = await rootBundle.loadString(path);
   return jsonDecode(json);
 }
 
-trainModels(List<String> labels, Map<String, dynamic> serverConfig) async {
+writeJSON(String path, String filename, Map<String, dynamic> content) async {
+  String json = jsonEncode(content);
+  await new File('assets/' + path + filename + '.json').writeAsString(json);
+}
+
+trainModels(Map<String, dynamic> serverConfig) async {
   String db = serverConfig['database']['db'];
   String subset = serverConfig['database']['collection'];
-  String url = '/databases/' + db + '/subsets/' + subset + '/';
+  String url = '/database/' + db + '/subset/' + subset + '/train';
 
   Map<String, dynamic> models;
   try {
     http.Response modelsResponse = await http.post(
-        serverConfig['address'] + url + '/train',
-        headers: {"Content-Type": "application/json"});
+        serverConfig['address'] + url);
 
     models = jsonDecode(modelsResponse.body);
   }
   catch (e) { // something with the web request went wrong, use local file fallback
-    subset = await readJSON(serverConfig['fallbacks']['models']);
+    print(e);
   }
   return models;
+}
+
+getDatabase(Map<String, dynamic> serverConfig) async {
+  String db = serverConfig['database']['db'];
+  String url = '/database/' + db;
+
+  Map<String, dynamic> database;
+  try {
+    http.Response subsetResponse = await http.get(serverConfig['address'] + url);
+    database = jsonDecode(subsetResponse.body);
+  }
+  catch (e) {
+    print(e);
+  }
+  return database;
 }
 
 getSubset(Map<String, dynamic> serverConfig) async {

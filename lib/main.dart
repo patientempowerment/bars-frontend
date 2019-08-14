@@ -102,7 +102,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(40.0),
               child: BarsPrototype(this),
             ),
-            drawer: AdminSettings(this),
+            drawer: AdminDrawer(this),
             floatingActionButton: ResetButton(this),
           ),
           Scaffold(
