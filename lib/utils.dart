@@ -6,15 +6,41 @@ import 'package:bars_frontend/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
-readJSON(String path) async {
+ensureDirExistence(String path) async {
+  final dir = new Directory(path);
+  dir.exists().then((isThere) async {
+    if (!isThere)
+      await dir.create(recursive: true);
+  });
+}
+
+legacyReadJSON(String path) async {
   String json = await rootBundle.loadString(path);
   return jsonDecode(json);
 }
 
-writeJSON(String path, String filename, Map<String, dynamic> content) async {
+directoryContents(String subDir) async {
+  List<String> files = [];
+  final rootDir = await getApplicationDocumentsDirectory();
+  final dir = new Directory(rootDir.path + '/' + subDir);
+
+  await for (FileSystemEntity entity in dir.list(recursive: false, followLinks: false)) {
+    files.add(entity.path.split('/').last.replaceAll('.json', ''));
+  }
+  return files;
+}
+
+readJSON(String subDir, String filename) async {
+  //TODO
+}
+
+writeJSON(String subDir, String filename, Map<String, dynamic> content) async {
   String json = jsonEncode(content);
-  await new File('assets/' + path + filename + '.json').writeAsString(json);
+  final rootDir = await getApplicationDocumentsDirectory();
+  ensureDirExistence(rootDir.path + '/' + subDir);
+  await new File(rootDir.path + '/' + subDir + filename + '.json').writeAsString(json);
 }
 
 trainModels(Map<String, dynamic> serverConfig) async {
@@ -79,13 +105,13 @@ getFeatureConfig(Map<String, dynamic> serverConfig) async {
     features = jsonDecode(featureConfigResponse.body);
   }
   catch (e) { // something with the web request went wrong, use local file fallback
-    features = await readJSON(serverConfig['fallbacks']['features_config']);
+    features = await legacyReadJSON(serverConfig['fallbacks']['features_config']);
   }
   return features;
 }
 
 initializeData() async {
-  Map<String, dynamic> serverConfig = await readJSON('assets/server_config.json');
+  Map<String, dynamic> serverConfig = await legacyReadJSON('assets/server_config.json');
   Map<String, dynamic> subset;
   Map<String, dynamic> response = {};
   if (serverConfig["last_used_subset"] == null) {
@@ -97,7 +123,7 @@ initializeData() async {
     response["server_config"] = serverConfig;
   }
   else {
-    subset = await readJSON('assets/subsets/' + serverConfig["last_used_subset"] + '.json');
+    subset = await legacyReadJSON('assets/subsets/' + serverConfig["last_used_subset"] + '.json');
     response["subset"] = subset;
     response["server_config"] = serverConfig;
   }
@@ -118,7 +144,7 @@ generateLabelsConfig(columns) {
 }
 /// Reads model, feature and label configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await readJSON('assets/server_config.json');
+  Map<String, dynamic> serverConfig = await legacyReadJSON('assets/server_config.json');
   Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
   String serverAddress = serverConfig["address"];
 
@@ -127,10 +153,10 @@ readData() async {
   getFeatureConfig(serverAddress, jsonEncode(serverConfig["database"], localFallbacks["feature-config"])
   *//// WARN: Currently always using feature fallback.
   Map<String, dynamic> features =
-      await readJSON(localFallbacks["features_config"]);
+      await legacyReadJSON(localFallbacks["features_config"]);
 
   // load labels
-  Map<String, dynamic> labelsConfig = await readJSON(
+  Map<String, dynamic> labelsConfig = await legacyReadJSON(
       'assets/configs/labels_config.json');
   Map<String, dynamic> labels = labelsConfig["label_titles"];
   String labelsJSON = jsonEncode({"labels": labelsConfig["labels"]});
@@ -145,7 +171,7 @@ readData() async {
     models = jsonDecode(modelsResponse.body);
   } catch (e) {
     // something with the web request went wrong, use local file fallback
-    models = await readJSON(localFallbacks["models"]);
+    models = await legacyReadJSON(localFallbacks["models"]);
   }
   return [models, features, labels, serverConfig];
 }
