@@ -7,7 +7,7 @@ import 'dart:math';
 class AdminDrawer extends StatefulWidget {
   final MyHomePageState homePageState;
 
-  AdminDrawer(this.homePageState);
+  AdminDrawer(this.homePageState, {Key key}) : super(key: key);
 
   @override //TODO: always have features represent actual features - > just invis until requested
   State<StatefulWidget> createState() {
@@ -35,7 +35,8 @@ class AdminDrawerState extends State<AdminDrawer>
   Map<String, dynamic> subsetConfigs = {};
   List<String> subsetConfigNames = [];
 
-  static Key formKey = new UniqueKey();
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {

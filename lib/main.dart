@@ -56,6 +56,8 @@ class MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> labelsConfig;
   Map<String, dynamic> subsetConfig;
 
+  final GlobalKey adminDrawerKey = GlobalKey();
+
   @override
   void initState() {
     initializeData().then((result) {
@@ -102,7 +104,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(40.0),
               child: BarsPrototype(this),
             ),
-            drawer: AdminDrawer(this),
+            drawer: AdminDrawer(this, key: adminDrawerKey),
             floatingActionButton: ResetButton(this),
           ),
           Scaffold(

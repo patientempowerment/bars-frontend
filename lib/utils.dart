@@ -24,6 +24,7 @@ legacyReadJSON(String path) async {
 directoryContents(String subDir) async {
   List<String> files = [];
   final rootDir = await getApplicationDocumentsDirectory();
+  await ensureDirExistence(rootDir.path + '/' + subDir);
   final dir = new Directory(rootDir.path + '/' + subDir);
 
   await for (FileSystemEntity entity in dir.list(recursive: false, followLinks: false)) {
