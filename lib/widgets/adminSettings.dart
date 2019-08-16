@@ -18,6 +18,7 @@ class AdminDrawer extends StatefulWidget {
 class AdminDrawerState extends State<AdminDrawer>
     with SingleTickerProviderStateMixin {
   MyHomePageState homePageState;
+
   AdminDrawerState(this.homePageState, this.serverConfig);
 
   TabController tabController;
@@ -34,6 +35,7 @@ class AdminDrawerState extends State<AdminDrawer>
   };
   Map<String, dynamic> subsetConfigs = {};
   List<String> subsetConfigNames = [];
+  String errorMessage;
 
   @override
   bool get wantKeepAlive => true;
@@ -51,6 +53,7 @@ class AdminDrawerState extends State<AdminDrawer>
   _getConfigNames() async {
     return directoryContents('subsets/');
   }
+
   _setSubsetTile(title) {
     for (var s in subsets.entries) {
       if (s.key == title) {
@@ -62,15 +65,20 @@ class AdminDrawerState extends State<AdminDrawer>
   }
 
   _fetchSubsets() {
-    getDatabase(serverConfig).then((result) {
-      setState(() {
-        subsets = result ?? {};
-        for (var subset in subsets.entries) {
-          subset.value["syncButtonState"] = SyncButtonState.Ready;
-        }
-        syncState = SubsetFetchState.Fetched;
+      getDatabase(serverConfig).then((result) {
+        setState(() {
+          subsets = result ?? {};
+          for (var subset in subsets.entries) {
+            subset.value["syncButtonState"] = SyncButtonState.Ready;
+          }
+          syncState = SubsetFetchState.Fetched;
+        });
+      }).catchError((e) {
+        setState(() {
+          errorMessage = e.toString();
+          syncState = SubsetFetchState.Error;
+        });
       });
-    });
   }
 
   _trainModels(String name, Map<String, dynamic> subset) {
@@ -84,23 +92,24 @@ class AdminDrawerState extends State<AdminDrawer>
       setState(() {
         subsets[name]["syncButtonState"] = SyncButtonState.Synced;
       });
-    }).catchError((e) => {
-          setState(() {
-            subsets[name]["syncButtonState"] = SyncButtonState.Error;
-          }),
-          print(e)
-        });
+    }).catchError((e) =>
+    {
+      setState(() {
+        subsets[name]["syncButtonState"] = SyncButtonState.Error;
+      }),
+      print(e)
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
-        children: <Widget>[
-          SafeArea(child: getTabBar()),
-          Flexible(child: getTabBarPages())
-        ],
-      )
+        child: Column(
+          children: <Widget>[
+            SafeArea(child: getTabBar()),
+            Flexible(child: getTabBarPages())
+          ],
+        )
     );
   }
 
@@ -144,6 +153,86 @@ class AdminDrawerState extends State<AdminDrawer>
     );
   }
 
+  Widget syncPage() {
+    Widget content;
+    if (syncState == SubsetFetchState.Fetching) {
+      content = makeAnimator(1, 0, Icon(
+          Icons.autorenew,
+          color: Colors.blue,
+          size: MediaQuery
+              .of(context)
+              .size
+              .width / 8)
+      );
+    }
+    else if (syncState == SubsetFetchState.Fetched) {
+      content = ListView.builder(
+          shrinkWrap: true,
+          itemCount: (subsets ??= {}).length,
+          itemBuilder: (context, position) {
+            String name = subsets.keys.toList()[position];
+            return Card(
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                        child: ListTile(
+                            key: Key(name),
+                            title: Text(name),
+                            onTap: () =>
+                                setState(() {
+                                  _setSubsetTile(name);
+                                }))),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: loadingButton(name),
+                    )
+                  ],
+                ));
+          });
+    }
+    else if (syncState == SubsetFetchState.Error){
+      content = Column(
+        children: <Widget>[
+          Icon(Icons.error, color: Colors.red),
+          Text(errorMessage)
+        ],
+      );
+    }
+    return Column(
+      children: <Widget>[
+        Flexible(child: Center(child: content)),
+      ],
+    );
+  }
+
+  Widget configPage() {
+    return Column(
+      children: <Widget>[
+        Flexible(
+          child: Center(
+            child: ListView.builder(
+                itemCount: (subsetConfigNames ??= []).length,
+                itemBuilder: (context, position) {
+                  String name = subsetConfigNames[position];
+                  return Card(
+                      child: Row(
+                        children: <Widget>[
+                          Flexible(
+                              child: ListTile(
+                                  key: Key(name),
+                                  title: Text(name),
+                                  onTap: () => null
+                              )
+                          ),
+                        ],
+                      ));
+                }),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget makeAnimator(int seconds, int repeats, Widget icon) {
     return Animator(
         tween: Tween<double>(begin: 0, end: 2 * pi),
@@ -154,82 +243,22 @@ class AdminDrawerState extends State<AdminDrawer>
 
   Widget getTabBar() {
     return TabBar(
-      controller: tabController,
-    tabs: [
-      Tab(child: Text("Data Sync", style: TextStyle(color: Colors.blue)),
-          icon: Icon(Icons.autorenew, color: Colors.blue)),
-      Tab(child: Text("Config", style: TextStyle(color: Colors.blue)),
-          icon: Icon(Icons.settings, color: Colors.blue))
-    ]);
+        controller: tabController,
+        tabs: [
+          Tab(child: Text("Data Sync", style: TextStyle(color: Colors.blue)),
+              icon: Icon(Icons.autorenew, color: Colors.blue)),
+          Tab(child: Text("Config", style: TextStyle(color: Colors.blue)),
+              icon: Icon(Icons.settings, color: Colors.blue))
+        ]);
   }
+
   Widget getTabBarPages() {
     return TabBarView(
-    controller: tabController,
-    children: <Widget> [
-      Column(
+        controller: tabController,
         children: <Widget>[
-          Flexible(
-            child: Center(
-              child: (syncState == SubsetFetchState.Fetching)
-                  ? makeAnimator(
-                  1,
-                  0,
-                  Icon(Icons.autorenew,
-                      color: Colors.blue,
-                      size: MediaQuery.of(context).size.width / 8))
-                  : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: (subsets ??= {}).length,
-                  itemBuilder: (context, position) {
-                    String name = subsets.keys.toList()[position];
-                    return Card(
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                                child: ListTile(
-                                    key: Key(name),
-                                    title: Text(name),
-                                    onTap: () => setState(() {
-                                      _setSubsetTile(name);
-                                    }))),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: loadingButton(name),
-                            )
-                          ],
-                        ));
-                  }),
-            ),
-          ),
-        ],
-      ),
-      Column(
-        children: <Widget>[
-          //Flexible(child: Center(child: makeAnimator(600, 1, Icon(Icons.mood_bad, color: Colors.red, size: MediaQuery.of(context).size.width / 8)))),
-          Flexible(
-            child: Center(
-              child: ListView.builder(
-                  itemCount: (subsetConfigNames ??= []).length,
-                  itemBuilder: (context, position) {
-                    String name = subsetConfigNames[position];
-                    return Card(
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                                child: ListTile(
-                                    key: Key(name),
-                                    title: Text(name),
-                                    onTap: () => null
-                                )
-                            ),
-                          ],
-                        ));
-                  }),
-            ),
-          )
-        ],
-      )
-    ]);
+          syncPage(),
+          configPage()
+        ]);
   }
 /*
   @override

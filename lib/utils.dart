@@ -69,10 +69,12 @@ getDatabase(Map<String, dynamic> serverConfig) async {
   Map<String, dynamic> database;
   try {
     http.Response subsetResponse = await http.get(serverConfig['address'] + url);
+    if (subsetResponse.statusCode != 200)
+      throw new Exception("Server Response: ${subsetResponse.statusCode}");
     database = jsonDecode(subsetResponse.body);
   }
   catch (e) {
-    print(e);
+    rethrow;
   }
   return database;
 }
