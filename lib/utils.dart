@@ -33,8 +33,11 @@ directoryContents(String subDir) async {
   return files;
 }
 
-readJSON(String subDir, String filename) async {
-  //TODO
+readJSON(String subDir, String name) async {
+  final rootDir = await getApplicationDocumentsDirectory();
+  ensureDirExistence(rootDir.path + '/' + subDir); // TODO: need this?
+  String json = await new File(rootDir.path + '/' + subDir + '/' + name + '.json').readAsString();
+  return jsonDecode(json);
 }
 
 writeJSON(String subDir, String filename, Map<String, dynamic> content) async {
@@ -44,15 +47,15 @@ writeJSON(String subDir, String filename, Map<String, dynamic> content) async {
   await new File(rootDir.path + '/' + subDir + filename + '.json').writeAsString(json);
 }
 
-trainModels(Map<String, dynamic> serverConfig) async {
-  String db = serverConfig['database']['db'];
-  String subset = serverConfig['database']['collection'];
+trainModels(Map<String, dynamic> appConfig) async {
+  String db = appConfig['database']['db'];
+  String subset = appConfig['database']['collection'];
   String url = '/database/' + db + '/subset/' + subset + '/train';
 
   Map<String, dynamic> models;
   try {
     http.Response modelsResponse = await http.post(
-        serverConfig['address'] + url);
+        appConfig['address'] + url);
 
     models = jsonDecode(modelsResponse.body);
   }
@@ -62,13 +65,13 @@ trainModels(Map<String, dynamic> serverConfig) async {
   return models;
 }
 
-getDatabase(Map<String, dynamic> serverConfig) async {
-  String db = serverConfig['database']['db'];
+getDatabase(Map<String, dynamic> appConfig) async {
+  String db = appConfig['database']['db'];
   String url = '/database/' + db;
 
   Map<String, dynamic> database;
   try {
-    http.Response subsetResponse = await http.get(serverConfig['address'] + url);
+    http.Response subsetResponse = await http.get(appConfig['address'] + url);
     if (subsetResponse.statusCode != 200)
       throw new Exception("Server Response: ${subsetResponse.statusCode}");
     database = jsonDecode(subsetResponse.body);
@@ -79,14 +82,14 @@ getDatabase(Map<String, dynamic> serverConfig) async {
   return database;
 }
 
-getSubset(Map<String, dynamic> serverConfig) async {
-  String db = serverConfig['database']['db'];
-  String subsetName = serverConfig['database']['collection'];
+getSubset(Map<String, dynamic> appConfig) async {
+  String db = appConfig['database']['db'];
+  String subsetName = appConfig['database']['collection'];
   String url = '/database/' + db + '/subset/' + subsetName;
 
   Map<String, dynamic> subset;
   try {
-    http.Response subsetResponse = await http.get(serverConfig['address'] + url);
+    http.Response subsetResponse = await http.get(appConfig['address'] + url);
     subset = jsonDecode(subsetResponse.body);
   }
   catch (e) {
@@ -96,39 +99,39 @@ getSubset(Map<String, dynamic> serverConfig) async {
 }
 
 /// Requests featureConfig from [serverAddress] with [databaseJSON] if available, else takes featureConfig from [fallbackFilename].
-getFeatureConfig(Map<String, dynamic> serverConfig) async {
+getFeatureConfig(Map<String, dynamic> appConfig) async {
   Map<String, dynamic> requestBody = {
-    'db' : serverConfig['database']['db'],
-    'collection' : serverConfig['database']['collection'],
+    'db' : appConfig['database']['db'],
+    'collection' : appConfig['database']['collection'],
   };
 
   Map<String, dynamic> features;
   try {
-    http.Response featureConfigResponse = await http.post(serverConfig['address'] + '/feature-config', headers: {"Content-Type": "application/json"}, body: jsonEncode(requestBody));
+    http.Response featureConfigResponse = await http.post(appConfig['address'] + '/feature-config', headers: {"Content-Type": "application/json"}, body: jsonEncode(requestBody));
     features = jsonDecode(featureConfigResponse.body);
   }
   catch (e) { // something with the web request went wrong, use local file fallback
-    features = await legacyReadJSON(serverConfig['fallbacks']['features_config']);
+    features = await legacyReadJSON(appConfig['fallbacks']['features_config']);
   }
   return features;
 }
 
 initializeData() async {
-  Map<String, dynamic> serverConfig = await legacyReadJSON('assets/server_config.json');
+  Map<String, dynamic> appConfig = await legacyReadJSON('assets/app_config.json');
   Map<String, dynamic> subset;
   Map<String, dynamic> response = {};
-  if (serverConfig["last_used_subset"] == null) {
+  if (appConfig["active_subset"] == null) {
     response["subset"] = {
     "columns": [],
     "models_config": Map<String, dynamic>(),
     "features_config": Map<String, dynamic>()
     };
-    response["server_config"] = serverConfig;
+    response["server_config"] = appConfig;
   }
   else {
-    subset = await legacyReadJSON('assets/subsets/' + serverConfig["last_used_subset"] + '.json');
+    subset = await legacyReadJSON('assets/subsets/' + appConfig["active_subset"] + '.json');
     response["subset"] = subset;
-    response["server_config"] = serverConfig;
+    response["server_config"] = appConfig;
   }
   return response;
 }
@@ -147,13 +150,13 @@ generateLabelsConfig(columns) {
 }
 /// Reads model, feature and label configs.
 readData() async {
-  Map<String, dynamic> serverConfig = await legacyReadJSON('assets/server_config.json');
-  Map<String, dynamic> localFallbacks = serverConfig["fallbacks"];
-  String serverAddress = serverConfig["address"];
+  Map<String, dynamic> appConfig = await legacyReadJSON('assets/app_config.json');
+  Map<String, dynamic> localFallbacks = appConfig["fallbacks"];
+  String serverAddress = appConfig["address"];
 
   // load features
   /*
-  getFeatureConfig(serverAddress, jsonEncode(serverConfig["database"], localFallbacks["feature-config"])
+  getFeatureConfig(serverAddress, jsonEncode(appConfig["database"], localFallbacks["feature-config"])
   *//// WARN: Currently always using feature fallback.
   Map<String, dynamic> features =
       await legacyReadJSON(localFallbacks["features_config"]);
@@ -176,7 +179,7 @@ readData() async {
     // something with the web request went wrong, use local file fallback
     models = await legacyReadJSON(localFallbacks["models"]);
   }
-  return [models, features, labels, serverConfig];
+  return [models, features, labels, appConfig];
 }
 
 /// For all features in [featureConfig]: Sets radio button or slider to mean.

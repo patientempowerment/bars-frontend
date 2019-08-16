@@ -8,5 +8,5 @@
     "features_config": "assets/configs/features_config_fallback.json",
     "models": "assets/configs/models_config_fallback.json"
   },
-  "last_used_subset": null
+  "active_subset": null
 }

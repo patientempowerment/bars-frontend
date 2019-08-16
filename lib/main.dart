@@ -48,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;
-  Map<String, dynamic> serverConfig;
+  Map<String, dynamic> appConfig;
   Map<String, dynamic> userInputs;
   Map<String, bool> activeInputFields;
   Map<String, dynamic> modelsConfig;
@@ -62,12 +62,8 @@ class MyHomePageState extends State<MyHomePage> {
   void initState() {
     initializeData().then((result) {
       setState(() {
-        modelsConfig = result["subset"]["models_config"];
-        featuresConfig = result["subset"]["features_config"];
-        labelsConfig = generateLabelsConfig(result["subset"]["columns"]);
-        userInputs = generateDefaultInputValues(featuresConfig);
-        activeInputFields = deactivateInputFields(featuresConfig);
-        serverConfig = result["server_config"];
+        appConfig = result["server_config"];
+        setConfig(result["subset"], appConfig["active_subset"]);
       });
     });
 /* OLD SHIT
@@ -76,12 +72,23 @@ class MyHomePageState extends State<MyHomePage> {
         modelsConfig = result[0];
         featuresConfig = result[1];
         labelsConfig = result[2];
-        serverConfig = result[3];
+        appConfig = result[3];
         userInputs = generateDefaultInputValues(featuresConfig);
         activeInputFields = deactivateInputFields(featuresConfig);
       });
     });*/
     super.initState();
+  }
+
+  setConfig(Map<String, dynamic> fullConfig, String subsetName) {
+    setState (() {
+      modelsConfig = fullConfig["models_config"];
+      featuresConfig = fullConfig["features_config"];
+      labelsConfig = generateLabelsConfig(fullConfig["columns"]);
+      userInputs = generateDefaultInputValues(featuresConfig);
+      activeInputFields = deactivateInputFields(featuresConfig);
+      appConfig["active_subset"] = subsetName;
+    });
   }
 
   @override

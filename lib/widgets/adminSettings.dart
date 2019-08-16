@@ -11,7 +11,7 @@ class AdminDrawer extends StatefulWidget {
 
   @override //TODO: always have features represent actual features - > just invis until requested
   State<StatefulWidget> createState() {
-    return AdminDrawerState(homePageState, homePageState.serverConfig);
+    return AdminDrawerState(homePageState, homePageState.appConfig);
   }
 }
 
@@ -19,11 +19,11 @@ class AdminDrawerState extends State<AdminDrawer>
     with SingleTickerProviderStateMixin {
   MyHomePageState homePageState;
 
-  AdminDrawerState(this.homePageState, this.serverConfig);
+  AdminDrawerState(this.homePageState, this.appConfig);
 
   TabController tabController;
   SubsetFetchState syncState = SubsetFetchState.Fetching;
-  Map<String, dynamic> serverConfig;
+  Map<String, dynamic> appConfig;
   Map<String, dynamic> subsets;
   Map<String, dynamic> features = {
     " ": {"title": " "}
@@ -65,7 +65,7 @@ class AdminDrawerState extends State<AdminDrawer>
   }
 
   _fetchSubsets() {
-      getDatabase(serverConfig).then((result) {
+      getDatabase(appConfig).then((result) {
         setState(() {
           subsets = result ?? {};
           for (var subset in subsets.entries) {
@@ -82,12 +82,12 @@ class AdminDrawerState extends State<AdminDrawer>
   }
 
   _trainModels(String name, Map<String, dynamic> subset) {
-    serverConfig['database']['collection'] = name;
+    appConfig['database']['collection'] = name;
 
     setState(() {
       subsets[name]["syncButtonState"] = SyncButtonState.Syncing;
     });
-    trainModels(serverConfig).then((result) async {
+    trainModels(appConfig).then((result) async {
       await writeJSON('subsets/', name, result);
       setState(() {
         subsets[name]["syncButtonState"] = SyncButtonState.Synced;
@@ -221,7 +221,7 @@ class AdminDrawerState extends State<AdminDrawer>
                               child: ListTile(
                                   key: Key(name),
                                   title: Text(name),
-                                  onTap: () => null
+                                  onTap: () => selectConfig(name)
                               )
                           ),
                         ],
@@ -231,6 +231,11 @@ class AdminDrawerState extends State<AdminDrawer>
         ),
       ],
     );
+  }
+
+  selectConfig(String configName) async {
+    Map<String, dynamic> fullConfig = await readJSON("subsets", configName);
+    homePageState.setConfig(fullConfig, configName);
   }
 
   Widget makeAnimator(int seconds, int repeats, Widget icon) {
@@ -274,7 +279,7 @@ class AdminDrawerState extends State<AdminDrawer>
                   border: InputBorder.none,
                   hintText: 'Enter collection to use'),
               onSubmitted: (String newCollection) {
-                serverConfig['database']['collection'] = newCollection;
+                appConfig['database']['collection'] = newCollection;
               },
             ),
           ),
