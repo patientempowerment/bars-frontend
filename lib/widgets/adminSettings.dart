@@ -224,6 +224,12 @@ class AdminDrawerState extends State<AdminDrawer>
                                   onTap: () => selectConfig(name)
                               )
                           ),
+                          FlatButton.icon(
+                                onPressed: null,
+                                icon: Icon(Icons.settings, color: Colors.pink),
+                                label: Text(""),
+                                padding: EdgeInsets.all(0.0)
+                          ),
                         ],
                       ));
                 }),
