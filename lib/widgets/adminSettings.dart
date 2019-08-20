@@ -113,7 +113,7 @@ class AdminDrawerState extends State<AdminDrawer>
     );
   }
 
-  Widget loadingButton(String subsetName) {
+  Widget getLoadingButton(String subsetName) {
     SyncButtonState buttonState = subsets[subsetName]["syncButtonState"];
 
     Widget child;
@@ -127,7 +127,7 @@ class AdminDrawerState extends State<AdminDrawer>
     } else if (buttonState == SyncButtonState.Syncing) {
       buttonColor = Colors.white;
       borderColor = Colors.white;
-      child = makeAnimator(1, 0, Icon(Icons.autorenew, color: Colors.blue));
+      child = getAnimator(1, 0, Icon(Icons.autorenew, color: Colors.blue));
     } else if (buttonState == SyncButtonState.Synced) {
       buttonColor = Colors.white;
       borderColor = Colors.white;
@@ -153,10 +153,10 @@ class AdminDrawerState extends State<AdminDrawer>
     );
   }
 
-  Widget syncPage() {
+  Widget getSyncPage() {
     Widget content;
     if (syncState == SubsetFetchState.Fetching) {
-      content = makeAnimator(1, 0, Icon(
+      content = getAnimator(1, 0, Icon(
           Icons.autorenew,
           color: Colors.blue,
           size: MediaQuery
@@ -184,7 +184,7 @@ class AdminDrawerState extends State<AdminDrawer>
                                 }))),
                     Padding(
                       padding: const EdgeInsets.only(right: 10.0),
-                      child: loadingButton(name),
+                      child: getLoadingButton(name),
                     )
                   ],
                 ));
@@ -205,7 +205,7 @@ class AdminDrawerState extends State<AdminDrawer>
     );
   }
 
-  Widget configPage() {
+  Widget getConfigPage() {
     return Column(
       children: <Widget>[
         Flexible(
@@ -244,7 +244,7 @@ class AdminDrawerState extends State<AdminDrawer>
     homePageState.setConfig(fullConfig, configName);
   }
 
-  Widget makeAnimator(int seconds, int repeats, Widget icon) {
+  Widget getAnimator(int seconds, int repeats, Widget icon) {
     return Animator(
         tween: Tween<double>(begin: 0, end: 2 * pi),
         duration: Duration(seconds: seconds),
@@ -267,8 +267,8 @@ class AdminDrawerState extends State<AdminDrawer>
     return TabBarView(
         controller: tabController,
         children: <Widget>[
-          syncPage(),
-          configPage()
+          getSyncPage(),
+          getConfigPage()
         ]);
   }
 /*
