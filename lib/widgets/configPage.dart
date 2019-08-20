@@ -20,6 +20,7 @@ class _ConfigPageState extends State<ConfigPage>{
   _ConfigPageState(this.adminSettingsState);
 
   Map<String, dynamic> subsetsConfigs = {};
+  Map<String, bool> cardsOpen = {};
   Map<String, TextEditingController> textEditingControllers = {};
 
   @override
@@ -29,7 +30,7 @@ class _ConfigPageState extends State<ConfigPage>{
       _loadConfigs(configNames).then((result){
         subsetsConfigs.forEach((name,config) {
          textEditingControllers[name] = TextEditingController(text: jsonEncode(config["features_config"]));
-
+         cardsOpen[name] = false;
         });
       });
     });
@@ -52,7 +53,10 @@ class _ConfigPageState extends State<ConfigPage>{
 
   _selectConfig(String configName) async {
     Map<String, dynamic> fullConfig = await readJSON("subsets", configName);
-    adminSettingsState.homePageState.setConfig(fullConfig, configName);
+    setState(() {
+      adminSettingsState.homePageState.setConfig(fullConfig, configName);
+    });
+
   }
 
   _getSaveConfigButton(String name, TextEditingController textEditingController) {
@@ -78,6 +82,12 @@ class _ConfigPageState extends State<ConfigPage>{
         icon: Icon(Icons.save, color: iconColor),
         label: text,
         padding: EdgeInsets.all(0.0));
+  }
+
+  _toggleCardState(name) {
+    setState(() {
+      cardsOpen[name] = !cardsOpen[name];
+    });
   }
 
   _getConfigurationArea(String name) {
@@ -116,19 +126,30 @@ class _ConfigPageState extends State<ConfigPage>{
                         children: <Widget>[
                           Row(
                             children: <Widget>[
+                              FlatButton.icon(
+                                  onPressed: () => _toggleCardState(name),
+                                  label: Text(""),
+                                  icon: cardsOpen[name]
+                                    ? Icon(Icons.keyboard_arrow_down, color: Colors.grey)
+                                    : Icon(Icons.keyboard_arrow_right, color: Colors.grey)
+                              ),
                               Flexible(
                                   child: ListTile(
                                       key: Key(name),
                                       title: Text(name),
-                                      onTap: () => _selectConfig(name))),
-                              FlatButton.icon(
-                                  onPressed: null,
-                                  icon: Icon(Icons.settings, color: Colors.pink),
+                                      onTap: () => _toggleCardState(name))),
+                              Radio(
+                                  groupValue: adminSettingsState.homePageState.appConfig["active_subset"],
+                                  value: name,
+                                  onChanged: (param) => _selectConfig(name))
+                              /*FlatButton.icon(
+                                  onPressed: () => _selectConfig(name),
+                                  icon: Icon(Icons.fastfood, color: Colors.deepPurple),
                                   label: Text(""),
-                                  padding: EdgeInsets.all(0.0))
+                                  padding: EdgeInsets.all(0.0))*/
                             ],
                           ),
-                          _getConfigurationArea(name)
+                          if(cardsOpen[name]) _getConfigurationArea(name)
                         ],
                       ));
                 }),
