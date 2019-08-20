@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'dart:convert';
 import 'package:bars_frontend/widgets/adminSettings.dart';
@@ -7,18 +6,18 @@ import 'package:bars_frontend/widgets/adminSettings.dart';
 class ConfigPage extends StatefulWidget {
   final AdminSettingsState adminSettingsState;
 
-  ConfigPage(this.adminSettingsState, {Key key}) : super(key: key);
+  ConfigPage(this.adminSettingsState);
 
-  @override //TODO: always have features represent actual features - > just invis until requested
+  @override
   State<StatefulWidget> createState() {
-    return ConfigPageState(adminSettingsState);
+    return _ConfigPageState(adminSettingsState);
   }
 }
 
-class ConfigPageState extends State<ConfigPage>{
+class _ConfigPageState extends State<ConfigPage>{
 
   AdminSettingsState adminSettingsState;
-  ConfigPageState(this.adminSettingsState);
+  _ConfigPageState(this.adminSettingsState);
 
   Map<String, dynamic> subsetsConfigs = {};
   Map<String, TextEditingController> textEditingControllers = {};
