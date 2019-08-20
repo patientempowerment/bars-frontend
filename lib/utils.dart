@@ -35,13 +35,17 @@ directoryContents(String subDir) async {
 
 readJSON(String subDir, String name) async {
   final rootDir = await getApplicationDocumentsDirectory();
+  if (!subDir.endsWith('/'))
+    subDir += '/';
   ensureDirExistence(rootDir.path + '/' + subDir); // TODO: need this?
-  String json = await new File(rootDir.path + '/' + subDir + '/' + name + '.json').readAsString();
+  String json = await new File(rootDir.path + '/' + subDir + name + '.json').readAsString();
   return jsonDecode(json);
 }
 
 writeJSON(String subDir, String filename, Map<String, dynamic> content) async {
   String json = jsonEncode(content);
+  if (!subDir.endsWith('/'))
+    subDir += '/';
   final rootDir = await getApplicationDocumentsDirectory();
   ensureDirExistence(rootDir.path + '/' + subDir);
   await new File(rootDir.path + '/' + subDir + filename + '.json').writeAsString(json);

@@ -3,39 +3,36 @@ import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:animator/animator.dart';
 import 'dart:math';
+import 'package:bars_frontend/widgets/configPage.dart';
 
-class AdminDrawer extends StatefulWidget {
+class AdminSettings extends StatefulWidget {
   final MyHomePageState homePageState;
 
-  AdminDrawer(this.homePageState, {Key key}) : super(key: key);
+  AdminSettings(this.homePageState, {Key key}) : super(key: key);
 
   @override //TODO: always have features represent actual features - > just invis until requested
   State<StatefulWidget> createState() {
-    return AdminDrawerState(homePageState, homePageState.appConfig);
+    return AdminSettingsState(homePageState, homePageState.appConfig);
   }
 }
 
-class AdminDrawerState extends State<AdminDrawer>
+class AdminSettingsState extends State<AdminSettings>
     with SingleTickerProviderStateMixin {
   MyHomePageState homePageState;
+  AdminSettingsState(this.homePageState, this.appConfig);
 
-  AdminDrawerState(this.homePageState, this.appConfig);
 
-  TabController tabController;
-  SubsetFetchState syncState = SubsetFetchState.Fetching;
+  //configs
   Map<String, dynamic> appConfig;
   Map<String, dynamic> subsets;
-  Map<String, dynamic> features = {
-    " ": {"title": " "}
-  }; //TODO: this breaks as it has no active
-  Map<String, dynamic> fetchButton = {"enabled": true, "hasBeenPressed": false};
-  Map<String, dynamic> trainButton = {
-    "enabled": false,
-    "hasBeenPressed": false
-  };
-  Map<String, dynamic> subsetConfigs = {};
-  List<String> subsetConfigNames = [];
+
+  //controllers
+  TabController tabController;
+
+  //state
+  SubsetFetchState syncState = SubsetFetchState.Fetching;
   String errorMessage;
+  ConfigPage configPage;
 
   @override
   bool get wantKeepAlive => true;
@@ -45,13 +42,7 @@ class AdminDrawerState extends State<AdminDrawer>
     super.initState();
     subsets = _fetchSubsets();
     tabController = TabController(length: 2, vsync: this);
-    _getConfigNames().then((result) {
-      subsetConfigNames = result;
-    });
-  }
-
-  _getConfigNames() async {
-    return directoryContents('subsets/');
+    configPage = ConfigPage(this);
   }
 
   _setSubsetTile(title) {
@@ -65,20 +56,20 @@ class AdminDrawerState extends State<AdminDrawer>
   }
 
   _fetchSubsets() {
-      getDatabase(appConfig).then((result) {
-        setState(() {
-          subsets = result ?? {};
-          for (var subset in subsets.entries) {
-            subset.value["syncButtonState"] = SyncButtonState.Ready;
-          }
-          syncState = SubsetFetchState.Fetched;
-        });
-      }).catchError((e) {
-        setState(() {
-          errorMessage = e.toString();
-          syncState = SubsetFetchState.Error;
-        });
+    getDatabase(appConfig).then((result) {
+      setState(() {
+        subsets = result ?? {};
+        for (var subset in subsets.entries) {
+          subset.value["syncButtonState"] = SyncButtonState.Ready;
+        }
+        syncState = SubsetFetchState.Fetched;
       });
+    }).catchError((e) {
+      setState(() {
+        errorMessage = e.toString();
+        syncState = SubsetFetchState.Error;
+      });
+    });
   }
 
   _trainModels(String name, Map<String, dynamic> subset) {
@@ -92,25 +83,23 @@ class AdminDrawerState extends State<AdminDrawer>
       setState(() {
         subsets[name]["syncButtonState"] = SyncButtonState.Synced;
       });
-    }).catchError((e) =>
-    {
-      setState(() {
-        subsets[name]["syncButtonState"] = SyncButtonState.Error;
-      }),
-      print(e)
-    });
+    }).catchError((e) => {
+          setState(() {
+            subsets[name]["syncButtonState"] = SyncButtonState.Error;
+          }),
+          print(e)
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
         child: Column(
-          children: <Widget>[
-            SafeArea(child: getTabBar()),
-            Flexible(child: getTabBarPages())
-          ],
-        )
-    );
+      children: <Widget>[
+        SafeArea(child: getTabBar()),
+        Flexible(child: getTabBarPages())
+      ],
+    ));
   }
 
   Widget getLoadingButton(String subsetName) {
@@ -156,16 +145,12 @@ class AdminDrawerState extends State<AdminDrawer>
   Widget getSyncPage() {
     Widget content;
     if (syncState == SubsetFetchState.Fetching) {
-      content = getAnimator(1, 0, Icon(
-          Icons.autorenew,
-          color: Colors.blue,
-          size: MediaQuery
-              .of(context)
-              .size
-              .width / 8)
-      );
-    }
-    else if (syncState == SubsetFetchState.Fetched) {
+      content = getAnimator(
+          1,
+          0,
+          Icon(Icons.autorenew,
+              color: Colors.blue, size: MediaQuery.of(context).size.width / 8));
+    } else if (syncState == SubsetFetchState.Fetched) {
       content = ListView.builder(
           shrinkWrap: true,
           itemCount: (subsets ??= {}).length,
@@ -173,24 +158,22 @@ class AdminDrawerState extends State<AdminDrawer>
             String name = subsets.keys.toList()[position];
             return Card(
                 child: Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: ListTile(
-                            key: Key(name),
-                            title: Text(name),
-                            onTap: () =>
-                                setState(() {
-                                  _setSubsetTile(name);
-                                }))),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: getLoadingButton(name),
-                    )
-                  ],
-                ));
+              children: <Widget>[
+                Flexible(
+                    child: ListTile(
+                        key: Key(name),
+                        title: Text(name),
+                        onTap: () => setState(() {
+                              _setSubsetTile(name);
+                            }))),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: getLoadingButton(name),
+                )
+              ],
+            ));
           });
-    }
-    else if (syncState == SubsetFetchState.Error){
+    } else if (syncState == SubsetFetchState.Error) {
       content = Column(
         children: <Widget>[
           Icon(Icons.error, color: Colors.red),
@@ -205,44 +188,7 @@ class AdminDrawerState extends State<AdminDrawer>
     );
   }
 
-  Widget getConfigPage() {
-    return Column(
-      children: <Widget>[
-        Flexible(
-          child: Center(
-            child: ListView.builder(
-                itemCount: (subsetConfigNames ??= []).length,
-                itemBuilder: (context, position) {
-                  String name = subsetConfigNames[position];
-                  return Card(
-                      child: Row(
-                        children: <Widget>[
-                          Flexible(
-                              child: ListTile(
-                                  key: Key(name),
-                                  title: Text(name),
-                                  onTap: () => selectConfig(name)
-                              )
-                          ),
-                          FlatButton.icon(
-                                onPressed: null,
-                                icon: Icon(Icons.settings, color: Colors.pink),
-                                label: Text(""),
-                                padding: EdgeInsets.all(0.0)
-                          ),
-                        ],
-                      ));
-                }),
-          ),
-        ),
-      ],
-    );
-  }
 
-  selectConfig(String configName) async {
-    Map<String, dynamic> fullConfig = await readJSON("subsets", configName);
-    homePageState.setConfig(fullConfig, configName);
-  }
 
   Widget getAnimator(int seconds, int repeats, Widget icon) {
     return Animator(
@@ -253,23 +199,20 @@ class AdminDrawerState extends State<AdminDrawer>
   }
 
   Widget getTabBar() {
-    return TabBar(
-        controller: tabController,
-        tabs: [
-          Tab(child: Text("Data Sync", style: TextStyle(color: Colors.blue)),
-              icon: Icon(Icons.autorenew, color: Colors.blue)),
-          Tab(child: Text("Config", style: TextStyle(color: Colors.blue)),
-              icon: Icon(Icons.settings, color: Colors.blue))
-        ]);
+    return TabBar(controller: tabController, tabs: [
+      Tab(
+          child: Text("Data Sync", style: TextStyle(color: Colors.blue)),
+          icon: Icon(Icons.autorenew, color: Colors.blue)),
+      Tab(
+          child: Text("Config", style: TextStyle(color: Colors.blue)),
+          icon: Icon(Icons.settings, color: Colors.blue))
+    ]);
   }
 
   Widget getTabBarPages() {
     return TabBarView(
         controller: tabController,
-        children: <Widget>[
-          getSyncPage(),
-          getConfigPage()
-        ]);
+        children: <Widget>[getSyncPage(), configPage]);
   }
 /*
   @override
