@@ -122,6 +122,7 @@ class _ConfigPageState extends State<ConfigPage> {
     );
   }
 
+  //Functional, but not "usable"
   _getFeaturesConfigurationArea(String name) {
     return Flexible(
       fit: FlexFit.loose,
@@ -144,6 +145,9 @@ class _ConfigPageState extends State<ConfigPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    String activeSubset = adminSettingsState.homePageState.appConfig["active_subset"];
+
     return Column(
       children: <Widget>[
         Flexible(
@@ -152,40 +156,34 @@ class _ConfigPageState extends State<ConfigPage> {
                 itemCount: (subsetsConfigs.keys).length,
                 itemBuilder: (context, position) {
                   String name = subsetsConfigs.keys.toList()[position];
-                  return Card(
-                      child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          FlatButton.icon(
-                              onPressed: () => _toggleCardState(name),
-                              label: Text(""),
-                              icon: cardsOpen[name]
-                                  ? Icon(Icons.keyboard_arrow_down,
-                                      color: Colors.grey)
-                                  : Icon(Icons.keyboard_arrow_right,
-                                      color: Colors.grey)),
-                          Flexible(
-                              child: ListTile(
-                                  key: Key(name),
-                                  title: Text(name),
-                                  onTap: () => _toggleCardState(name))),
-                          Radio(
-                              groupValue: adminSettingsState
-                                  .homePageState.appConfig["active_subset"],
-                              value: name,
-                              onChanged: (param) => _selectConfig(name))
-                          /*FlatButton.icon(
-                                  onPressed: () => _selectConfig(name),
-                                  icon: Icon(Icons.fastfood, color: Colors.deepPurple),
-                                  label: Text(""),
-                                  padding: EdgeInsets.all(0.0))*/
-                        ],
-                      ),
-                      if (cardsOpen[name]) _getLabelsConfigurationArea(name)
-                    ],
-                  ));
+                  return Container(
+                    decoration: (activeSubset == name) ? BoxDecoration(border: Border.all(width: 4, color: Colors.lightBlueAccent), borderRadius: BorderRadius.all(Radius.circular(5.0))):null,
+                    child: Card(
+                      elevation: (activeSubset == name) ? 4 : 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 1.0),
+                          child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Flexible(
+                                  child: ListTile(
+                                      key: Key(name),
+                                      title: Text(name),
+                                      onTap: () => _selectConfig(name))),
+                              Radio(
+                                  groupValue: adminSettingsState
+                                      .homePageState.appConfig["active_subset"],
+                                  value: name,
+                                  onChanged: (param) => _selectConfig(name))
+                            ],
+                          ),
+                          if (activeSubset == name) _getLabelsConfigurationArea(name)
+                      ],
+                    ),
+                        )),
+                  );
                 }),
           ),
         ),
