@@ -110,10 +110,11 @@ class _ConfigPageState extends State<ConfigPage> {
                 value: adminSettingsState.homePageState.labelsConfig[labelName]
                     ["active"],
                 onChanged: (value) {
-                  setState(() {
+                  adminSettingsState.homePageState.setState(() {
                     adminSettingsState.homePageState.labelsConfig[labelName]
                         ["active"] = value;
                   });
+                  setState(() {});
                 },
               )),
             ]));

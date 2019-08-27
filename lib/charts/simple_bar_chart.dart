@@ -30,9 +30,11 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
   var data = mapToTupleList(labelValues);
 
   // replace labels with labelTitles
-  data.asMap().forEach((i, tuple) {
-    data[i] = tuple.withItem1(labelTitles[tuple.item1]["title"]);
-  });
+  if(labelTitles.isNotEmpty) {
+    data.asMap().forEach((i, tuple) {
+      data[i] = tuple.withItem1(labelTitles[tuple.item1]["title"]);
+    });
+  }
 
   return [ //TODO: make a utils func that creates charts.series from maps
     charts.Series<Tuple2<String, dynamic>, String>(

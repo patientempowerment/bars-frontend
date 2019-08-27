@@ -146,7 +146,7 @@ generateLabelsConfig(columns) {
   for (var label in columns) {
     Map<String, dynamic> label_config = {};
     label_config["title"] = label;
-    label_config["active"] = false;
+    label_config["active"] = true;
     labels_config[label] = label_config;
   }
 

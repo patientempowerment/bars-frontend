@@ -25,6 +25,11 @@ class BarsPrototypeState extends State<BarsPrototype> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> activeLabels = new Map<String, dynamic>.from(homePageState.labelsConfig);
+    activeLabels.removeWhere((key, value) => value["active"] == false);
+
+    Map<String, dynamic> activeModels = new Map<String, dynamic>.from(homePageState.modelsConfig);
+    activeModels.removeWhere((key, value) => !activeLabels.containsKey(key));
     return Row(
       children: [
         Expanded(
@@ -39,8 +44,8 @@ class BarsPrototypeState extends State<BarsPrototype> {
         Flexible(
           child: SimpleBarChart(mapChartData(
               getLabelProbabilities(homePageState.userInputs,
-                  homePageState.modelsConfig, predictMode),
-              homePageState.labelsConfig)),
+                  activeModels, predictMode),
+              activeLabels))
         ),
       ],
     );
