@@ -14,9 +14,9 @@ class ConfigPage extends StatefulWidget {
   }
 }
 
-class _ConfigPageState extends State<ConfigPage>{
-
+class _ConfigPageState extends State<ConfigPage> {
   AdminSettingsState adminSettingsState;
+
   _ConfigPageState(this.adminSettingsState);
 
   Map<String, dynamic> subsetsConfigs = {};
@@ -27,10 +27,11 @@ class _ConfigPageState extends State<ConfigPage>{
   void initState() {
     super.initState();
     _getConfigNames().then((configNames) {
-      _loadConfigs(configNames).then((result){
-        subsetsConfigs.forEach((name,config) {
-         textEditingControllers[name] = TextEditingController(text: jsonEncode(config["features_config"]));
-         cardsOpen[name] = false;
+      _loadConfigs(configNames).then((result) {
+        subsetsConfigs.forEach((name, config) {
+          textEditingControllers[name] = TextEditingController(
+              text: jsonEncode(config["features_config"]));
+          cardsOpen[name] = false;
         });
       });
     });
@@ -56,23 +57,23 @@ class _ConfigPageState extends State<ConfigPage>{
     setState(() {
       adminSettingsState.homePageState.setConfig(fullConfig, configName);
     });
-
   }
 
-  _getSaveConfigButton(String name, TextEditingController textEditingController) {
+  _getSaveConfigButton(
+      String name, TextEditingController textEditingController) {
     Function function;
     Color iconColor = Colors.green;
-    Text text= Text("");
+    Text text = Text("");
     try {
       jsonDecode(textEditingController.text);
       function = () async {
         setState(() {
-          subsetsConfigs[name]["features_config"] = jsonDecode(textEditingController.text);
+          subsetsConfigs[name]["features_config"] =
+              jsonDecode(textEditingController.text);
         });
         await writeJSON("subsets", name, subsetsConfigs[name]);
       };
-    }
-    catch (e) {
+    } catch (e) {
       function = null;
       iconColor = Colors.grey;
       text = Text(e.toString());
@@ -90,7 +91,37 @@ class _ConfigPageState extends State<ConfigPage>{
     });
   }
 
-  _getConfigurationArea(String name) {
+  _getLabelsConfigurationArea(String name) {
+    Map<String, dynamic> subsetConfig = subsetsConfigs[name];
+    return ConstrainedBox(
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 2),
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: (subsetConfig["features_config"].keys).length,
+          itemBuilder: (context, position) {
+            String labelName =
+                subsetConfig["features_config"].keys.toList()[position];
+            return Card(
+                child: Row(children: <Widget>[
+              Flexible(
+                  child: CheckboxListTile(
+                title: Text(labelName),
+                value: adminSettingsState.homePageState.labelsConfig[labelName]
+                    ["active"],
+                onChanged: (value) {
+                  setState(() {
+                    adminSettingsState.homePageState.labelsConfig[labelName]
+                        ["active"] = value;
+                  });
+                },
+              )),
+            ]));
+          }),
+    );
+  }
+
+  _getFeaturesConfigurationArea(String name) {
     return Flexible(
       fit: FlexFit.loose,
       child: Column(
@@ -101,7 +132,7 @@ class _ConfigPageState extends State<ConfigPage>{
             child: TextField(
               maxLines: null,
               controller: textEditingControllers[name],
-              onChanged: (text) => setState((){}),
+              onChanged: (text) => setState(() {}),
             ),
           ),
           _getSaveConfigButton(name, textEditingControllers[name])
@@ -122,36 +153,38 @@ class _ConfigPageState extends State<ConfigPage>{
                   String name = subsetsConfigs.keys.toList()[position];
                   return Card(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
                         children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              FlatButton.icon(
-                                  onPressed: () => _toggleCardState(name),
-                                  label: Text(""),
-                                  icon: cardsOpen[name]
-                                    ? Icon(Icons.keyboard_arrow_down, color: Colors.grey)
-                                    : Icon(Icons.keyboard_arrow_right, color: Colors.grey)
-                              ),
-                              Flexible(
-                                  child: ListTile(
-                                      key: Key(name),
-                                      title: Text(name),
-                                      onTap: () => _toggleCardState(name))),
-                              Radio(
-                                  groupValue: adminSettingsState.homePageState.appConfig["active_subset"],
-                                  value: name,
-                                  onChanged: (param) => _selectConfig(name))
-                              /*FlatButton.icon(
+                          FlatButton.icon(
+                              onPressed: () => _toggleCardState(name),
+                              label: Text(""),
+                              icon: cardsOpen[name]
+                                  ? Icon(Icons.keyboard_arrow_down,
+                                      color: Colors.grey)
+                                  : Icon(Icons.keyboard_arrow_right,
+                                      color: Colors.grey)),
+                          Flexible(
+                              child: ListTile(
+                                  key: Key(name),
+                                  title: Text(name),
+                                  onTap: () => _toggleCardState(name))),
+                          Radio(
+                              groupValue: adminSettingsState
+                                  .homePageState.appConfig["active_subset"],
+                              value: name,
+                              onChanged: (param) => _selectConfig(name))
+                          /*FlatButton.icon(
                                   onPressed: () => _selectConfig(name),
                                   icon: Icon(Icons.fastfood, color: Colors.deepPurple),
                                   label: Text(""),
                                   padding: EdgeInsets.all(0.0))*/
-                            ],
-                          ),
-                          if(cardsOpen[name]) _getConfigurationArea(name)
                         ],
-                      ));
+                      ),
+                      if (cardsOpen[name]) _getLabelsConfigurationArea(name)
+                    ],
+                  ));
                 }),
           ),
         ),
