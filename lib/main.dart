@@ -1,11 +1,11 @@
-import 'package:bars_frontend/widgets/barsPrototype.dart';
-import 'package:bars_frontend/widgets/bubblesPrototype.dart';
+import 'package:bars_frontend/widgets/bars.dart';
+import 'package:bars_frontend/widgets/bubblesPage.dart';
 import 'package:bars_frontend/widgets/buttons.dart';
 import 'package:bars_frontend/widgets/adminSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(EmpowerApp());
 
 const double PARTICLE_SIZE = 5.0;
 const double STANDARD_PADDING = 5.0;
@@ -17,7 +17,7 @@ const int MAX_PARTICLES = 5;
 const double STANDARD_DIALOG_WIDTH = 600.0;
 const double STANDARD_DIALOG_HEIGHT = 150.0;
 
-class MyApp extends StatelessWidget {
+class EmpowerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,25 +26,25 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Empower'),
+      home: HomePage(title: 'Empower'),
     );
   }
 }
 
 /// Represents main widget in app, consisting of two pages: bars and bubble prototype.
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  MyHomePageState createState() => MyHomePageState();
+  HomePageState createState() => HomePageState();
 }
 
 /// [userInputs] Maps features and their current input (filled with averages for dataset at beginning).
 /// [modelsConfig] Models are represented as mappings from labels to their intercept and features, whereby features each contain their coefficients and mean value for given data set (see assets/models_config_fallback.json for example)
 /// [featuresConfig] Map of features to their user-facing names and their selectable min/max values or choices)
-class MyHomePageState extends State<MyHomePage> {
+class HomePageState extends State<HomePage> {
   double globalWidth;
   double globalHeight;
   Map<String, dynamic> appConfig;
@@ -95,7 +95,7 @@ class MyHomePageState extends State<MyHomePage> {
             ),
             body: Container(
               padding: EdgeInsets.all(40.0),
-              child: BarsPrototype(this),
+              child: Bars(this),
             ),
             drawer: AdminSettings(this, key: adminDrawerKey),
             floatingActionButton: ResetButton(this),
@@ -106,7 +106,7 @@ class MyHomePageState extends State<MyHomePage> {
             ),
             body: Container(
               padding: EdgeInsets.all(STANDARD_PADDING * 2),
-              child: BubblePrototype(this),
+              child: BubblesPage(this),
             ),
             floatingActionButton: ResetButton(this),
           ),

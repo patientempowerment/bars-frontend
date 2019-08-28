@@ -174,7 +174,7 @@ deactivateInputFields(featureConfig) {
 
 /// Creates either a radio button or a slider for [feature].
 /// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
-buildInputWidget(MyHomePageState homePageState, State context,
+buildInputWidget(HomePageState homePageState, State context,
     MapEntry<String, dynamic> feature) {
   if (feature.value["choices"] != null) {
     return getRadioButtonInputRow(homePageState, context, feature);
@@ -199,7 +199,7 @@ Color computeColorByFactor(double factor) {
 }
 
 /// Returns color for active and inactive input field.
-getActivityColor (MyHomePageState homePageState, String featureKey){
+getActivityColor (HomePageState homePageState, String featureKey){
   return homePageState.activeInputFields[featureKey]
       ? Colors.blue
       : Colors.grey;

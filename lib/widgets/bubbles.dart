@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'package:bars_frontend/predictions.dart';
-import 'bubblesPrototype.dart';
+import 'bubblesPage.dart';
 import 'dialogs.dart';
 
 /// Represents a draggable widget in a circular shape.
@@ -17,8 +17,8 @@ class FeatureBubble extends StatefulWidget {
   final Offset initialOffset;
   final double width;
   final double labelBubbleWidth;
-  final MyHomePageState homePageState;
-  final BubblePrototypeState bubblePrototypeState;
+  final HomePageState homePageState;
+  final BubblesPageState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
 
   FeatureBubble(this.initialOffset, this.width, this.labelBubbleWidth,
@@ -37,8 +37,8 @@ class FeatureBubble extends StatefulWidget {
 /// [width] changes when the bubble is dragged the first time.
 class FeatureBubbleState extends State<FeatureBubble>
     with SingleTickerProviderStateMixin {
-  final MyHomePageState homePageState;
-  final BubblePrototypeState bubblePrototypeState;
+  final HomePageState homePageState;
+  final BubblesPageState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
   final double labelBubbleWidth;
   double width;
@@ -178,7 +178,7 @@ class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
   final double dimensions;
-  final MyHomePageState homePageState;
+  final HomePageState homePageState;
 
   LabelBubble(this.title, this.position, this.dimensions, this.homePageState);
 

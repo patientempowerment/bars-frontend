@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import '../utils.dart';
-import 'barsPrototype.dart';
+import 'bars.dart';
 
-/// A [FloatingActionButton] that resets the userInputs of [MyHomePageState] to their default values.
+/// A [FloatingActionButton] that resets the userInputs of [HomePageState] to their default values.
 class ResetButton extends StatelessWidget {
-  final MyHomePageState homePageState;
+  final HomePageState homePageState;
 
   ResetButton(this.homePageState);
 
@@ -26,7 +26,7 @@ class ResetButton extends StatelessWidget {
 
 /// A button that starts or ends [predictMode] in [barsPrototypeState].
 class PredictModeButton extends StatelessWidget {
-  final BarsPrototypeState barsPrototypeState;
+  final BarsState barsPrototypeState;
 
   PredictModeButton(this.barsPrototypeState);
 

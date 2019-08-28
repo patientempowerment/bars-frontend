@@ -13,26 +13,26 @@ Widget getCenterImage(double width, Offset position) {
 }
 
 /// Second prototype with bubbles as input and output representation.
-class BubblePrototype extends StatefulWidget {
-  final MyHomePageState homePageState;
+class BubblesPage extends StatefulWidget {
+  final HomePageState homePageState;
 
-  BubblePrototype(this.homePageState);
+  BubblesPage(this.homePageState);
 
   @override
   State<StatefulWidget> createState() {
-    return BubblePrototypeState(homePageState);
+    return BubblesPageState(homePageState);
   }
 }
 
 /// [labelBubbleOffsets] Map of labels and their bubble position to let particles flow there.
-class BubblePrototypeState extends State<BubblePrototype> {
-  final MyHomePageState homePageState;
+class BubblesPageState extends State<BubblesPage> {
+  final HomePageState homePageState;
   double imageDimensions;
   Offset imagePosition;
   Map<String, Offset> labelBubbleOffsets = Map();
   List<Particle> particles = List();
 
-  BubblePrototypeState(this.homePageState);
+  BubblesPageState(this.homePageState);
 
   @override
   initState() {
