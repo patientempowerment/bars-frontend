@@ -121,7 +121,14 @@ getFeatureConfig(Map<String, dynamic> appConfig) async {
 }
 
 initializeData() async {
-  Map<String, dynamic> appConfig = await legacyReadJSON('assets/app_config.json');
+
+  Map<String, dynamic> appConfig = {};
+  try {
+    appConfig = await readJSON('/', 'app_config');
+  } catch (e) {
+    appConfig = await legacyReadJSON('assets/app_config.json');
+
+  }
   Map<String, dynamic> subset;
   Map<String, dynamic> response = {};
   if (appConfig["active_subset"] == null) {
@@ -133,7 +140,7 @@ initializeData() async {
     response["server_config"] = appConfig;
   }
   else {
-    subset = await legacyReadJSON('assets/subsets/' + appConfig["active_subset"] + '.json');
+    subset = await readJSON('subsets/', appConfig["active_subset"]);
     response["subset"] = subset;
     response["server_config"] = appConfig;
   }

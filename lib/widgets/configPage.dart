@@ -54,6 +54,11 @@ class _ConfigPageState extends State<ConfigPage> {
 
   _selectConfig(String configName) async {
     Map<String, dynamic> fullConfig = await readJSON("subsets", configName);
+
+    Map<String, dynamic> appConfig = adminSettingsState.homePageState.appConfig;
+
+    appConfig["active_subset"] = configName;
+    await writeJSON('/', 'app_config', appConfig);
     setState(() {
       adminSettingsState.homePageState.setConfig(fullConfig, configName);
     });
