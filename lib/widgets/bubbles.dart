@@ -17,7 +17,7 @@ class FeatureBubble extends StatefulWidget {
   final Offset initialOffset;
   final double width;
   final double labelBubbleWidth;
-  final HomePageState homePageState;
+  final HomepageState homePageState;
   final BubblesPageState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
 
@@ -37,7 +37,7 @@ class FeatureBubble extends StatefulWidget {
 /// [width] changes when the bubble is dragged the first time.
 class FeatureBubbleState extends State<FeatureBubble>
     with SingleTickerProviderStateMixin {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
   final BubblesPageState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
   final double labelBubbleWidth;
@@ -178,7 +178,7 @@ class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
   final double dimensions;
-  final HomePageState homePageState;
+  final HomepageState homePageState;
 
   LabelBubble(this.title, this.position, this.dimensions, this.homePageState);
 

@@ -5,7 +5,7 @@ import 'package:bars_frontend/utils.dart';
 /// Returns a [SimpleDialog] with the corresponding input option of [feature].
 /// [context] is the BuildContext of the calling widget to which the result of the input is passed.
 Future<dynamic> asyncInputDialog(BuildContext context,
-    HomePageState homePageState, MapEntry<String, dynamic> feature) async {
+    HomepageState homePageState, MapEntry<String, dynamic> feature) async {
   return showDialog<dynamic>(
     context: context,
     barrierDismissible: true,
@@ -50,7 +50,7 @@ Future<dynamic> asyncInputDialog(BuildContext context,
 
 /// Represents the content of the dialog, including an input option for [feature].
 class MyDialogContent extends StatefulWidget {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
   final MapEntry<String, dynamic> feature;
 
   MyDialogContent(this.homePageState, this.feature);
@@ -62,7 +62,7 @@ class MyDialogContent extends StatefulWidget {
 }
 
 class MyDialogContentState extends State<MyDialogContent> {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
   final MapEntry<String, dynamic> feature;
 
   MyDialogContentState(this.homePageState, this.feature);

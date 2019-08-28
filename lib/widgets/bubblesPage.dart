@@ -14,7 +14,7 @@ Widget getCenterImage(double width, Offset position) {
 
 /// Second prototype with bubbles as input and output representation.
 class BubblesPage extends StatefulWidget {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
 
   BubblesPage(this.homePageState);
 
@@ -26,7 +26,7 @@ class BubblesPage extends StatefulWidget {
 
 /// [labelBubbleOffsets] Map of labels and their bubble position to let particles flow there.
 class BubblesPageState extends State<BubblesPage> {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
   double imageDimensions;
   Offset imagePosition;
   Map<String, Offset> labelBubbleOffsets = Map();

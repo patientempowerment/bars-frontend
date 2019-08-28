@@ -3,14 +3,14 @@ import 'package:bars_frontend/main.dart';
 import '../utils.dart';
 
 /// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
-Widget getSliderInputRow(HomePageState homePageState, State parentState,
+Widget getSliderInputRow(HomepageState homePageState, State parentState,
     MapEntry<String, dynamic> feature) {
   return SliderInputRow(homePageState, parentState, feature);
 }
 
 /// Defines a slider that changes its color when dragged and is correlated to [feature].
 class SliderInputRow extends StatelessWidget {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
   final State parentState;
   final MapEntry<String, dynamic> feature;
   SliderInputRow(this.homePageState, this.parentState, this.feature);

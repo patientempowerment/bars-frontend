@@ -7,7 +7,7 @@ import 'package:bars_frontend/predictions.dart';
 
 /// Represents the first prototype, includes input fields left a button to trigger output and an output graph with bars.
 class Bars extends StatefulWidget {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
 
   Bars(this.homePageState);
   @override
@@ -18,7 +18,7 @@ class Bars extends StatefulWidget {
 
 /// [predictMode] determines whether output should be displayed.
 class BarsState extends State<Bars> {
-  HomePageState homePageState;
+  HomepageState homePageState;
   bool predictMode = false;
 
   BarsState(this.homePageState);

@@ -3,9 +3,9 @@ import 'package:bars_frontend/main.dart';
 import '../utils.dart';
 import 'bars.dart';
 
-/// A [FloatingActionButton] that resets the userInputs of [HomePageState] to their default values.
+/// A [FloatingActionButton] that resets the userInputs of [HomepageState] to their default values.
 class ResetButton extends StatelessWidget {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
 
   ResetButton(this.homePageState);
 

@@ -4,7 +4,7 @@ import 'package:bars_frontend/widgets/configPage.dart';
 import 'package:bars_frontend/widgets/syncPage.dart';
 
 class AdminSettings extends StatefulWidget {
-  final HomePageState homePageState;
+  final HomepageState homePageState;
 
   AdminSettings(this.homePageState, {Key key}) : super(key: key);
 
@@ -16,7 +16,7 @@ class AdminSettings extends StatefulWidget {
 
 class AdminSettingsState extends State<AdminSettings>
     with SingleTickerProviderStateMixin {
-  HomePageState homePageState;
+  HomepageState homePageState;
   AdminSettingsState(this.homePageState, this.appConfig);
 
 

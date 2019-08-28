@@ -26,25 +26,25 @@ class EmpowerApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Empower'),
+      home: Homepage(title: 'Empower'),
     );
   }
 }
 
 /// Represents main widget in app, consisting of two pages: bars and bubble prototype.
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+class Homepage extends StatefulWidget {
+  Homepage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  HomePageState createState() => HomePageState();
+  HomepageState createState() => HomepageState();
 }
 
 /// [userInputs] Maps features and their current input (filled with averages for dataset at beginning).
 /// [modelsConfig] Models are represented as mappings from labels to their intercept and features, whereby features each contain their coefficients and mean value for given data set (see assets/models_config_fallback.json for example)
 /// [featuresConfig] Map of features to their user-facing names and their selectable min/max values or choices)
-class HomePageState extends State<HomePage> {
+class HomepageState extends State<Homepage> {
   double globalWidth;
   double globalHeight;
   Map<String, dynamic> appConfig;
