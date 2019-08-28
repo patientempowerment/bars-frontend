@@ -140,52 +140,6 @@ initializeData() async {
   return response;
 }
 
-generateLabelsConfig(columns) {
-  Map<String, dynamic> labels_config = {};
-
-  for (var label in columns) {
-    Map<String, dynamic> label_config = {};
-    label_config["title"] = label;
-    label_config["active"] = true;
-    labels_config[label] = label_config;
-  }
-
-  return labels_config;
-}
-/// Reads model, feature and label configs.
-readData() async {
-  Map<String, dynamic> appConfig = await legacyReadJSON('assets/app_config.json');
-  Map<String, dynamic> localFallbacks = appConfig["fallbacks"];
-  String serverAddress = appConfig["address"];
-
-  // load features
-  /*
-  getFeatureConfig(serverAddress, jsonEncode(appConfig["database"], localFallbacks["feature-config"])
-  *//// WARN: Currently always using feature fallback.
-  Map<String, dynamic> features =
-      await legacyReadJSON(localFallbacks["features_config"]);
-
-  // load labels
-  Map<String, dynamic> labelsConfig = await legacyReadJSON(
-      'assets/configs/labels_config.json');
-  Map<String, dynamic> labels = labelsConfig["label_titles"];
-  String labelsJSON = jsonEncode({"labels": labelsConfig["labels"]});
-
-  // load model coefficients and means
-  Map<String, dynamic> models;
-  try {
-    http.Response modelsResponse = await http
-        .post(serverAddress + '/models',
-            headers: {"Content-Type": "application/json"}, body: labelsJSON)
-        .timeout(const Duration(seconds: 1));
-    models = jsonDecode(modelsResponse.body);
-  } catch (e) {
-    // something with the web request went wrong, use local file fallback
-    models = await legacyReadJSON(localFallbacks["models"]);
-  }
-  return [models, features, labels, appConfig];
-}
-
 /// For all features in [featureConfig]: Sets radio button or slider to mean.
 generateDefaultInputValues(featureConfig) {
   Map<String, dynamic> defaultInputs = {};

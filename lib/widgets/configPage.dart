@@ -106,12 +106,12 @@ class _ConfigPageState extends State<ConfigPage> {
                 child: Row(children: <Widget>[
               Flexible(
                   child: CheckboxListTile(
-                title: Text(labelName),
-                value: adminSettingsState.homePageState.labelsConfig[labelName]
+                title: Text(labelName, style: TextStyle(fontWeight: FontWeight.w300)),
+                value: adminSettingsState.homePageState.modelsConfig[labelName]
                     ["active"],
                 onChanged: (value) {
                   adminSettingsState.homePageState.setState(() {
-                    adminSettingsState.homePageState.labelsConfig[labelName]
+                    adminSettingsState.homePageState.modelsConfig[labelName]
                         ["active"] = value;
                   });
                   setState(() {});
@@ -145,8 +145,8 @@ class _ConfigPageState extends State<ConfigPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    String activeSubset = adminSettingsState.homePageState.appConfig["active_subset"];
+    String activeSubset =
+        adminSettingsState.homePageState.appConfig["active_subset"];
 
     return Column(
       children: <Widget>[
@@ -157,31 +157,41 @@ class _ConfigPageState extends State<ConfigPage> {
                 itemBuilder: (context, position) {
                   String name = subsetsConfigs.keys.toList()[position];
                   return Container(
-                    decoration: (activeSubset == name) ? BoxDecoration(border: Border.all(width: 4, color: Colors.lightBlueAccent), borderRadius: BorderRadius.all(Radius.circular(5.0))):null,
+                    decoration: (activeSubset == name)
+                        ? BoxDecoration(
+                            border: Border.all(
+                                width: 4, color: Colors.lightBlueAccent),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.0)))
+                        : null,
                     child: Card(
-                      elevation: (activeSubset == name) ? 4 : 1,
+                        elevation: (activeSubset == name) ? 4 : 1,
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 1.0),
                           child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                          Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Flexible(
-                                  child: ListTile(
-                                      key: Key(name),
-                                      title: Text(name),
-                                      onTap: () => _selectConfig(name))),
-                              Radio(
-                                  groupValue: adminSettingsState
-                                      .homePageState.appConfig["active_subset"],
-                                  value: name,
-                                  onChanged: (param) => _selectConfig(name))
+                              Card(
+                                child: Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                        child: ListTile(
+                                            key: Key(name),
+                                            title: Text(name),
+                                            onTap: () => _selectConfig(name))),
+                                    Radio(
+                                        groupValue: adminSettingsState
+                                            .homePageState
+                                            .appConfig["active_subset"],
+                                        value: name,
+                                        onChanged: (param) => _selectConfig(name))
+                                  ],
+                                ),
+                              ),
+                              if (activeSubset == name)
+                                _getLabelsConfigurationArea(name)
                             ],
                           ),
-                          if (activeSubset == name) _getLabelsConfigurationArea(name)
-                      ],
-                    ),
                         )),
                   );
                 }),

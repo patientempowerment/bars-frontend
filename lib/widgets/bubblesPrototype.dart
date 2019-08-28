@@ -74,7 +74,7 @@ class BubblePrototypeState extends State<BubblePrototype> {
 
       // Actually add label bubble.
       LabelBubble labelBubble = LabelBubble(
-          homePageState.labelsConfig[k]["title"],
+          homePageState.modelsConfig[k]["title"],
           Offset(imageCenter.dx + x, imageCenter.dy + y),
           labelBubbleDimensions,
           homePageState);

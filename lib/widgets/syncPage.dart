@@ -90,6 +90,7 @@ class _SyncPageState extends State<SyncPage> {
       });
     });
   }
+
   _trainModels(String name, Map<String, dynamic> subset) {
     adminSettingsState.appConfig['database']['collection'] = name;
 
@@ -97,6 +98,10 @@ class _SyncPageState extends State<SyncPage> {
       subsets[name]["syncButtonState"] = SyncButtonState.Syncing;
     });
     trainModels(adminSettingsState.appConfig).then((result) async {
+      result["models_config"].forEach((String k, dynamic v) {
+        v["title"] = k;
+        v["active"] = true;
+      });
       await writeJSON('subsets/', name, result);
       setState(() {
         subsets[name]["syncButtonState"] = SyncButtonState.Synced;

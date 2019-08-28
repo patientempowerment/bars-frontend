@@ -44,7 +44,6 @@ class MyHomePage extends StatefulWidget {
 /// [userInputs] Maps features and their current input (filled with averages for dataset at beginning).
 /// [modelsConfig] Models are represented as mappings from labels to their intercept and features, whereby features each contain their coefficients and mean value for given data set (see assets/models_config_fallback.json for example)
 /// [featuresConfig] Map of features to their user-facing names and their selectable min/max values or choices)
-/// [labelsConfig] Map of labels to their user-facing names.
 class MyHomePageState extends State<MyHomePage> {
   double globalWidth;
   double globalHeight;
@@ -53,7 +52,6 @@ class MyHomePageState extends State<MyHomePage> {
   Map<String, bool> activeInputFields;
   Map<String, dynamic> modelsConfig;
   Map<String, dynamic> featuresConfig;
-  Map<String, dynamic> labelsConfig;
   Map<String, dynamic> subsetConfig;
 
   final GlobalKey adminDrawerKey = GlobalKey();
@@ -66,17 +64,6 @@ class MyHomePageState extends State<MyHomePage> {
         setConfig(result["subset"], appConfig["active_subset"]);
       });
     });
-/* OLD SHIT
-    readData().then((result) {
-      setState(() {
-        modelsConfig = result[0];
-        featuresConfig = result[1];
-        labelsConfig = result[2];
-        appConfig = result[3];
-        userInputs = generateDefaultInputValues(featuresConfig);
-        activeInputFields = deactivateInputFields(featuresConfig);
-      });
-    });*/
     super.initState();
   }
 
@@ -84,7 +71,6 @@ class MyHomePageState extends State<MyHomePage> {
     setState (() {
       modelsConfig = fullConfig["models_config"];
       featuresConfig = fullConfig["features_config"];
-      labelsConfig = generateLabelsConfig(fullConfig["columns"]);
       userInputs = generateDefaultInputValues(featuresConfig);
       activeInputFields = deactivateInputFields(featuresConfig);
       appConfig["active_subset"] = subsetName;
