@@ -53,7 +53,7 @@ writeJSON(String subDir, String filename, Map<String, dynamic> content) async {
 
 trainModels(Map<String, dynamic> appConfig) async {
   String db = appConfig['database']['db'];
-  String subset = appConfig['database']['collection'];
+  String subset = appConfig['database']['subset'];
   String url = '/database/' + db + '/subset/' + subset + '/train';
 
   Map<String, dynamic> models;
@@ -88,7 +88,7 @@ getDatabase(Map<String, dynamic> appConfig) async {
 
 getSubset(Map<String, dynamic> appConfig) async {
   String db = appConfig['database']['db'];
-  String subsetName = appConfig['database']['collection'];
+  String subsetName = appConfig['database']['subset'];
   String url = '/database/' + db + '/subset/' + subsetName;
 
   Map<String, dynamic> subset;
@@ -106,7 +106,7 @@ getSubset(Map<String, dynamic> appConfig) async {
 getFeatureConfig(Map<String, dynamic> appConfig) async {
   Map<String, dynamic> requestBody = {
     'db' : appConfig['database']['db'],
-    'collection' : appConfig['database']['collection'],
+    'collection' : appConfig['database']['subset'], //LEGACY. Leave it as 'collection'!
   };
 
   Map<String, dynamic> features;

@@ -2,7 +2,7 @@
   "address": "http://172.20.24.28:5050",
   "database": {
     "db": "ukbb",
-    "collection": "ahriTest"
+    "subset": "ahriTest"
   },
   "fallbacks": {
     "features_config": "assets/configs/features_config_fallback.json",

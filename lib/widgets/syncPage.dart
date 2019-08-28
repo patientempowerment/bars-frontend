@@ -92,7 +92,7 @@ class _SyncPageState extends State<SyncPage> {
   }
 
   _trainModels(String name, Map<String, dynamic> subset) {
-    adminSettingsState.appConfig['database']['collection'] = name;
+    adminSettingsState.appConfig['database']['subset'] = name;
 
     setState(() {
       subsets[name]["syncButtonState"] = SyncButtonState.Syncing;
