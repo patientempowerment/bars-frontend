@@ -21,7 +21,9 @@ class _ConfigPageState extends State<ConfigPage> {
 
   Map<String, dynamic> subsetsConfigs = {};
   Map<String, bool> cardsOpen = {};
-  Map<String, TextEditingController> textEditingControllers = {};
+  Map<String, TextEditingController> featureEditingControllers = {};
+  TextEditingController modelTitleEditingController;
+  String modelTitleBeingEdited = "";
 
   @override
   void initState() {
@@ -29,12 +31,37 @@ class _ConfigPageState extends State<ConfigPage> {
     _getConfigNames().then((configNames) {
       _loadConfigs(configNames).then((result) {
         subsetsConfigs.forEach((name, config) {
-          textEditingControllers[name] = TextEditingController(
+          featureEditingControllers[name] = TextEditingController(
               text: jsonEncode(config["features_config"]));
           cardsOpen[name] = false;
         });
       });
     });
+  }
+
+  _getModelTitleTextField(String subset, String model) {
+    return Column(
+      children: <Widget>[
+        TextField(
+            controller: modelTitleEditingController,
+        maxLines: 1,
+        onSubmitted: (text) => {
+        },
+        onEditingComplete: () {
+          setState(() async {
+              String text = modelTitleEditingController.text;
+              subsetsConfigs[subset]["models_config"][model]["title"] = text;
+              await _saveConfigs({subset: subsetsConfigs[subset]});
+
+              adminSettingsState.homePageState.setState(() {
+                adminSettingsState.homePageState.modelsConfig[model]["title"] = text;
+              });
+                modelTitleBeingEdited = "";
+              });
+        }),
+        Text(model)
+      ],
+    );
   }
 
   _loadConfigs(names) async {
@@ -111,6 +138,7 @@ class _ConfigPageState extends State<ConfigPage> {
 
   _getLabelsConfigurationArea(String name) {
     Map<String, dynamic> subsetConfig = subsetsConfigs[name];
+
     return ConstrainedBox(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 2),
@@ -118,26 +146,38 @@ class _ConfigPageState extends State<ConfigPage> {
           shrinkWrap: true,
           itemCount: (subsetConfig["features_config"].keys).length,
           itemBuilder: (context, position) {
-            String labelName =
-                subsetConfig["features_config"].keys.toList()[position];
+            Widget cardChild;
+            String model = subsetConfig["features_config"].keys.toList()[position];
+            if (modelTitleBeingEdited == model) {
+              cardChild = _getModelTitleTextField(name, model);
+            } else {
+              cardChild = Row(children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => setState(() {
+                    modelTitleBeingEdited = model;
+                    modelTitleEditingController = TextEditingController(text: subsetConfig["models_config"][model]["title"]);
+                  })
+                ),
+                Flexible(
+                    child: CheckboxListTile(
+                      title: Text(subsetConfig["models_config"][model]["title"], style: TextStyle(fontWeight: FontWeight.w300)),
+                      value: adminSettingsState.homePageState.modelsConfig[model]
+                      ["active"],
+                      onChanged: (value) {
+                        subsetsConfigs[name]["models_config"][model]["active"] = value;
+                        _saveConfigs({name: subsetsConfigs[name]});
+                        adminSettingsState.homePageState.setState(() {
+                          adminSettingsState.homePageState.modelsConfig[model]
+                          ["active"] = value;
+                        });
+                        setState(() {});
+                      },
+                    )),
+              ]);
+            }
             return Card(
-                child: Row(children: <Widget>[
-              Flexible(
-                  child: CheckboxListTile(
-                title: Text(labelName, style: TextStyle(fontWeight: FontWeight.w300)),
-                value: adminSettingsState.homePageState.modelsConfig[labelName]
-                    ["active"],
-                onChanged: (value) {
-                  subsetsConfigs[name]["models_config"][labelName]["active"] = value;
-                  _saveConfigs({name: subsetsConfigs[name]});
-                  adminSettingsState.homePageState.setState(() {
-                    adminSettingsState.homePageState.modelsConfig[labelName]
-                        ["active"] = value;
-                  });
-                  setState(() {});
-                },
-              )),
-            ]));
+                child: cardChild,);
           }),
     );
   }
@@ -153,11 +193,11 @@ class _ConfigPageState extends State<ConfigPage> {
             fit: FlexFit.loose,
             child: TextField(
               maxLines: null,
-              controller: textEditingControllers[name],
+              controller: featureEditingControllers[name],
               onChanged: (text) => setState(() {}),
             ),
           ),
-          _getSaveConfigButton(name, textEditingControllers[name])
+          _getSaveConfigButton(name, featureEditingControllers[name])
         ],
       ),
     );
