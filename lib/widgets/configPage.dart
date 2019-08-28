@@ -59,6 +59,19 @@ class _ConfigPageState extends State<ConfigPage> {
     });
   }
 
+
+  //Saves one or many configuration files to disk. Keys => config name, values => config content
+  _saveConfigs(Map<String, Map<String, dynamic>> configs) async {
+    for (MapEntry<String, dynamic> config in configs.entries) {
+      try {
+        await writeJSON("subsets", config.key, config.value);
+      } catch (e) {
+        print(e);
+        rethrow;
+      }
+    }
+  }
+
   _getSaveConfigButton(
       String name, TextEditingController textEditingController) {
     Function function;
@@ -110,6 +123,8 @@ class _ConfigPageState extends State<ConfigPage> {
                 value: adminSettingsState.homePageState.modelsConfig[labelName]
                     ["active"],
                 onChanged: (value) {
+                  subsetsConfigs[name]["models_config"][labelName]["active"] = value;
+                  _saveConfigs({name: subsetsConfigs[name]});
                   adminSettingsState.homePageState.setState(() {
                     adminSettingsState.homePageState.modelsConfig[labelName]
                         ["active"] = value;
