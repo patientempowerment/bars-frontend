@@ -31,6 +31,8 @@ class SliderInputRow extends StatelessWidget {
               activeTrackColor: getActivityColor(homePageState, feature.key),
               inactiveTrackColor: Colors.grey,
               thumbColor: getActivityColor(homePageState, feature.key),
+              showValueIndicator: ShowValueIndicator.always,
+
             ),
             child: Slider(
               value: homePageState.activeInputFields[feature.key]
@@ -56,6 +58,9 @@ class SliderInputRow extends StatelessWidget {
             ),
           ),
         ),
+        Container(
+            width: 32, //One digit is 8 pixels wide
+            child:(homePageState.activeInputFields[feature.key]) ? Text(homePageState.userInputs[feature.key].toInt().toString()):null)
       ]),
     ));
   }
