@@ -73,9 +73,11 @@ class FeatureBubbleState extends State<FeatureBubble>
   _getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
-    for (String label in homePageState.modelsConfig.keys) {
-      if (homePageState.modelsConfig[label]['features'][feature.key] != null) {
-        double factor = homePageState.modelsConfig[label]['features']
+    Map<String,dynamic> activeModels = Map.from(homePageState.modelsConfig);
+    activeModels.removeWhere((k,v) => v["active"] == false);
+    for (String label in activeModels.keys) {
+      if (activeModels[label]['features'][feature.key] != null) {
+        double factor = activeModels[label]['features']
         [feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;

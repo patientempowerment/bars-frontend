@@ -195,15 +195,16 @@ buildInputWidget(HomepageState homePageState, State context,
 
 /// Returns the color for a [factor]. [factor] should be > 0.
 Color computeColorByFactor(double factor) {
-  final List<Color> colorGradient = [
+  factor = factor > 1 ? 1 : factor;
+  return Color.lerp(Colors.lightGreen, Colors.red, factor);
+
+  /*final List<Color> colorGradient = [
     Colors.lightGreen,
     Colors.amber,
     Colors.orange,
-    Colors.red
+    Colors.red,
   ];
-
-  factor = factor > 1 ? 1 : factor;
-  return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];
+  return colorGradient[(factor * (colorGradient.length - 1)).round().toInt()];*/
 }
 
 /// Returns color for active and inactive input field.
