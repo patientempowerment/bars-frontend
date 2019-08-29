@@ -42,7 +42,7 @@ class BubblesPageState extends State<BubblesPage> {
     super.initState();
   }
 
-  /// Returns all widgets of bubble prototype in a list.
+  /// Returns all widgets of this page in a list.
   List<Widget> _getWidgets() {
     double labelBubbleDimensions = homePageState.globalHeight / 8;
     List<Widget> widgets = List();
@@ -60,21 +60,25 @@ class BubblesPageState extends State<BubblesPage> {
 
   /// Arranges and adds label bubbles around center image. Does not check for overlapping bubbles in case of a high number.
   _addLabelBubbles(List<Widget> widgets, double labelBubbleDimensions) {
+
+    Map<String, dynamic> activeModels = Map.from(homePageState.modelsConfig);
+    activeModels.removeWhere((k, v) => v["active"] == false);
     var boundingRadius =
         sqrt(pow((imageDimensions / 2), 2) * 2) + labelBubbleDimensions / 2;
     var angle = 0.0;
-    var step = (2 * pi) / homePageState.modelsConfig.length;
+    var step = (2 * pi) / activeModels.length;
     Offset imageCenter = Offset(imagePosition.dx + imageDimensions / 2,
         imagePosition.dy + imageDimensions / 2);
 
-    homePageState.modelsConfig.forEach((k, v) {
+    activeModels.forEach((k, v) {
       //45 comes from bubble container height(90) and width(90) divided by 2
+
       var x = (boundingRadius * cos(angle) - 45).round();
       var y = (boundingRadius * sin(angle) - 45).round();
 
       // Actually add label bubble.
       LabelBubble labelBubble = LabelBubble(
-          homePageState.modelsConfig[k]["title"],
+          v["title"],
           Offset(imageCenter.dx + x, imageCenter.dy + y),
           labelBubbleDimensions,
           homePageState);

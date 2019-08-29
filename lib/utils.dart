@@ -127,7 +127,6 @@ initializeData() async {
     appConfig = await readJSON('/', 'app_config');
   } catch (e) {
     appConfig = await legacyReadJSON('assets/app_config.json');
-
   }
   Map<String, dynamic> subset;
   Map<String, dynamic> response = {};
@@ -140,9 +139,18 @@ initializeData() async {
     response["server_config"] = appConfig;
   }
   else {
-    subset = await readJSON('subsets/', appConfig["active_subset"]);
-    response["subset"] = subset;
-    response["server_config"] = appConfig;
+    try {
+      subset = await readJSON('subsets/', appConfig["active_subset"]);
+      response["subset"] = subset;
+      response["server_config"] = appConfig;
+    } catch (e) { //TODO:
+      response["subset"] = {
+        "columns": [],
+        "models_config": Map<String, dynamic>(),
+        "features_config": Map<String, dynamic>()
+      };
+      response["server_config"] = appConfig;
+    }
   }
   return response;
 }
