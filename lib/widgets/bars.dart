@@ -4,12 +4,15 @@ import 'package:bars_frontend/utils.dart';
 import 'buttons.dart';
 import 'package:bars_frontend/charts/simple_bar_chart.dart';
 import 'package:bars_frontend/predictions.dart';
+import 'package:bars_frontend/widgets/story.dart';
+
 
 /// Represents the first prototype, includes input fields left a button to trigger output and an output graph with bars.
 class Bars extends StatefulWidget {
   final HomepageState homePageState;
 
   Bars(this.homePageState);
+
   @override
   State<StatefulWidget> createState() {
     return BarsState(homePageState);
@@ -20,6 +23,7 @@ class Bars extends StatefulWidget {
 class BarsState extends State<Bars> {
   HomepageState homePageState;
   bool predictMode = false;
+  String currentStoryLabel = "";
 
   BarsState(this.homePageState);
 
@@ -39,10 +43,17 @@ class BarsState extends State<Bars> {
         ),
         PredictModeButton(this),
         Flexible(
-          child: SimpleBarChart(mapChartData(
-              getLabelProbabilities(homePageState.userInputs,
-                  activeModels, predictMode),
-              activeModels))
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                child: SimpleBarChart(mapChartData(
+                    getLabelProbabilities(homePageState.userInputs,
+                        activeModels, predictMode),
+                    activeModels)),
+              ),
+              Flexible(child: Story(this.homePageState, "diabetes"))
+            ],
+          )
         ),
       ],
     );

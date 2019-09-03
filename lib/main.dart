@@ -95,7 +95,7 @@ class HomepageState extends State<Homepage> {
             ),
             body: Container(
               padding: EdgeInsets.all(40.0),
-              child: Bars(this),
+              child: Bars(this)
             ),
             drawer: AdminSettings(this, key: adminDrawerKey),
             floatingActionButton: ResetButton(this),

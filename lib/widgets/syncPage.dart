@@ -100,7 +100,7 @@ class _SyncPageState extends State<SyncPage> {
     trainModels(adminSettingsState.appConfig).then((result) async {
       result["models_config"].forEach((String k, dynamic v) {
         v["title"] = k;
-        v["active"] = true;
+        v["active"] = false;
       });
       await writeJSON('subsets/', name, result);
       setState(() {
