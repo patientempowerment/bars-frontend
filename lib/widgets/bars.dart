@@ -8,51 +8,38 @@ import 'package:bars_frontend/charts/lineChart.dart';
 
 
 /// Represents the first prototype, includes input fields left a button to trigger output and an output graph with bars.
-class Bars extends StatefulWidget {
-  final HomepageState homePageState;
+class UserInputPage extends StatelessWidget {
+  final HomepageState homepageState;
 
-  Bars(this.homePageState);
-
-  @override
-  State<StatefulWidget> createState() {
-    return BarsState(homePageState);
-  }
-}
-
-/// [predictMode] determines whether output should be displayed.
-class BarsState extends State<Bars> {
-  HomepageState homePageState;
-  bool predictMode = false;
-
-  BarsState(this.homePageState);
+  UserInputPage(this.homepageState);
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> activeModels = new Map<String, dynamic>.from(homePageState.modelsConfig);
+    Map<String, dynamic> activeModels = new Map<String, dynamic>.from(homepageState.modelsConfig);
     activeModels.removeWhere((key, value) => value["active"] == false);
     return Row(
       children: [
         Expanded(
           child: ListView(
             children: [
-              for (var feature in homePageState.featuresConfig.entries)
-                buildInputWidget(homePageState, this, feature),
+              for (var feature in homepageState.featuresConfig.entries)
+                buildInputWidget(homepageState, homepageState, feature),
             ],
           ),
         ),
-        PredictModeButton(this),
+        PredictModeButton(homepageState),
         Flexible(
-          child: Column(
-            children: <Widget>[
-              Flexible(
-                child: SimpleBarChart(mapChartData(
-                    getLabelProbabilities(homePageState.userInputs,
-                        activeModels, predictMode),
-                    activeModels)),
-              ),
-              Flexible(child: LineChart(this.homePageState))
-            ],
-          )
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: SimpleBarChart(mapChartData(
+                      getLabelProbabilities(homepageState.userInputs,
+                          activeModels, homepageState.predictMode),
+                      activeModels)),
+                ),
+                Flexible(child: LineChart(homepageState))
+              ],
+            )
         ),
       ],
     );

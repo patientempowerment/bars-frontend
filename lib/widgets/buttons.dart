@@ -28,24 +28,27 @@ class ResetButton extends StatelessWidget {
   }
 }
 
-/// A button that starts or ends [predictMode] in [barsPrototypeState].
+/// A button that starts or ends [predictMode] in [homepageState].
 class PredictModeButton extends StatelessWidget {
-  final BarsState barsPrototypeState;
+  final HomepageState homepageState;
 
-  PredictModeButton(this.barsPrototypeState);
+  PredictModeButton(this.homepageState);
 
   @override
   Widget build(BuildContext context) {
 
     return FloatingActionButton(
-      child: (barsPrototypeState.predictMode) ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_forward_ios),
+      child: (homepageState.predictMode) ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_forward_ios),
       onPressed: () {
-        barsPrototypeState.setState(() {
-          HomepageState state = barsPrototypeState.homePageState;
-          if (!barsPrototypeState.predictMode) {
-            state.originalInputsPlot = generateDataPoints(barsPrototypeState.homePageState);
+        homepageState.setState(() {
+          if (!homepageState.predictMode) {
+            homepageState.originalInputsPlot = generateDataPoints(homepageState);
           }
-          barsPrototypeState.predictMode = !barsPrototypeState.predictMode;
+          else {
+            homepageState.changedInputsPlot = [];
+            homepageState.originalInputsPlot = [];
+          }
+          homepageState.predictMode = !homepageState.predictMode;
         });
       },
     );

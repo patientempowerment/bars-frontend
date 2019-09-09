@@ -56,6 +56,7 @@ class HomepageState extends State<Homepage> {
   Map<String, dynamic> subsetConfig;
   List<DataPoint> originalInputsPlot = [];
   List<DataPoint> changedInputsPlot = [];
+  bool predictMode = false;
 
   String lineModel;
 
@@ -103,7 +104,7 @@ class HomepageState extends State<Homepage> {
             ),
             body: Container(
               padding: EdgeInsets.all(40.0),
-              child: Bars(this)
+              child: UserInputPage(this)
             ),
             drawer: AdminSettings(this, key: adminDrawerKey),
             floatingActionButton: ResetButton(this),

@@ -37,7 +37,7 @@ double multiplyInputAndCoefficient(
 List<DataPoint> generateDataPoints(HomepageState homepageState) {
   List<DataPoint> points = [];
   Map<String, dynamic> inputs = Map.from(homepageState.userInputs);
-  for(var i = homepageState.featuresConfig["age"]["slider_min"]; i<=homepageState.featuresConfig["age"]["slider_max"]; i++){
+  for(var i = 0; i<=100; i++){
     inputs["age"] = i;
     Map<String, double> probability = getLabelProbabilities(inputs, {homepageState.lineModel: homepageState.modelsConfig[homepageState.lineModel]}, true);
     points.add(DataPoint(i.toInt(), probability[homepageState.lineModel]));

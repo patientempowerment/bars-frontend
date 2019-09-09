@@ -188,7 +188,9 @@ buildInputWidget(HomepageState homePageState, State context,
   Function onChanged = (num newValue) {
     context.setState(() {
       homePageState.userInputs[feature.key] = newValue;
-      homePageState.changedInputsPlot = generateDataPoints(homePageState);
+      if(homePageState.predictMode) {
+        homePageState.changedInputsPlot = generateDataPoints(homePageState);
+      }
     });
   };
   if (feature.value["choices"] != null) {
