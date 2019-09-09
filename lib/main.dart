@@ -4,6 +4,7 @@ import 'package:bars_frontend/widgets/buttons.dart';
 import 'package:bars_frontend/widgets/adminSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/utils.dart';
+import 'package:bars_frontend/predictions.dart';
 
 void main() => runApp(EmpowerApp());
 
@@ -53,6 +54,10 @@ class HomepageState extends State<Homepage> {
   Map<String, dynamic> modelsConfig;
   Map<String, dynamic> featuresConfig;
   Map<String, dynamic> subsetConfig;
+  List<DataPoint> originalInputsPlot = [];
+  List<DataPoint> changedInputsPlot = [];
+
+  String lineModel;
 
   final GlobalKey adminDrawerKey = GlobalKey();
 
@@ -62,8 +67,11 @@ class HomepageState extends State<Homepage> {
       setState(() {
         appConfig = result["server_config"];
         setConfig(result["subset"], appConfig["active_subset"]);
+        //storyModel = modelsConfig.entries.first.key; TODO
+        lineModel = "diabetes";
       });
     });
+
     super.initState();
   }
 
@@ -81,11 +89,11 @@ class HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     globalWidth = MediaQuery.of(context).size.width;
     globalHeight = MediaQuery.of(context).size.height;
+
     // make sure that configs are loaded before displaying input and output
     if ((modelsConfig == null) || (featuresConfig == null)) {
       return new Container();
     }
-
     return Stack(
       children: <Widget>[
         PageView(children: [

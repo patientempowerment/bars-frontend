@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:bars_frontend/predictions.dart';
 
 ensureDirExistence(String path) async {
   final dir = new Directory(path);
@@ -184,10 +185,16 @@ deactivateInputFields(featureConfig) {
 /// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
 buildInputWidget(HomepageState homePageState, State context,
     MapEntry<String, dynamic> feature) {
+  Function onChanged = (num newValue) {
+    context.setState(() {
+      homePageState.userInputs[feature.key] = newValue;
+      homePageState.changedInputsPlot = generateDataPoints(homePageState);
+    });
+  };
   if (feature.value["choices"] != null) {
-    return getRadioButtonInputRow(homePageState, context, feature);
+    return getRadioButtonInputRow(homePageState, context, feature, onChanged);
   } else if (feature.value["slider_min"] != null) {
-    return getSliderInputRow(homePageState, context, feature);
+    return getSliderInputRow(homePageState, context, feature, onChanged);
   } else {
     throw new Exception("Input Widget not supported: " + feature.key);
   }

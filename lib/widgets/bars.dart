@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
 import 'buttons.dart';
-import 'package:bars_frontend/charts/simple_bar_chart.dart';
+import 'package:bars_frontend/charts/barChart.dart';
 import 'package:bars_frontend/predictions.dart';
-import 'package:bars_frontend/widgets/story.dart';
+import 'package:bars_frontend/charts/lineChart.dart';
 
 
 /// Represents the first prototype, includes input fields left a button to trigger output and an output graph with bars.
@@ -23,7 +23,6 @@ class Bars extends StatefulWidget {
 class BarsState extends State<Bars> {
   HomepageState homePageState;
   bool predictMode = false;
-  String currentStoryLabel = "";
 
   BarsState(this.homePageState);
 
@@ -51,7 +50,7 @@ class BarsState extends State<Bars> {
                         activeModels, predictMode),
                     activeModels)),
               ),
-              Flexible(child: Story(this.homePageState, "diabetes"))
+              Flexible(child: LineChart(this.homePageState))
             ],
           )
         ),

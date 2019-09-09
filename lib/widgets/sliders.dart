@@ -4,8 +4,8 @@ import '../utils.dart';
 
 /// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
 Widget getSliderInputRow(HomepageState homePageState, State parentState,
-    MapEntry<String, dynamic> feature) {
-  return SliderInputRow(homePageState, parentState, feature);
+    MapEntry<String, dynamic> feature, Function onChanged) {
+  return SliderInputRow(homePageState, parentState, feature, onChanged);
 }
 
 /// Defines a slider that changes its color when dragged and is correlated to [feature].
@@ -13,7 +13,8 @@ class SliderInputRow extends StatelessWidget {
   final HomepageState homePageState;
   final State parentState;
   final MapEntry<String, dynamic> feature;
-  SliderInputRow(this.homePageState, this.parentState, this.feature);
+  final Function onChanged;
+  SliderInputRow(this.homePageState, this.parentState, this.feature, this.onChanged);
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +51,7 @@ class SliderInputRow extends StatelessWidget {
                   });
                 }
               },
-              onChanged: (double newValue) {
-                parentState.setState(() {
-                  homePageState.userInputs[feature.key] = newValue;
-                });
-              },
+              onChanged: (double newValue) => onChanged(newValue)
             ),
           ),
         ),

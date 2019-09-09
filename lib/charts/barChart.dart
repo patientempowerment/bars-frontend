@@ -40,6 +40,7 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
     charts.Series<Tuple2<String, dynamic>, String>(
       id: 'barChart',
       colorFn: (Tuple2<String, dynamic> tuple, __) => getChartColorByFactor(tuple.item2.toDouble()),
+      //colorFn: (Tuple2<String, dynamic> tuple, __) => charts.Color.fromHex(code: computeColorByFactor(tuple.item2.toDouble()).toString()),
       domainFn: (Tuple2<String, dynamic> tuple, _) => tuple.item1,
       measureFn: (Tuple2<String, dynamic> tuple, _) => tuple.item2,
       data: data,

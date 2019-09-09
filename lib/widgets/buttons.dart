@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import '../utils.dart';
 import 'bars.dart';
+import 'package:bars_frontend/predictions.dart';
 
 /// A [FloatingActionButton] that resets the userInputs of [HomepageState] to their default values.
 class ResetButton extends StatelessWidget {
@@ -14,11 +15,14 @@ class ResetButton extends StatelessWidget {
     return FloatingActionButton(
       child: Icon(Icons.replay),
       onPressed: () {
-        homePageState.userInputs =
-            generateDefaultInputValues(homePageState.featuresConfig);
-        homePageState.activeInputFields =
-            deactivateInputFields(homePageState.featuresConfig);
-        homePageState.setState(() {});
+        homePageState.setState(() {
+          homePageState.userInputs =
+              generateDefaultInputValues(homePageState.featuresConfig);
+          homePageState.activeInputFields =
+              deactivateInputFields(homePageState.featuresConfig);
+          homePageState.originalInputsPlot = [];
+          homePageState.changedInputsPlot = [];
+        });
       },
     );
   }
@@ -32,21 +36,16 @@ class PredictModeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (barsPrototypeState.predictMode) {
-      return FloatingActionButton(
-        child: Icon(Icons.arrow_back_ios),
-        onPressed: () {
-          barsPrototypeState.setState(() {
-            barsPrototypeState.predictMode = false;
-          });
-        },
-      );
-    }
+
     return FloatingActionButton(
-      child: Icon(Icons.arrow_forward_ios),
+      child: (barsPrototypeState.predictMode) ? Icon(Icons.arrow_back_ios) : Icon(Icons.arrow_forward_ios),
       onPressed: () {
         barsPrototypeState.setState(() {
-          barsPrototypeState.predictMode = true;
+          HomepageState state = barsPrototypeState.homePageState;
+          if (!barsPrototypeState.predictMode) {
+            state.originalInputsPlot = generateDataPoints(barsPrototypeState.homePageState);
+          }
+          barsPrototypeState.predictMode = !barsPrototypeState.predictMode;
         });
       },
     );
