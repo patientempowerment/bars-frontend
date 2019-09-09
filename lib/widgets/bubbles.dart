@@ -56,7 +56,7 @@ class FeatureBubbleState extends State<FeatureBubble>
     for (String label in homePageState.modelsConfig.keys) {
       if (homePageState.modelsConfig[label]['features'][feature.key] != null) {
         double factor = homePageState.modelsConfig[label]['features']
-        [feature.key]['coef'] *
+                [feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         colorFactor += factor < 0 ? 0 : factor;
       }
@@ -73,26 +73,28 @@ class FeatureBubbleState extends State<FeatureBubble>
   _getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
-    Map<String,dynamic> activeModels = Map.from(homePageState.modelsConfig);
-    activeModels.removeWhere((k,v) => v["active"] == false);
+    Map<String, dynamic> activeModels = Map.from(homePageState.modelsConfig);
+    activeModels.removeWhere((k, v) => v["active"] == false);
     for (String label in activeModels.keys) {
+      Rectangle labelBubbleBoundingBox =
+          bubblePrototypeState.labelBubbleBoundingBoxes[label];
       if (activeModels[label]['features'][feature.key] != null) {
-        double factor = activeModels[label]['features']
-        [feature.key]['coef'] *
+        double factor = activeModels[label]['features'][feature.key]['coef'] *
             homePageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
         for (int i = 0; i < factor * MAX_PARTICLES; i++) {
           // choose random duration around one second
           int timerDuration = ((rdm.nextInt(60) / 100 + 0.7) * 1000).toInt();
           Offset labelBubbleCenter = Offset(
-              bubblePrototypeState.labelBubbleOffsets[label].dx +
-                  labelBubbleWidth / 2 -
+              labelBubbleBoundingBox.left +
+                  (labelBubbleBoundingBox.right - labelBubbleBoundingBox.left) /
+                      2 -
                   PARTICLE_SIZE / 2,
-              bubblePrototypeState.labelBubbleOffsets[label].dy +
+              labelBubbleBoundingBox.top +
                   labelBubbleWidth / 2 -
                   PARTICLE_SIZE / 2);
           Offset ownCenter =
-          Offset(offset.dx + width / 2, offset.dy + width / 2);
+              Offset(offset.dx + width / 2, offset.dy + width / 2);
           particles.add(
               Particle(ownCenter, labelBubbleCenter, timerDuration, color));
         }
@@ -156,8 +158,8 @@ class FeatureBubbleState extends State<FeatureBubble>
             },
             onPanUpdate: (details) {
               setState(() {
-                offset = Offset(offset.dx + details.delta.dx,
-                    offset.dy + details.delta.dy);
+                offset = Offset(
+                    offset.dx + details.delta.dx, offset.dy + details.delta.dy);
               });
             },
             onPanEnd: invokeDialog(context, homePageState, feature, this),
@@ -172,7 +174,6 @@ class FeatureBubbleState extends State<FeatureBubble>
     );
   }
 }
-
 
 /// Represents the label bubbles around the center image.
 /// Computes its own inner dimensions. [dimensions] is the outer border size only.
@@ -190,10 +191,7 @@ class LabelBubble extends StatelessWidget {
     Map<String, dynamic> probabilities = getLabelProbabilities(
         homePageState.userInputs, homePageState.modelsConfig, true);
     probabilities.forEach(
-            (k, v) =>
-        (k.toLowerCase() == title.toLowerCase())
-            ? value = v
-            : null);
+        (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
     double innerBubbleSize = value * dimensions;
     // make sure that inner bubble isn't bigger than border
     return innerBubbleSize > dimensions - LABEL_BUBBLE_BORDER_SIZE * 2

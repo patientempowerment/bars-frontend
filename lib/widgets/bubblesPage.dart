@@ -24,12 +24,12 @@ class BubblesPage extends StatefulWidget {
   }
 }
 
-/// [labelBubbleOffsets] Map of labels and their bubble position to let particles flow there.
+/// [labelBubbleBoundingBoxes] Map of labels and their bubble position to let particles flow there.
 class BubblesPageState extends State<BubblesPage> {
   final HomepageState homePageState;
   double imageDimensions;
   Offset imagePosition;
-  Map<String, Offset> labelBubbleOffsets = Map();
+  Map<String, Rectangle> labelBubbleBoundingBoxes = Map();
   List<Particle> particles = List();
 
   BubblesPageState(this.homePageState);
@@ -43,12 +43,12 @@ class BubblesPageState extends State<BubblesPage> {
   }
 
   /// Returns all widgets of this page in a list.
-  List<Widget> _getWidgets() {
+  List<Widget> _getWidgets(BuildContext context) {
     double labelBubbleDimensions = homePageState.globalHeight / 8;
     List<Widget> widgets = List();
 
     widgets.add(getCenterImage(imageDimensions, imagePosition));
-    _addLabelBubbles(widgets, labelBubbleDimensions);
+    _addLabelBubbles(widgets, labelBubbleDimensions, context);
     _addFeatureBubbles(widgets, labelBubbleDimensions);
 
     for (Particle particle in particles) {
@@ -58,8 +58,19 @@ class BubblesPageState extends State<BubblesPage> {
     return widgets;
   }
 
+  _getTextBoxWidth(String text, BuildContext context) {
+    final textWidget = Text(text).build(context) as RichText;
+    final renderObject = textWidget.createRenderObject(context);
+    renderObject.layout(BoxConstraints());
+    final lastBox = renderObject
+        .getBoxesForSelection(TextSelection(
+        baseOffset: 0, extentOffset: text.length))
+        .last;
+    return lastBox;
+  }
+
   /// Arranges and adds label bubbles around center image. Does not check for overlapping bubbles in case of a high number.
-  _addLabelBubbles(List<Widget> widgets, double labelBubbleDimensions) {
+  _addLabelBubbles(List<Widget> widgets, double labelBubbleDimensions, BuildContext context) {
 
     Map<String, dynamic> activeModels = Map.from(homePageState.modelsConfig);
     activeModels.removeWhere((k, v) => v["active"] == false);
@@ -72,9 +83,9 @@ class BubblesPageState extends State<BubblesPage> {
 
     activeModels.forEach((k, v) {
       //45 comes from bubble container height(90) and width(90) divided by 2
-
-      var x = (boundingRadius * cos(angle) - 45).round();
-      var y = (boundingRadius * sin(angle) - 45).round();
+      var textBoxBounds = (_getTextBoxWidth(v['title'], context));
+      var x = (boundingRadius * cos(angle) - max(labelBubbleDimensions / 2, textBoxBounds.right / 2)).round();
+      var y = (boundingRadius * sin(angle) - labelBubbleDimensions / 2).round();
 
       // Actually add label bubble.
       LabelBubble labelBubble = LabelBubble(
@@ -84,7 +95,7 @@ class BubblesPageState extends State<BubblesPage> {
           homePageState);
       widgets.add(labelBubble);
 
-      labelBubbleOffsets[k] = Offset(imageCenter.dx + x, imageCenter.dy + y);
+      labelBubbleBoundingBoxes[k] = Rectangle(imageCenter.dx + x, imageCenter.dy + y, max(labelBubbleDimensions, textBoxBounds.right), labelBubbleDimensions);
       angle += step;
     });
   }
@@ -113,7 +124,7 @@ class BubblesPageState extends State<BubblesPage> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: Stack(children: _getWidgets()),
+          child: Stack(children: _getWidgets(context)),
         ),
       ],
     );
