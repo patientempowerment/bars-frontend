@@ -1,6 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
+import 'package:bars_frontend/utils.dart';
 
 /// Bar Chart that generates a bar for each <[label] - [labelValues]> pair.
 class SimpleBarChart extends StatelessWidget {
@@ -39,8 +40,8 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
   return [ //TODO: make a utils func that creates charts.series from maps
     charts.Series<Tuple2<String, dynamic>, String>(
       id: 'barChart',
-      colorFn: (Tuple2<String, dynamic> tuple, __) => getChartColorByFactor(tuple.item2.toDouble()),
-      //colorFn: (Tuple2<String, dynamic> tuple, __) => charts.Color.fromHex(code: computeColorByFactor(tuple.item2.toDouble()).toString()),
+      //colorFn: (Tuple2<String, dynamic> tuple, __) => getChartColorByFactor(tuple.item2.toDouble()),
+      colorFn: (Tuple2<String, dynamic> tuple, __) => charts.ColorUtil.fromDartColor(computeColorByFactor(tuple.item2.toDouble())),
       domainFn: (Tuple2<String, dynamic> tuple, _) => tuple.item1,
       measureFn: (Tuple2<String, dynamic> tuple, _) => tuple.item2,
       data: data,
