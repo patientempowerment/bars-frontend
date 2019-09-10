@@ -1,0 +1,328 @@
+{
+  "columns": [
+    "COPD",
+    "age",
+    "alcoholFrequency",
+    "asthma",
+    "coughOnMostDays",
+    "currentlySmoking",
+    "diabetes",
+    "diastolicBloodPressure",
+    "height",
+    "noOfCigarettesPerDay",
+    "noOfCigarettesPreviouslyPerDay",
+    "previouslySmoked",
+    "sex",
+    "sputumOnMostDays",
+    "systolicBloodPressure",
+    "tuberculosis",
+    "weight",
+    "wheezeInChestInLastYear"
+  ],
+  "features_config": {
+    "sex": {
+      "choices": {
+        "Female": 0,
+        "Male": 1
+      },
+      "mean": 0.44406857303944886,
+      "title": "Sex"
+    },
+    "age": {
+      "mean": 56.107616681642796,
+      "slider_max": 80,
+      "slider_min": 10,
+      "title": "Age"
+    },
+    "height": {
+      "mean": 169.3661715735504,
+      "slider_max": 204,
+      "slider_min": 122,
+      "title": "Height"
+    },
+    "weight": {
+      "mean": 76.98686946103564,
+      "slider_max": 197,
+      "slider_min": 32,
+      "title": "Weight"
+    },
+    "diastolicBloodPressure": {
+      "mean": 81.84501030709869,
+      "slider_max": 142,
+      "slider_min": 37,
+      "title": "Diastolic Blood Pressure"
+    },
+    "systolicBloodPressure": {
+      "mean": 136.703679722325,
+      "slider_max": 249,
+      "slider_min": 79,
+      "title": "Systolic Blood Pressure"
+    },
+    "previouslySmoked": {
+      "choices": {
+        "No": 0,
+        "Yes": 1
+      },
+      "mean": 0.3486530295822542,
+      "title": "Previously Smoked"
+    },
+    "coughOnMostDays": {
+      "choices": {
+        "No": 0,
+        "Yes": 1
+      },
+      "mean": 0.13563965678242332,
+      "title": "Cough On Most Days"
+    },
+    "sputumOnMostDays": {
+      "choices": {
+        "No": 0,
+        "Yes": 1
+      },
+      "mean": 0.08605105978117236,
+      "title": "Sputum On Most Days"
+    },
+    "wheezeInChestInLastYear": {
+      "choices": {
+        "No": 0,
+        "Yes": 1
+      },
+      "mean": 0.1665521433479571,
+      "title": "Wheeze In Chest In Last Year"
+    }
+  },
+  "models_config": {
+    "COPD": {
+      "features": {
+        "age": {
+          "coef": 0.17479547873439027
+        },
+        "alcoholFrequency": {
+          "coef": -1.1499183181807617
+        },
+        "asthma": {
+          "coef": 2.46123601457218
+        },
+        "coughOnMostDays": {
+          "coef": 2.1379973244576
+        },
+        "currentlySmoking": {
+          "coef": -0.8897903112133337
+        },
+        "diabetes": {
+          "coef": 3.2067433890354073
+        },
+        "diastolicBloodPressure": {
+          "coef": -0.18948095650648195
+        },
+        "height": {
+          "coef": -0.007455530931019366
+        },
+        "noOfCigarettesPerDay": {
+          "coef": 0.23807264242273288
+        },
+        "noOfCigarettesPreviouslyPerDay": {
+          "coef": 0.037741849994292205
+        },
+        "previouslySmoked": {
+          "coef": 2.262191997286734
+        },
+        "sex": {
+          "coef": 0.8385479178721106
+        },
+        "sputumOnMostDays": {
+          "coef": -0.909653369709105
+        },
+        "systolicBloodPressure": {
+          "coef": 0.0523426133920875
+        },
+        "tuberculosis": {
+          "coef": -0.3324663314310863
+        },
+        "weight": {
+          "coef": -0.04294912551326084
+        },
+        "wheezeInChestInLastYear": {
+          "coef": 0.5996732592519043
+        }
+      },
+      "intercept": -0.40696405647296546,
+      "title": "COPD",
+      "active": true
+    },
+    "asthma": {
+      "features": {
+        "COPD": {
+          "coef": 0.6834763437941266
+        },
+        "age": {
+          "coef": -0.028568436721135286
+        },
+        "alcoholFrequency": {
+          "coef": -0.14178265325341635
+        },
+        "coughOnMostDays": {
+          "coef": 1.0019014708880745
+        },
+        "currentlySmoking": {
+          "coef": -0.46618862227799746
+        },
+        "diabetes": {
+          "coef": -1.1798891358195396
+        },
+        "diastolicBloodPressure": {
+          "coef": 0.01894341878039955
+        },
+        "height": {
+          "coef": 0.018104747829801444
+        },
+        "noOfCigarettesPerDay": {
+          "coef": -0.02589737644304083
+        },
+        "noOfCigarettesPreviouslyPerDay": {
+          "coef": -0.0257828942424768
+        },
+        "previouslySmoked": {
+          "coef": 0.32175319810595426
+        },
+        "sex": {
+          "coef": -0.4104738244011383
+        },
+        "sputumOnMostDays": {
+          "coef": -0.11191553449537184
+        },
+        "systolicBloodPressure": {
+          "coef": -0.011817966164046994
+        },
+        "tuberculosis": {
+          "coef": 1.472731490607279
+        },
+        "weight": {
+          "coef": -0.030564163488420906
+        },
+        "wheezeInChestInLastYear": {
+          "coef": 2.95653884318388
+        }
+      },
+      "intercept": 0.2122016366279409,
+      "title": "asthma",
+      "active": true
+    },
+    "diabetes": {
+      "features": {
+        "COPD": {
+          "coef": 1.3619362564196413
+        },
+        "age": {
+          "coef": 0.019136590258194048
+        },
+        "alcoholFrequency": {
+          "coef": 0.11502373724237658
+        },
+        "asthma": {
+          "coef": -1.1630595314046503
+        },
+        "coughOnMostDays": {
+          "coef": 1.71157157914513
+        },
+        "currentlySmoking": {
+          "coef": 0.3164961879146224
+        },
+        "diastolicBloodPressure": {
+          "coef": -0.032984975076053635
+        },
+        "height": {
+          "coef": -0.035637825419568434
+        },
+        "noOfCigarettesPerDay": {
+          "coef": -0.256224255217304
+        },
+        "noOfCigarettesPreviouslyPerDay": {
+          "coef": 0.02672177760512625
+        },
+        "previouslySmoked": {
+          "coef": -0.23150944231605725
+        },
+        "sex": {
+          "coef": -0.09943202042324188
+        },
+        "sputumOnMostDays": {
+          "coef": -0.15623563876022312
+        },
+        "systolicBloodPressure": {
+          "coef": -0.006258844652816982
+        },
+        "tuberculosis": {
+          "coef": -0.5044671261474725
+        },
+        "weight": {
+          "coef": 0.07517191327011352
+        },
+        "wheezeInChestInLastYear": {
+          "coef": 0.3087771283576244
+        }
+      },
+      "intercept": 1.3113845028006121,
+      "title": "diabetes",
+      "active": true
+    },
+    "tuberculosis": {
+      "features": {
+        "COPD": {
+          "coef": -0.06571467681137483
+        },
+        "age": {
+          "coef": 0.4216729312336708
+        },
+        "alcoholFrequency": {
+          "coef": -1.5744010473087646
+        },
+        "asthma": {
+          "coef": 3.1356545119599724
+        },
+        "coughOnMostDays": {
+          "coef": 0.07041127731784398
+        },
+        "currentlySmoking": {
+          "coef": -0.9365622622043962
+        },
+        "diabetes": {
+          "coef": -1.5854612520531797
+        },
+        "diastolicBloodPressure": {
+          "coef": -0.137184939179086
+        },
+        "height": {
+          "coef": -0.25788335393243744
+        },
+        "noOfCigarettesPerDay": {
+          "coef": -1.0797755088065246
+        },
+        "noOfCigarettesPreviouslyPerDay": {
+          "coef": -0.6735260929251823
+        },
+        "previouslySmoked": {
+          "coef": -2.3320605784316917
+        },
+        "sex": {
+          "coef": 1.4848438451816393
+        },
+        "sputumOnMostDays": {
+          "coef": 2.115714056087424
+        },
+        "systolicBloodPressure": {
+          "coef": 0.07692551324081535
+        },
+        "weight": {
+          "coef": 0.2390802382305654
+        },
+        "wheezeInChestInLastYear": {
+          "coef": -3.702336619715062
+        }
+      },
+      "intercept": -0.6051413455376872,
+      "title": "tuberculosis",
+      "active": true
+    }
+  }
+}

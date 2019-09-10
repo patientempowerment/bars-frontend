@@ -86,10 +86,12 @@ class _SyncPageState extends State<SyncPage> {
         syncState = SubsetFetchState.Fetched;
       });
     }).catchError((e) {
-      setState(() {
-        errorMessage = e.toString();
-        syncState = SubsetFetchState.Error;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = e.toString();
+          syncState = SubsetFetchState.Error;
+        });
+      }
     });
   }
 

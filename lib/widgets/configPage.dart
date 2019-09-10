@@ -74,9 +74,11 @@ class _ConfigPageState extends State<ConfigPage> {
     for (String name in names) {
       loadedConfigs[name] = await readJSON("subsets", name);
     }
-    setState(() {
-      subsetsConfigs = loadedConfigs;
-    });
+    if(mounted) {
+      setState(() {
+        subsetsConfigs = loadedConfigs;
+      });
+    }
   }
 
   _getConfigNames() async {

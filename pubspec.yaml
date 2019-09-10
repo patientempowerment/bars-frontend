@@ -40,9 +40,8 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - assets/configs/
+    - assets/demoConfigs/
     - assets/images/
-    - assets/subsets/
     - assets/
 
   # The following line ensures that the Material Icons font is
