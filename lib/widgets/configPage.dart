@@ -71,8 +71,14 @@ class _ConfigPageState extends State<ConfigPage> {
   _loadConfigs(names) async {
     Map<String, dynamic> loadedConfigs = {};
 
-    for (String name in names) {
-      loadedConfigs[name] = await readJSON("subsets", name);
+    if (adminSettingsState.homePageState.demoStateTracker.demo) {
+      for (String name in names) {
+        loadedConfigs[name] = await legacyReadJSON('assets/demoConfigs/' + name + '.json');
+      }
+    } else {
+      for (String name in names) {
+        loadedConfigs[name] = await readJSON("subsets", name);
+      }
     }
     if(mounted) {
       setState(() {
@@ -82,12 +88,21 @@ class _ConfigPageState extends State<ConfigPage> {
   }
 
   _getConfigNames() async {
+    if (adminSettingsState.homePageState.demoStateTracker.demo) {
+      return ['femaleDemoSet', 'maleDemoSet', 'largeDemoSet'];
+    }
     return directoryContents('subsets/');
   }
 
   _selectConfig(String configName) async {
-    Map<String, dynamic> fullConfig = await readJSON("subsets", configName);
 
+    Map<String, dynamic> fullConfig = {};
+    if(adminSettingsState.homePageState.demoStateTracker.demo){
+      fullConfig = await legacyReadJSON('assets/demoConfigs/' + configName + '.json');
+    }
+    else {
+      fullConfig = await readJSON("subsets", configName);
+    }
     Map<String, dynamic> appConfig = adminSettingsState.homePageState.appConfig;
 
     appConfig["active_subset"] = configName;
@@ -149,11 +164,11 @@ class _ConfigPageState extends State<ConfigPage> {
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 2),
       child: ListView.builder(
           shrinkWrap: true,
-          itemCount: (subsetConfig["features_config"].keys).length,
+          itemCount: (subsetConfig["models_config"].keys).length,
           itemBuilder: (context, position) {
             Widget cardChild;
             String model =
-                subsetConfig["features_config"].keys.toList()[position];
+                subsetConfig["models_config"].keys.toList()[position];
             if (modelTitleBeingEdited == model) {
               cardChild = _getModelTitleTextField(name, model);
             } else {

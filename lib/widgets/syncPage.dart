@@ -110,6 +110,15 @@ class _SyncPageState extends State<SyncPage> {
   }
 
   _trainModels(String name, Map<String, dynamic> subset) {
+
+    if(adminSettingsState.homePageState.demoStateTracker.demo) {
+        Future.delayed(Duration(seconds: (name=="largeDemoSet")? 5 : 1)).then((result) {
+          setState(() {
+            subsets[name]["syncButtonState"] = SyncButtonState.Synced;
+          });
+        });
+
+    }
     adminSettingsState.appConfig['database']['subset'] = name;
 
     setState(() {
