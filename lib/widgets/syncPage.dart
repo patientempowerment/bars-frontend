@@ -4,9 +4,7 @@ import 'dart:math';
 import 'package:bars_frontend/widgets/adminSettings.dart';
 import 'package:animator/animator.dart';
 
-
 class SyncPage extends StatefulWidget {
-
   final AdminSettingsState adminSettingsState;
 
   SyncPage(this.adminSettingsState);
@@ -18,6 +16,7 @@ class SyncPage extends StatefulWidget {
 class _SyncPageState extends State<SyncPage> {
   AdminSettingsState adminSettingsState;
   Animator animator;
+
   _SyncPageState(this.adminSettingsState);
 
   SubsetFetchState syncState = SubsetFetchState.Fetching;
@@ -49,17 +48,14 @@ class _SyncPageState extends State<SyncPage> {
             String name = subsets.keys.toList()[position];
             return Card(
                 child: Row(
-                  children: <Widget>[
-                    Flexible(
-                        child: ListTile(
-                            key: Key(name),
-                            title: Text(name))),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: getLoadingButton(name),
-                    )
-                  ],
-                ));
+              children: <Widget>[
+                Flexible(child: ListTile(key: Key(name), title: Text(name))),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: getLoadingButton(name),
+                )
+              ],
+            ));
           });
     } else if (syncState == SubsetFetchState.Error) {
       content = Column(
@@ -77,6 +73,24 @@ class _SyncPageState extends State<SyncPage> {
   }
 
   _fetchSubsets() {
+    if (adminSettingsState.homePageState.demoStateTracker.demo) {
+      Map<String, dynamic> subsetResponse = {};
+      legacyReadJSON('assets/demoConfigs/femaleDemoSet.json').then((result) {
+      subsetResponse["femaleDemoSet"] = result;
+      legacyReadJSON('assets/demoConfigs/maleDemoSet.json')
+      .then((result) {
+      subsetResponse["maleDemoSet"] = result;
+      legacyReadJSON('assets/demoConfigs/largeDemoSet.json').then((result) {
+      subsetResponse["largeDemoSet"] = result;
+      setState(() {
+        subsets = subsetResponse;
+        for (var subset in subsets.entries) {
+          subset.value["syncButtonState"] = SyncButtonState.Ready;
+        }
+        syncState = SubsetFetchState.Fetched;
+      });});});});
+      return;
+    }
     getDatabase(adminSettingsState.appConfig).then((result) {
       setState(() {
         subsets = result ?? {};
@@ -111,12 +125,13 @@ class _SyncPageState extends State<SyncPage> {
         subsets[name]["syncButtonState"] = SyncButtonState.Synced;
       });
     }).catchError((e) => {
-      setState(() {
-        subsets[name]["syncButtonState"] = SyncButtonState.Error;
-      }),
-      print(e)
-    });
+          setState(() {
+            subsets[name]["syncButtonState"] = SyncButtonState.Error;
+          }),
+          print(e)
+        });
   }
+
   Widget getLoadingButton(String subsetName) {
     SyncButtonState buttonState = subsets[subsetName]["syncButtonState"];
 
