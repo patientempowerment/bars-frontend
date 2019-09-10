@@ -17,7 +17,7 @@ class SyncPage extends StatefulWidget {
 
 class _SyncPageState extends State<SyncPage> {
   AdminSettingsState adminSettingsState;
-
+  Animator animator;
   _SyncPageState(this.adminSettingsState);
 
   SubsetFetchState syncState = SubsetFetchState.Fetching;
@@ -28,17 +28,19 @@ class _SyncPageState extends State<SyncPage> {
   @override
   void initState() {
     super.initState();
+    animator = getAnimator(1, 0, Icon(Icons.autorenew, color: Colors.blue));
     subsets = _fetchSubsets();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Widget _getSyncPage() {
     Widget content;
     if (syncState == SubsetFetchState.Fetching) {
-      content = getAnimator(
-          1,
-          0,
-          Icon(Icons.autorenew,
-              color: Colors.blue, size: MediaQuery.of(context).size.width / 8));
+      content = animator;
     } else if (syncState == SubsetFetchState.Fetched) {
       content = ListView.builder(
           shrinkWrap: true,
@@ -127,7 +129,7 @@ class _SyncPageState extends State<SyncPage> {
     } else if (buttonState == SyncButtonState.Syncing) {
       buttonColor = Colors.white;
       borderColor = Colors.white;
-      child = getAnimator(1, 0, Icon(Icons.autorenew, color: Colors.blue));
+      child = animator;
     } else if (buttonState == SyncButtonState.Synced) {
       buttonColor = Colors.white;
       borderColor = Colors.white;

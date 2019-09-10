@@ -58,6 +58,7 @@ class HomepageState extends State<Homepage> {
   List<DataPoint> changedInputsPlot = [];
   bool predictMode = false;
 
+  DemoStateTracker demoStateTracker;
   String lineModel;
 
   final GlobalKey adminDrawerKey = GlobalKey();
@@ -70,6 +71,7 @@ class HomepageState extends State<Homepage> {
         setConfig(result["subset"], appConfig["active_subset"]);
         //storyModel = modelsConfig.entries.first.key; TODO
         lineModel = "diabetes";
+        demoStateTracker = DemoStateTracker();
       });
     });
 
@@ -109,7 +111,7 @@ class HomepageState extends State<Homepage> {
             drawer: AdminSettings(this, key: adminDrawerKey),
             floatingActionButton: ResetButton(this),
           ),
-          Scaffold(
+          if (demoStateTracker.bubbles) Scaffold(
             appBar: AppBar(
               title: MyAppBarContent(),
             ),
@@ -134,4 +136,13 @@ class MyAppBarContent extends StatelessWidget {
       child: new Image.asset('assets/images/logo.png', fit: BoxFit.scaleDown),
     );
   }
+}
+
+class DemoStateTracker {
+  bool demo;
+  bool bars;
+  bool graph;
+  bool bubbles;
+
+  DemoStateTracker({this.demo: false, this.bars: true, this.graph: false, this.bubbles: false});
 }

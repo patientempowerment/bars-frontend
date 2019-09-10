@@ -1,3 +1,4 @@
+import 'package:bars_frontend/widgets/bars.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
@@ -11,9 +12,21 @@ class SimpleBarChart extends StatelessWidget {
   SimpleBarChart(this.labelValues, {this.animate = true});
 
   @override Widget build(BuildContext context) {
+    UserInputPage parent = context.ancestorWidgetOfExactType(UserInputPage);
     return charts.BarChart(
       labelValues,
       animate: animate,
+      selectionModels: [new charts.SelectionModelConfig(
+        type: charts.SelectionModelType.info,
+        changedListener: parent.selectModelForLinePrediction,
+      )
+      ],
+      behaviors: [
+        new charts.InitialSelection(selectedDataConfig: [
+          new charts.SeriesDatumConfig('barChart', parent.homepageState.lineModel)
+        ],
+        )
+      ],
     );
   }
 }

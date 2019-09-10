@@ -1,3 +1,4 @@
+import 'package:charts_flutter/flutter.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/utils.dart';
@@ -12,6 +13,14 @@ class UserInputPage extends StatelessWidget {
   final HomepageState homepageState;
 
   UserInputPage(this.homepageState);
+
+  selectModelForLinePrediction(prefix0.SelectionModel<String> model){
+    homepageState.setState((){
+      homepageState.lineModel = model.selectedDatum.first.datum.item1;
+      homepageState.originalInputsPlot = generateDataPoints(homepageState);
+      homepageState.changedInputsPlot = [];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +40,14 @@ class UserInputPage extends StatelessWidget {
         Flexible(
             child: Column(
               children: <Widget>[
-                Flexible(
+                if(homepageState.demoStateTracker.bars) Flexible(
                   child: SimpleBarChart(mapChartData(
                       getLabelProbabilities(homepageState.userInputs,
                           activeModels, homepageState.predictMode),
                       activeModels)),
                 ),
-                Flexible(child: LineChart(homepageState))
+                if(homepageState.demoStateTracker.graph) Flexible(
+                    child: LineChart(homepageState))
               ],
             )
         ),

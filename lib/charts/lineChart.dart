@@ -11,24 +11,27 @@ class LineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(_createSeries([homepageState.originalInputsPlot, homepageState.changedInputsPlot]), animate: animate, behaviors: [
-      new charts.LinePointHighlighter(
-        selectionModelType: charts.SelectionModelType.info,
-        defaultRadiusPx: 0,
-        radiusPaddingPx: 0,
-        showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.none,
-        showVerticalFollowLine: charts.LinePointHighlighterFollowLineType.none,
-        dashPattern: [],
-        drawFollowLinesAcrossChart: false
-      ),
-      new charts.RangeAnnotation([
-        new charts.LineAnnotationSegment(
-          homepageState.userInputs["age"],
-          charts.RangeAnnotationAxisType.domain,
-          labelDirection: charts.AnnotationLabelDirection.horizontal,
-          strokeWidthPx: 10
-        )
-      ])
+    return new charts.LineChart(_createSeries(
+        [homepageState.originalInputsPlot, homepageState.changedInputsPlot]),
+        animate: animate,
+        behaviors: [
+          new charts.LinePointHighlighter(
+            selectionModelType: charts.SelectionModelType.info,
+            defaultRadiusPx: 0,
+            radiusPaddingPx: 0,
+            showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.none,
+            showVerticalFollowLine: charts.LinePointHighlighterFollowLineType.none,
+            dashPattern: [],
+            drawFollowLinesAcrossChart: false
+          ),
+           new charts.RangeAnnotation([
+             if (homepageState.predictMode) new charts.LineAnnotationSegment(
+              homepageState.userInputs["age"],
+              charts.RangeAnnotationAxisType.domain,
+              labelDirection: charts.AnnotationLabelDirection.horizontal,
+              strokeWidthPx: 10
+            )
+          ])
     ]);
   }
 
