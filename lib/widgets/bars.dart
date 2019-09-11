@@ -16,7 +16,10 @@ class UserInputPage extends StatelessWidget {
 
   selectModelForLinePrediction(prefix0.SelectionModel<String> model){
     homepageState.setState((){
-      homepageState.lineModel = model.selectedDatum.first.datum.item1;
+      String modelTitle = model.selectedDatum.first.datum.item1;
+      Map<String,dynamic> tempConfig = Map.from(homepageState.modelsConfig);
+      tempConfig.removeWhere((k,v) => (v["title"]!=modelTitle));
+      homepageState.lineModel = tempConfig.keys.first;
       homepageState.originalInputsPlot = generateDataPoints(homepageState);
       homepageState.changedInputsPlot = [];
     });
