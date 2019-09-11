@@ -5,7 +5,7 @@ import 'package:bars_frontend/utils.dart';
 /// Returns a [SimpleDialog] with the corresponding input option of [feature].
 /// [context] is the BuildContext of the calling widget to which the result of the input is passed.
 Future<dynamic> asyncInputDialog(BuildContext context,
-    HomepageState homePageState, MapEntry<String, dynamic> feature) async {
+    HomepageState homepageState, MapEntry<String, dynamic> feature) async {
   return showDialog<dynamic>(
     context: context,
     barrierDismissible: true,
@@ -24,7 +24,7 @@ Future<dynamic> asyncInputDialog(BuildContext context,
                   right: DIALOG_PADDING,
                   bottom: DIALOG_PADDING / 2),
               child: Column(children: <Widget>[
-                MyDialogContent(homePageState, feature),
+                MyDialogContent(homepageState, feature),
                 Container(
                   height: 40,
                   width: 100,
@@ -34,7 +34,7 @@ Future<dynamic> asyncInputDialog(BuildContext context,
                     padding: EdgeInsets.all(STANDARD_PADDING),
                     onPressed: () {
                       Navigator.of(context)
-                          .pop(homePageState.userInputs[feature.key]);
+                          .pop(homepageState.userInputs[feature.key]);
                     },
                     child: Text("OK"),
                   ),
@@ -50,22 +50,22 @@ Future<dynamic> asyncInputDialog(BuildContext context,
 
 /// Represents the content of the dialog, including an input option for [feature].
 class MyDialogContent extends StatefulWidget {
-  final HomepageState homePageState;
+  final HomepageState homepageState;
   final MapEntry<String, dynamic> feature;
 
-  MyDialogContent(this.homePageState, this.feature);
+  MyDialogContent(this.homepageState, this.feature);
 
   @override
   State<StatefulWidget> createState() {
-    return new MyDialogContentState(homePageState, feature);
+    return new MyDialogContentState(homepageState, feature);
   }
 }
 
 class MyDialogContentState extends State<MyDialogContent> {
-  final HomepageState homePageState;
+  final HomepageState homepageState;
   final MapEntry<String, dynamic> feature;
 
-  MyDialogContentState(this.homePageState, this.feature);
+  MyDialogContentState(this.homepageState, this.feature);
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +74,6 @@ class MyDialogContentState extends State<MyDialogContent> {
         width: STANDARD_DIALOG_WIDTH,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [buildInputWidget(homePageState, this, feature)]));
+            children: [buildInputWidget(homepageState, this, feature)]));
   }
 }

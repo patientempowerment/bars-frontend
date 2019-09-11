@@ -5,20 +5,20 @@ import 'package:bars_frontend/widgets/configPage.dart';
 import 'package:bars_frontend/widgets/syncPage.dart';
 
 class AdminSettings extends StatefulWidget {
-  final HomepageState homePageState;
+  final HomepageState homepageState;
 
-  AdminSettings(this.homePageState, {Key key}) : super(key: key);
+  AdminSettings(this.homepageState, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return AdminSettingsState(homePageState, homePageState.appConfig);
+    return AdminSettingsState(homepageState, homepageState.appConfig);
   }
 }
 
 class AdminSettingsState extends State<AdminSettings>
     with TickerProviderStateMixin {
-  HomepageState homePageState;
-  AdminSettingsState(this.homePageState, this.appConfig);
+  HomepageState homepageState;
+  AdminSettingsState(this.homepageState, this.appConfig);
 
 
   //config
@@ -39,7 +39,7 @@ class AdminSettingsState extends State<AdminSettings>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: homePageState.demoStateTracker.demo? 3:2, vsync: this);
+    tabController = TabController(length: homepageState.demoStateTracker.demo? 3:2, vsync: this);
     configPage = ConfigPage(this);
     syncPage = SyncPage(this);
     demoConfigPage = DemoConfigPage(this);
@@ -54,11 +54,11 @@ class AdminSettingsState extends State<AdminSettings>
         SafeArea(child: getTabBar()),
         Flexible(child: getTabBarPages()),
         Switch(
-          value: homePageState.demoStateTracker.demo,
+          value: homepageState.demoStateTracker.demo,
           onChanged: ((value) {
-            homePageState.setState(() => homePageState.demoStateTracker.demo = value);
+            homepageState.setState(() => homepageState.demoStateTracker.demo = value);
             setState(() {
-              tabController = TabController(length: homePageState.demoStateTracker.demo? 3:2, vsync: this);
+              tabController = TabController(length: homepageState.demoStateTracker.demo? 3:2, vsync: this);
             });
           }),
         )
@@ -74,7 +74,7 @@ class AdminSettingsState extends State<AdminSettings>
       Tab(
           child: Text("Config", style: TextStyle(color: Colors.blue)),
           icon: Icon(Icons.settings, color: Colors.blue)),
-      if (homePageState.demoStateTracker.demo) Tab(
+      if (homepageState.demoStateTracker.demo) Tab(
         child: Text("f.toggle", style: TextStyle(color: Colors.blue)),
         icon: Icon(Icons.developer_mode, color: Colors.blue)
       )
@@ -87,6 +87,6 @@ class AdminSettingsState extends State<AdminSettings>
         children: <Widget>[
           syncPage,
           configPage,
-          if (homePageState.demoStateTracker.demo) demoConfigPage]);
+          if (homepageState.demoStateTracker.demo) demoConfigPage]);
   }
 }

@@ -55,8 +55,8 @@ class _ConfigPageState extends State<ConfigPage> {
                       text;
                   await _saveConfigs({subset: subsetsConfigs[subset]});
 
-                  adminSettingsState.homePageState.setState(() {
-                    adminSettingsState.homePageState.modelsConfig[model]
+                  adminSettingsState.homepageState.setState(() {
+                    adminSettingsState.homepageState.modelsConfig[model]
                         ["title"] = text;
                   });
                   modelTitleBeingEdited = "";
@@ -71,7 +71,7 @@ class _ConfigPageState extends State<ConfigPage> {
   _loadConfigs(names) async {
     Map<String, dynamic> loadedConfigs = {};
 
-    if (adminSettingsState.homePageState.demoStateTracker.demo) {
+    if (adminSettingsState.homepageState.demoStateTracker.demo) {
       for (String name in names) {
         loadedConfigs[name] = await legacyReadJSON('assets/demoConfigs/' + name + '.json');
       }
@@ -88,7 +88,7 @@ class _ConfigPageState extends State<ConfigPage> {
   }
 
   _getConfigNames() async {
-    if (adminSettingsState.homePageState.demoStateTracker.demo) {
+    if (adminSettingsState.homepageState.demoStateTracker.demo) {
       return ['femaleDemoSet', 'maleDemoSet', 'largeDemoSet'];
     }
     return directoryContents('subsets/');
@@ -97,18 +97,18 @@ class _ConfigPageState extends State<ConfigPage> {
   _selectConfig(String configName) async {
 
     Map<String, dynamic> fullConfig = {};
-    if(adminSettingsState.homePageState.demoStateTracker.demo){
+    if(adminSettingsState.homepageState.demoStateTracker.demo){
       fullConfig = await legacyReadJSON('assets/demoConfigs/' + configName + '.json');
     }
     else {
       fullConfig = await readJSON("subsets", configName);
     }
-    Map<String, dynamic> appConfig = adminSettingsState.homePageState.appConfig;
+    Map<String, dynamic> appConfig = adminSettingsState.homepageState.appConfig;
 
     appConfig["active_subset"] = configName;
     await writeJSON('/', 'app_config', appConfig);
     setState(() {
-      adminSettingsState.homePageState.setConfig(fullConfig, configName);
+      adminSettingsState.homepageState.setConfig(fullConfig, configName);
     });
   }
 
@@ -185,14 +185,14 @@ class _ConfigPageState extends State<ConfigPage> {
                     child: CheckboxListTile(
                   title: Text(subsetConfig["models_config"][model]["title"],
                       style: TextStyle(fontWeight: FontWeight.w300)),
-                  value: adminSettingsState.homePageState.modelsConfig[model]
+                  value: adminSettingsState.homepageState.modelsConfig[model]
                       ["active"],
                   onChanged: (value) {
                     subsetsConfigs[name]["models_config"][model]["active"] =
                         value;
                     _saveConfigs({name: subsetsConfigs[name]});
-                    adminSettingsState.homePageState.setState(() {
-                      adminSettingsState.homePageState.modelsConfig[model]
+                    adminSettingsState.homepageState.setState(() {
+                      adminSettingsState.homepageState.modelsConfig[model]
                           ["active"] = value;
                     });
                     setState(() {});
@@ -231,7 +231,7 @@ class _ConfigPageState extends State<ConfigPage> {
   @override
   Widget build(BuildContext context) {
     String activeSubset =
-        adminSettingsState.homePageState.appConfig["active_subset"];
+        adminSettingsState.homepageState.appConfig["active_subset"];
 
     return Column(
       children: <Widget>[
@@ -266,7 +266,7 @@ class _ConfigPageState extends State<ConfigPage> {
                                             onTap: () => _selectConfig(name))),
                                     Radio(
                                         groupValue: adminSettingsState
-                                            .homePageState
+                                            .homepageState
                                             .appConfig["active_subset"],
                                         value: name,
                                         onChanged: (param) =>

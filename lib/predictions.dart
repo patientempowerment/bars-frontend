@@ -20,7 +20,11 @@ double computeProbability(
   double dotProduct = 0.0;
 
   modelValues["features"].forEach((k, v) {
-    dotProduct += multiplyInputAndCoefficient(v, inputs[k]);
+    if(inputs[k]!= null) {
+      dotProduct += multiplyInputAndCoefficient(v, inputs[k]);
+    } else if (v["mean"] != null){
+      dotProduct += multiplyInputAndCoefficient(v, v["mean"]);
+    }
   });
   double intercept = modelValues["intercept"];
   double result = 1 - (1 / (1 + exp(intercept + dotProduct)));

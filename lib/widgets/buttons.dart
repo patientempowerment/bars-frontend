@@ -6,22 +6,22 @@ import 'package:bars_frontend/predictions.dart';
 
 /// A [FloatingActionButton] that resets the userInputs of [HomepageState] to their default values.
 class ResetButton extends StatelessWidget {
-  final HomepageState homePageState;
+  final HomepageState homepageState;
 
-  ResetButton(this.homePageState);
+  ResetButton(this.homepageState);
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       child: Icon(Icons.replay),
       onPressed: () {
-        homePageState.setState(() {
-          homePageState.userInputs =
-              generateDefaultInputValues(homePageState.featuresConfig);
-          homePageState.activeInputFields =
-              deactivateInputFields(homePageState.featuresConfig);
-          homePageState.originalInputsPlot = [];
-          homePageState.changedInputsPlot = [];
+        homepageState.setState(() {
+          homepageState.userInputs =
+              generateDefaultInputValues(homepageState.featuresConfig);
+          homepageState.activeInputFields =
+              deactivateInputFields(homepageState.featuresConfig);
+          homepageState.originalInputsPlot = [];
+          homepageState.changedInputsPlot = [];
         });
       },
     );

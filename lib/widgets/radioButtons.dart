@@ -3,7 +3,7 @@ import 'package:bars_frontend/main.dart';
 import '../utils.dart';
 
 /// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
-getRadioButtonInputRow(HomepageState homePageState, State parentState,
+getRadioButtonInputRow(HomepageState homepageState, State parentState,
     MapEntry<String, dynamic> feature, Function onChanged) {
   return (Padding(
       padding: EdgeInsets.only(bottom: 5.0),
@@ -23,7 +23,7 @@ getRadioButtonInputRow(HomepageState homePageState, State parentState,
                     scrollDirection: Axis.horizontal,
                     children: [
                       for (var choice in feature.value["choices"].entries)
-                        getRadioButton(homePageState, parentState, choice.key,
+                        getRadioButton(homepageState, parentState, choice.key,
                             choice.value, feature.key, onChanged)
                     ]),
               ),
@@ -35,20 +35,20 @@ getRadioButtonInputRow(HomepageState homePageState, State parentState,
 
 /// Returns one radio button and its [title] with current [value] and corresponding [featureKey].
 Widget getRadioButton(
-    homePageState, parentState, title, value, featureKey, onChanged) {
+    homepageState, parentState, title, value, featureKey, onChanged) {
   return Container(
     width: 100,
     child: Column(
       children: [
         Container(
             child: Radio(
-                activeColor: getActivityColor(homePageState, featureKey),
+                activeColor: getActivityColor(homepageState, featureKey),
                 value: value,
-                groupValue: homePageState.activeInputFields[featureKey]
-                    ? homePageState.userInputs[featureKey]
+                groupValue: homepageState.activeInputFields[featureKey]
+                    ? homepageState.userInputs[featureKey]
                     : null,
                 onChanged: (dynamic newValue) {
-                  homePageState.activeInputFields[featureKey] = true;
+                  homepageState.activeInputFields[featureKey] = true;
                   onChanged(newValue);
                 })),
         Text(title, overflow: TextOverflow.clip, textAlign: TextAlign.center)

@@ -17,17 +17,17 @@ class FeatureBubble extends StatefulWidget {
   final Offset initialOffset;
   final double width;
   final double labelBubbleWidth;
-  final HomepageState homePageState;
+  final HomepageState homepageState;
   final BubblesPageState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
 
   FeatureBubble(this.initialOffset, this.width, this.labelBubbleWidth,
-      this.homePageState, this.bubblePrototypeState, this.feature);
+      this.homepageState, this.bubblePrototypeState, this.feature);
 
   @override
   State<StatefulWidget> createState() {
     return FeatureBubbleState(initialOffset, width, labelBubbleWidth,
-        homePageState, bubblePrototypeState, feature);
+        homepageState, bubblePrototypeState, feature);
   }
 }
 
@@ -37,7 +37,7 @@ class FeatureBubble extends StatefulWidget {
 /// [width] changes when the bubble is dragged the first time.
 class FeatureBubbleState extends State<FeatureBubble>
     with SingleTickerProviderStateMixin {
-  final HomepageState homePageState;
+  final HomepageState homepageState;
   final BubblesPageState bubblePrototypeState;
   final MapEntry<String, dynamic> feature;
   final double labelBubbleWidth;
@@ -47,22 +47,22 @@ class FeatureBubbleState extends State<FeatureBubble>
   bool isSmall = true;
 
   FeatureBubbleState(this.offset, this.width, this.labelBubbleWidth,
-      this.homePageState, this.bubblePrototypeState, this.feature);
+      this.homepageState, this.bubblePrototypeState, this.feature);
 
   /// Sets [color] to a new value according to the impact the feature has on all labels.
   /// And reloads the state.
   _computeNewColor() {
     double colorFactor = 0;
-    for (String label in homePageState.modelsConfig.keys) {
-      if (homePageState.modelsConfig[label]['features'][feature.key] != null) {
-        double factor = homePageState.modelsConfig[label]['features']
+    for (String label in homepageState.modelsConfig.keys) {
+      if (homepageState.modelsConfig[label]['features'][feature.key] != null) {
+        double factor = homepageState.modelsConfig[label]['features']
                 [feature.key]['coef'] *
-            homePageState.userInputs[feature.key];
+            homepageState.userInputs[feature.key];
         colorFactor += factor < 0 ? 0 : factor;
       }
     }
     // average colorFactor over amount of labels
-    colorFactor = colorFactor / homePageState.modelsConfig.keys.length;
+    colorFactor = colorFactor / homepageState.modelsConfig.keys.length;
     setState(() {
       color = computeColorByFactor(colorFactor);
     });
@@ -73,14 +73,14 @@ class FeatureBubbleState extends State<FeatureBubble>
   _getParticles() {
     List<Particle> particles = List();
     dynamic rdm = Random();
-    Map<String, dynamic> activeModels = Map.from(homePageState.modelsConfig);
+    Map<String, dynamic> activeModels = Map.from(homepageState.modelsConfig);
     activeModels.removeWhere((k, v) => v["active"] == false);
     for (String label in activeModels.keys) {
       Rectangle labelBubbleBoundingBox =
           bubblePrototypeState.labelBubbleBoundingBoxes[label];
       if (activeModels[label]['features'][feature.key] != null) {
         double factor = activeModels[label]['features'][feature.key]['coef'] *
-            homePageState.userInputs[feature.key];
+            homepageState.userInputs[feature.key];
         factor = factor < 0 ? 0 : factor;
         for (int i = 0; i < factor * MAX_PARTICLES; i++) {
           // choose random duration around one second
@@ -117,7 +117,7 @@ class FeatureBubbleState extends State<FeatureBubble>
         color: color,
       ),
       child: new FlatButton(
-        onPressed: invokeDialog(context, homePageState, feature, this),
+        onPressed: invokeDialog(context, homepageState, feature, this),
         child: Container(),
       ),
     ));
@@ -162,7 +162,7 @@ class FeatureBubbleState extends State<FeatureBubble>
                     offset.dx + details.delta.dx, offset.dy + details.delta.dy);
               });
             },
-            onPanEnd: invokeDialog(context, homePageState, feature, this),
+            onPanEnd: invokeDialog(context, homepageState, feature, this),
             child: Container(
               child: Column(
                 children: _getBubble(context),
@@ -181,15 +181,15 @@ class LabelBubble extends StatelessWidget {
   final String title;
   final Offset position;
   final double dimensions;
-  final HomepageState homePageState;
+  final HomepageState homepageState;
 
-  LabelBubble(this.title, this.position, this.dimensions, this.homePageState);
+  LabelBubble(this.title, this.position, this.dimensions, this.homepageState);
 
   /// Returns the size of the inner bubble according to the probability returned by [getLabelProbabilities]
   double _computeInnerBubbleSize() {
     double value = 0.0;
     Map<String, dynamic> probabilities = getLabelProbabilities(
-        homePageState.userInputs, homePageState.modelsConfig, true);
+        homepageState.userInputs, homepageState.modelsConfig, true);
     probabilities.forEach(
         (k, v) => (k.toLowerCase() == title.toLowerCase()) ? value = v : null);
     double innerBubbleSize = value * dimensions;
@@ -203,7 +203,7 @@ class LabelBubble extends StatelessWidget {
   /// TODO currently assumes that the label title is the same as the label name, just camel case.
   Color _computeColor() {
     Map<String, dynamic> probabilities = getLabelProbabilities(
-        homePageState.userInputs, homePageState.modelsConfig, true);
+        homepageState.userInputs, homepageState.modelsConfig, true);
     for (var probability in probabilities.entries) {
       if (probability.key.toLowerCase() == title.toLowerCase()) {
         return computeColorByFactor(probability.value);
@@ -330,9 +330,9 @@ class ParticleState extends State<Particle> {
 }
 
 /// Opens a dialog and prompts color and particle amount changes on close.
-invokeDialog(context, homePageState, feature, dragState) {
+invokeDialog(context, homepageState, feature, dragState) {
   return ([_]) async {
-    var dialogInput = await asyncInputDialog(context, homePageState, feature);
+    var dialogInput = await asyncInputDialog(context, homepageState, feature);
 
     if (dialogInput != null) {
       dragState._computeNewColor();

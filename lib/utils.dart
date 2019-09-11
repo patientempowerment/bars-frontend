@@ -189,20 +189,20 @@ deactivateInputFields(featureConfig) {
 
 /// Creates either a radio button or a slider for [feature].
 /// [context] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
-buildInputWidget(HomepageState homePageState, State context,
+buildInputWidget(HomepageState homepageState, State context,
     MapEntry<String, dynamic> feature) {
   Function onChanged = (num newValue) {
     context.setState(() {
-      homePageState.userInputs[feature.key] = newValue;
-      if (homePageState.predictMode) {
-        homePageState.changedInputsPlot = generateDataPoints(homePageState);
+      homepageState.userInputs[feature.key] = newValue;
+      if (homepageState.predictMode) {
+        homepageState.changedInputsPlot = generateDataPoints(homepageState);
       }
     });
   };
   if (feature.value["choices"] != null) {
-    return getRadioButtonInputRow(homePageState, context, feature, onChanged);
+    return getRadioButtonInputRow(homepageState, context, feature, onChanged);
   } else if (feature.value["slider_min"] != null) {
-    return getSliderInputRow(homePageState, context, feature, onChanged);
+    return getSliderInputRow(homepageState, context, feature, onChanged);
   } else {
     throw new Exception("Input Widget not supported: " + feature.key);
   }
@@ -223,8 +223,8 @@ Color computeColorByFactor(double factor) {
 }
 
 /// Returns color for active and inactive input field.
-getActivityColor(HomepageState homePageState, String featureKey) {
-  return homePageState.activeInputFields[featureKey]
+getActivityColor(HomepageState homepageState, String featureKey) {
+  return homepageState.activeInputFields[featureKey]
       ? Colors.blue
       : Colors.grey;
 }

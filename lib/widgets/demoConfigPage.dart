@@ -23,7 +23,7 @@ class _DemoConfigPageState extends State<DemoConfigPage> {
 
   @override
   void initState() {
-    homepageState = adminSettingsState.homePageState;
+    homepageState = adminSettingsState.homepageState;
     demoStateTracker = homepageState.demoStateTracker;
     super.initState();
   }
