@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/widgets/configPage.dart';
 import 'package:bars_frontend/widgets/syncPage.dart';
+import 'package:bars_frontend/utils.dart';
 
 class AdminSettings extends StatefulWidget {
   final HomepageState homepageState;
@@ -55,11 +56,13 @@ class AdminSettingsState extends State<AdminSettings>
         Flexible(child: getTabBarPages()),
         Switch(
           value: homepageState.demoStateTracker.demo,
-          onChanged: ((value) {
-            homepageState.setState(() => homepageState.demoStateTracker.demo = value);
+          onChanged: ((value) async {
+            homepageState.setState(() {homepageState.demoStateTracker.demo = value;
+            homepageState.appConfig["demo_mode"] = value;
             setState(() {
               tabController = TabController(length: homepageState.demoStateTracker.demo? 3:2, vsync: this);
-            });
+            });});
+            await writeJSON('/', 'app_config', homepageState.appConfig);
           }),
         )
       ],

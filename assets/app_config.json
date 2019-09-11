@@ -8,5 +8,6 @@
     "features_config": "assets/configs/features_config_fallback.json",
     "models": "assets/configs/models_config_fallback.json"
   },
-  "active_subset": null
+  "active_subset": null,
+  "demo_mode": false
 }

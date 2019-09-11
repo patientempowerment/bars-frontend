@@ -71,7 +71,7 @@ class HomepageState extends State<Homepage> {
         setConfig(result["subset"], appConfig["active_subset"]);
         //storyModel = modelsConfig.entries.first.key; TODO
         lineModel = "diabetes";
-        demoStateTracker = DemoStateTracker();
+        demoStateTracker = DemoStateTracker(demo: appConfig["demo_mode"]??=false);
       });
     });
 
