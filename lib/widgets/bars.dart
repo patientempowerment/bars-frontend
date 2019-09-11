@@ -15,14 +15,20 @@ class UserInputPage extends StatelessWidget {
   UserInputPage(this.homepageState);
 
   selectModelForLinePrediction(prefix0.SelectionModel<String> model){
-    homepageState.setState((){
-      String modelTitle = model.selectedDatum.first.datum.item1;
-      Map<String,dynamic> tempConfig = Map.from(homepageState.modelsConfig);
-      tempConfig.removeWhere((k,v) => (v["title"]!=modelTitle));
-      homepageState.lineModel = tempConfig.keys.first;
-      homepageState.originalInputsPlot = generateDataPoints(homepageState);
-      homepageState.changedInputsPlot = [];
+    int modelBarIndex = model.selectedDatum.first.index;
+    Map<String, dynamic> activeModels = Map.from(homepageState.modelsConfig);
+    activeModels.removeWhere((k,v) => (v["active"]==false));
+
+    int i = 0;
+    activeModels.forEach((k,v) {
+      if(i == modelBarIndex){
+        homepageState.lineModel = k;
+      }
+      i++;
     });
+    homepageState.originalInputsPlot = generateDataPoints(homepageState);
+    homepageState.changedInputsPlot = [];
+    homepageState.setState((){});
   }
 
   @override

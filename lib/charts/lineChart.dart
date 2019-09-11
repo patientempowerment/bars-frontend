@@ -41,7 +41,7 @@ class LineChart extends StatelessWidget {
     for (MapEntry<int, dynamic>line in lines.asMap().entries) {
       series.add(new charts.Series<DataPoint, int>(
         id: line.key.toString(),
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (_, __) => ((line.key == 0) ? charts.MaterialPalette.black : charts.Color.fromHex(code: '#00ff1a')),
         domainFn: (DataPoint point, _) => point.x,
         measureFn: (DataPoint point, _) => point.y,
         data: line.value,
