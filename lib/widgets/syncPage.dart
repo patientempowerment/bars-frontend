@@ -28,7 +28,7 @@ class _SyncPageState extends State<SyncPage> {
   void initState() {
     super.initState();
     animator = getAnimator(1, 0, Icon(Icons.autorenew, color: Colors.blue));
-    subsets = _fetchSubsets();
+    _fetchSubsets();
   }
 
   @override
@@ -48,14 +48,15 @@ class _SyncPageState extends State<SyncPage> {
             String name = subsets.keys.toList()[position];
             return Card(
                 child: Row(
-              children: <Widget>[
-                Flexible(child: ListTile(key: Key(name), title: Text(name))),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: getLoadingButton(name),
-                )
-              ],
-            ));
+                  children: <Widget>[
+                    Flexible(
+                        child: ListTile(key: Key(name), title: Text(name))),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: getLoadingButton(name),
+                    )
+                  ],
+                ));
           });
     } else if (syncState == SubsetFetchState.Error) {
       content = Column(
@@ -72,26 +73,25 @@ class _SyncPageState extends State<SyncPage> {
     );
   }
 
-  _fetchSubsets() {
+  _fetchSubsets() async {
     if (adminSettingsState.homepageState.demoStateTracker.demo) {
       Map<String, dynamic> subsetResponse = {};
-      legacyReadJSON('assets/demoConfigs/femaleDemoSet.json').then((result) {
-      subsetResponse["femaleDemoSet"] = result;
-      legacyReadJSON('assets/demoConfigs/maleDemoSet.json')
-      .then((result) {
-      subsetResponse["maleDemoSet"] = result;
-      legacyReadJSON('assets/demoConfigs/largeDemoSet.json').then((result) {
-      subsetResponse["largeDemoSet"] = result;
-      setState(() {
-        subsets = subsetResponse;
-        for (var subset in subsets.entries) {
-          subset.value["syncButtonState"] = SyncButtonState.Ready;
-        }
-        syncState = SubsetFetchState.Fetched;
-      });});});});
+      subsetResponse["femaleDemoSet"] =
+      await legacyReadJSON('assets/demoConfigs/femaleDemoSet.json');
+      subsetResponse["maleDemoSet"] =
+      await legacyReadJSON('assets/demoConfigs/maleDemoSet.json');
+      subsetResponse["largeDemoSet"] =
+      await legacyReadJSON('assets/demoConfigs/largeDemoSet.json');
+      subsets = subsetResponse;
+      for (var subset in subsets.entries) {
+        subset.value["syncButtonState"] = SyncButtonState.Ready;
+      }
+      syncState = SubsetFetchState.Fetched;
+      setState(() {});
       return;
     }
-    getDatabase(adminSettingsState.appConfig).then((result) {
+    try {
+      var result = await getDatabase(adminSettingsState.appConfig);
       setState(() {
         subsets = result ?? {};
         for (var subset in subsets.entries) {
@@ -99,25 +99,24 @@ class _SyncPageState extends State<SyncPage> {
         }
         syncState = SubsetFetchState.Fetched;
       });
-    }).catchError((e) {
+    } catch (e) {
       if (mounted) {
         setState(() {
           errorMessage = e.toString();
           syncState = SubsetFetchState.Error;
         });
       }
-    });
+    }
   }
 
   _trainModels(String name, Map<String, dynamic> subset) {
-
-    if(adminSettingsState.homepageState.demoStateTracker.demo) {
-        Future.delayed(Duration(seconds: (name=="largeDemoSet")? 5 : 1)).then((result) {
-          setState(() {
-            subsets[name]["syncButtonState"] = SyncButtonState.Synced;
-          });
+    if (adminSettingsState.homepageState.demoStateTracker.demo) {
+      Future.delayed(Duration(seconds: (name == "largeDemoSet") ? 5 : 1)).then((
+          result) {
+        setState(() {
+          subsets[name]["syncButtonState"] = SyncButtonState.Synced;
         });
-
+      });
     }
     adminSettingsState.appConfig['database']['subset'] = name;
 
@@ -133,12 +132,13 @@ class _SyncPageState extends State<SyncPage> {
       setState(() {
         subsets[name]["syncButtonState"] = SyncButtonState.Synced;
       });
-    }).catchError((e) => {
-          setState(() {
-            subsets[name]["syncButtonState"] = SyncButtonState.Error;
-          }),
-          print(e)
-        });
+    }).catchError((e) =>
+    {
+      setState(() {
+        subsets[name]["syncButtonState"] = SyncButtonState.Error;
+      }),
+      print(e)
+    });
   }
 
   Widget getLoadingButton(String subsetName) {

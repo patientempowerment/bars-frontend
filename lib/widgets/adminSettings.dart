@@ -33,7 +33,6 @@ class AdminSettingsState extends State<AdminSettings>
   SyncPage syncPage;
   DemoConfigPage demoConfigPage;
 
-
   @override
   bool get wantKeepAlive => true;
 
@@ -57,11 +56,14 @@ class AdminSettingsState extends State<AdminSettings>
         Switch(
           value: homepageState.demoStateTracker.demo,
           onChanged: ((value) async {
-            homepageState.setState(() {homepageState.demoStateTracker.demo = value;
-            homepageState.appConfig["demo_mode"] = value;
+            homepageState.setState(() {
+              homepageState.demoStateTracker.demo = value;
+              homepageState.appConfig["demo_mode"] = value;
+            });
             setState(() {
-              tabController = TabController(length: homepageState.demoStateTracker.demo? 3:2, vsync: this);
-            });});
+              int index = (tabController.index == 2)?1:tabController.index;
+              tabController = TabController(length: homepageState.demoStateTracker.demo? 3:2, vsync: this, initialIndex: index);
+            });
             await writeJSON('/', 'app_config', homepageState.appConfig);
           }),
         )
