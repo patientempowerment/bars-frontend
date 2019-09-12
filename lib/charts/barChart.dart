@@ -9,7 +9,7 @@ class SimpleBarChart extends StatelessWidget {
   final List<charts.Series<Tuple2<String, dynamic>, String>> labelValues;
   final bool animate;
 
-  SimpleBarChart(this.labelValues, {this.animate = true});
+  SimpleBarChart(this.labelValues, {this.animate = false});
 
   @override Widget build(BuildContext context) {
     UserInputPage parent = context.ancestorWidgetOfExactType(UserInputPage);
