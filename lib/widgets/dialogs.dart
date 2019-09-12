@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'package:bars_frontend/utils.dart';
+import 'package:bars_frontend/colorUtils.dart';
 
 /// Returns a [SimpleDialog] with the corresponding input option of [feature].
 /// [context] is the BuildContext of the calling widget to which the result of the input is passed.
@@ -74,6 +74,6 @@ class MyDialogContentState extends State<MyDialogContent> {
         width: STANDARD_DIALOG_WIDTH,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [buildInputWidget(homepageState, this, feature)]));
+            children: [homepageState.buildInputWidget(this, feature)]));
   }
 }

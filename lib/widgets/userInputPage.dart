@@ -1,7 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'package:bars_frontend/utils.dart';
 import 'buttons.dart';
 import 'package:bars_frontend/charts/barChart.dart';
 import 'package:bars_frontend/predictions.dart';
@@ -41,7 +40,7 @@ class UserInputPage extends StatelessWidget {
           child: ListView(
             children: [
               for (var feature in homepageState.featuresConfig.entries)
-                buildInputWidget(homepageState, homepageState, feature),
+                homepageState.buildInputWidget(homepageState, feature),
             ],
           ),
         ),

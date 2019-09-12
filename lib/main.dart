@@ -1,10 +1,12 @@
-import 'package:bars_frontend/widgets/bars.dart';
+import 'package:bars_frontend/fileIO.dart';
+import 'package:bars_frontend/widgets/userInputPage.dart';
 import 'package:bars_frontend/widgets/bubblesPage.dart';
 import 'package:bars_frontend/widgets/buttons.dart';
 import 'package:bars_frontend/widgets/adminSettings.dart';
 import 'package:flutter/material.dart';
-import 'package:bars_frontend/utils.dart';
 import 'package:bars_frontend/predictions.dart';
+import 'widgets/radioButtons.dart';
+import 'widgets/sliders.dart';
 
 void main() => runApp(EmpowerApp());
 
@@ -65,17 +67,50 @@ class HomepageState extends State<Homepage> {
 
   @override
   void initState() {
-    initializeData().then((result) {
+    _initializeData().then((result) {
       setState(() {
-        appConfig = result["server_config"];
+        appConfig = result["app_config"];
         setConfig(result["subset"], appConfig["active_subset"]);
         //storyModel = modelsConfig.entries.first.key; TODO
         lineModel = "diabetes";
         demoStateTracker = DemoStateTracker(demo: appConfig["demo_mode"]??=false);
       });
     });
-
     super.initState();
+  }
+
+  _initializeData() async {
+    Map<String, dynamic> appConfig = {};
+    try {
+      appConfig = await readJSON('/', 'app_config');
+    } catch (e) {
+      appConfig = await legacyReadJSON('assets/app_config.json');
+    }
+    Map<String, dynamic> subset;
+    Map<String, dynamic> response = {};
+    if (appConfig["active_subset"] == null) {
+      response["subset"] = {
+        "columns": [],
+        "models_config": Map<String, dynamic>(),
+        "features_config": Map<String, dynamic>()
+      };
+      response["app_config"] = appConfig;
+    } else {
+      try {
+        subset = await readJSON('subsets/', appConfig["active_subset"]);
+        response["subset"] = subset;
+        response["app_config"] = appConfig;
+      } catch (e) {
+        //TODO:
+        response["subset"] = {
+          "columns": [],
+          "models_config": Map<String, dynamic>(),
+          "features_config": Map<String, dynamic>()
+        };
+        response["app_config"] = appConfig;
+      }
+    }
+    return response;
   }
 
   setConfig(Map<String, dynamic> fullConfig, String subsetName) {
@@ -86,6 +121,52 @@ class HomepageState extends State<Homepage> {
       activeInputFields = deactivateInputFields(featuresConfig);
       appConfig["active_subset"] = subsetName;
     });
+  }
+
+  /// Deactivates all sliders and radio buttons in [featureConfig].
+  deactivateInputFields(featureConfig) {
+    Map<String, bool> activeInputFields = {};
+    featureConfig.forEach((k, v) {
+      activeInputFields[k] = false;
+    });
+    return activeInputFields;
+  }
+
+  /// For all features in [featureConfig]: Sets radio button or slider to mean.
+  generateDefaultInputValues(featureConfig) {
+    Map<String, dynamic> defaultInputs = {};
+    featureConfig.forEach((k, v) {
+      int mean = v["mean"].round();
+
+      //Button selection needs int, slider needs double.
+      if (v["choices"] != null) {
+        defaultInputs[k] = mean;
+      } else {
+        defaultInputs[k] = mean.toDouble();
+      }
+    });
+    return defaultInputs;
+  }
+
+  /// Creates either a radio button or a slider for [feature].
+  /// [parentState] is the widget that the input widget is on(i.e., the widget that has to rebuild on state change).
+  buildInputWidget(State parentState,
+      MapEntry<String, dynamic> feature) {
+    Function onChanged = (num newValue) {
+      parentState.setState(() {
+        userInputs[feature.key] = newValue;
+        if (predictMode) {
+          changedInputsPlot = generateDataPoints(this);
+        }
+      });
+    };
+    if (feature.value["choices"] != null) {
+      return getRadioButtonInputRow(this, parentState, feature, onChanged);
+    } else if (feature.value["slider_min"] != null) {
+      return getSliderInputRow(this, parentState, feature, onChanged);
+    } else {
+      throw new Exception("Input Widget not supported: " + feature.key);
+    }
   }
 
   @override

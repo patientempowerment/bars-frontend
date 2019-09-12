@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import '../utils.dart';
+import '../colorUtils.dart';
 
 /// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
 getRadioButtonInputRow(HomepageState homepageState, State parentState,
@@ -42,7 +42,7 @@ Widget getRadioButton(
       children: [
         Container(
             child: Radio(
-                activeColor: getActivityColor(homepageState, featureKey),
+                activeColor: getActivityColor(homepageState.activeInputFields[featureKey]),
                 value: value,
                 groupValue: homepageState.activeInputFields[featureKey]
                     ? homepageState.userInputs[featureKey]

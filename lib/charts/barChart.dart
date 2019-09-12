@@ -1,8 +1,8 @@
-import 'package:bars_frontend/widgets/bars.dart';
+import 'package:bars_frontend/widgets/userInputPage.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
-import 'package:bars_frontend/utils.dart';
+import 'package:bars_frontend/colorUtils.dart';
 
 /// Bar Chart that generates a bar for each <[label] - [labelValues]> pair.
 class SimpleBarChart extends StatelessWidget {
@@ -60,17 +60,4 @@ mapChartData(Map<String, dynamic> labelValues, Map<String, dynamic> labelTitles)
       data: data,
     )
   ];
-}
-
-/// Returns a color matching a [factor] between 0 and 1, where 0 is green and 1 is red.
-getChartColorByFactor(double factor){
-  final List<dynamic> colorGradient = [
-    charts.Color.fromHex(code: "#8BC24A"),
-    charts.Color.fromHex(code: "#FEC007"),
-    charts.Color.fromHex(code: "#FE9800"),
-    charts.Color.fromHex(code: "#FE5722"),
-    charts.Color.fromHex(code: "#F34336"),
-  ];
-
-  return colorGradient[((colorGradient.length - 1) * factor).round().toInt()];
 }

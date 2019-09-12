@@ -1,6 +1,6 @@
 import 'package:bars_frontend/main.dart';
 import 'package:flutter/material.dart';
-import 'package:bars_frontend/utils.dart';
+import 'package:bars_frontend/colorUtils.dart';
 import 'dart:convert';
 import 'package:bars_frontend/widgets/adminSettings.dart';
 

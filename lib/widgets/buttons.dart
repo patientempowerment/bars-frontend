@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import '../utils.dart';
-import 'bars.dart';
+import '../colorUtils.dart';
+import 'userInputPage.dart';
 import 'package:bars_frontend/predictions.dart';
 
 /// A [FloatingActionButton] that resets the userInputs of [HomepageState] to their default values.
@@ -17,9 +17,9 @@ class ResetButton extends StatelessWidget {
       onPressed: () {
         homepageState.setState(() {
           homepageState.userInputs =
-              generateDefaultInputValues(homepageState.featuresConfig);
+              homepageState.generateDefaultInputValues(homepageState.featuresConfig);
           homepageState.activeInputFields =
-              deactivateInputFields(homepageState.featuresConfig);
+              homepageState.deactivateInputFields(homepageState.featuresConfig);
           homepageState.originalInputsPlot = [];
           homepageState.changedInputsPlot = [];
         });

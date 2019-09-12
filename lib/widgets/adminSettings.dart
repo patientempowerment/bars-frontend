@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
 import 'package:bars_frontend/widgets/configPage.dart';
 import 'package:bars_frontend/widgets/syncPage.dart';
-import 'package:bars_frontend/utils.dart';
+import 'package:bars_frontend/fileIO.dart';
 
 class AdminSettings extends StatefulWidget {
   final HomepageState homepageState;

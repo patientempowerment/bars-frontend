@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import 'package:bars_frontend/utils.dart';
+import 'package:bars_frontend/colorUtils.dart';
 import 'package:bars_frontend/predictions.dart';
 import 'bubblesPage.dart';
 import 'dialogs.dart';

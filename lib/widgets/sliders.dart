@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bars_frontend/main.dart';
-import '../utils.dart';
+import '../colorUtils.dart';
 
 /// [parentState] is the state of the widget that the input widget is on, (i.e., the widget that has to rebuild on state change).
 Widget getSliderInputRow(HomepageState homepageState, State parentState,
@@ -29,9 +29,9 @@ class SliderInputRow extends StatelessWidget {
           flex: 2,
           child: SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: getActivityColor(homepageState, feature.key),
+              activeTrackColor: getActivityColor(homepageState.activeInputFields[feature.key]),
               inactiveTrackColor: Colors.grey,
-              thumbColor: getActivityColor(homepageState, feature.key),
+              thumbColor: getActivityColor(homepageState.activeInputFields[feature.key]),
               showValueIndicator: ShowValueIndicator.always,
 
             ),
